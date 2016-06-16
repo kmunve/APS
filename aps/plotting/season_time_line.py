@@ -65,6 +65,7 @@ p2.yaxis.major_tick_line_color = None
 p2.yaxis.axis_line_color = None
 p2.yaxis.major_label_text_color = None
 
+p2.legend.location = "bottom_left"
 # TODO: get legend out of the way
 p = gridplot([[p1], [p2]])#, toolbar_location=None)
 show(p)
