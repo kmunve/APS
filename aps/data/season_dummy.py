@@ -24,7 +24,8 @@ class seasonData:
         self.precipitation()
         self.surface_hoar()
         dummy_y = np.zeros_like(self.preciparr)
-        self.data = DataFrame(data={'Time': self.timearr, 'Precipitation': self.preciparr, 'Dummy-y': dummy_y, 'SurfaceHoar': self.sharr})
+        self.data = DataFrame(data={'Time': self.timearr, 'Precipitation': self.preciparr, 'Dummy-y': dummy_y,
+                                    'SurfaceHoarObs': self.sh_obs_arr, 'SurfaceHoarWarn': self.sh_warn_arr})
 
 
     def precipitation(self):
@@ -33,16 +34,21 @@ class seasonData:
         i = np.random.random_integers(0, len(self.timearr)-1, 7)
         preciparr[i] = 20.0
         i = np.random.random_integers(0, len(self.timearr) - 1, 7)
-        preciparr[i] = 40.0
+        preciparr[i] = [40.0, 25.3, 15.0, 33.2, 41.0, 27.0, 29.9]
 
         self.preciparr = preciparr
 
     def surface_hoar(self):
-        sharr = np.zeros_like(self.timearr, dtype=float)
+        sh_obs_arr = np.zeros_like(self.timearr, dtype=float)
         i = np.random.random_integers(0, len(self.timearr)-1, 12)
-        sharr[i] = 1.0
+        sh_obs_arr[i] = 1.0
 
-        self.sharr = sharr
+        sh_warn_arr = np.zeros_like(self.timearr, dtype=float)
+        i = np.random.random_integers(0, len(self.timearr) - 1, 12)
+        sh_warn_arr[i] = -1.0
+
+        self.sh_obs_arr = sh_obs_arr
+        self.sh_warn_arr = sh_warn_arr
 
 
 def usage():
