@@ -10,6 +10,9 @@ from datetime import datetime
 __author__ = 'kmu'
 '''
 
+# defines the color palette for danger levels
+label_danger_levels = ['0 - no rating', '1 - low', '2 - moderate', '3 - considerable', '4 - high', '5 - very high']
+pal_danger_levels = ['0.5', '#ccff66', '#ffff00', '#ff9900', '#ff0000', 'k']
 
 def timeline_figure(title=None, x_range=None, y_range=None):
 
@@ -27,10 +30,10 @@ def timeline_figure(title=None, x_range=None, y_range=None):
 
     # change just some things about the x-grid
     fig.xgrid.grid_line_color = None
-
+    fig.ygrid.grid_line_color = None
     # change just some things about the y-grid
-    fig.ygrid.grid_line_alpha = 0.5
-    fig.ygrid.grid_line_dash = [6, 4]
+
+    fig.yaxis.minor_tick_line_color = None
 
     year = 2016
     dec = Span(location=datetime(year-1, 12, 1, 0, 0, 0).timestamp() * 1000,
