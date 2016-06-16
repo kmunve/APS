@@ -49,18 +49,18 @@ mask = sd.data['FacetsWarn'] != 0.0
 fc_warn = sd.data[mask]
 
 p2 = timeline_figure(x_range=p1.x_range, y_range=[0, 9])
-p2.inverted_triangle(x=sh_obs['Time'], y=sh_obs['SurfaceHoarObs'], size=10, color="red")
-p2.inverted_triangle(x=sh_warn['Time'], y=sh_warn['SurfaceHoarWarn'], size=10, color="blue")
+p2.inverted_triangle(x=sh_obs['Time'], y=sh_obs['SurfaceHoarObs'], size=10, color="red", legend="SH obs")
+p2.inverted_triangle(x=sh_warn['Time'], y=sh_warn['SurfaceHoarWarn'], size=10, color="blue", legend="SH var")
 
-p2.triangle(x=dh_obs['Time'], y=dh_obs['DepthHoarObs'], size=10, color="red")
-p2.triangle(x=dh_warn['Time'], y=dh_warn['DepthHoarWarn'], size=10, color="blue")
+p2.triangle(x=dh_obs['Time'], y=dh_obs['DepthHoarObs'], size=10, color="red", legend="DH obs")
+p2.triangle(x=dh_warn['Time'], y=dh_warn['DepthHoarWarn'], size=10, color="blue", legend="DH var")
 
-p2.square(x=fc_obs['Time'], y=fc_obs['FacetsObs'], size=10, color="red")
-p2.square(x=fc_warn['Time'], y=fc_warn['FacetsWarn'], size=10, color="blue")
+p2.square(x=fc_obs['Time'], y=fc_obs['FacetsObs'], size=10, color="red", legend="FC obs")
+p2.square(x=fc_warn['Time'], y=fc_warn['FacetsWarn'], size=10, color="blue", legend="FC var")
 
 p2.yaxis.axis_label = 'VSL'
 # TODO: remove y-axis ticks and labels
-
+# TODO: get legend out of the way
 p = gridplot([[p1], [p2]])#, toolbar_location=None)
 show(p)
 
