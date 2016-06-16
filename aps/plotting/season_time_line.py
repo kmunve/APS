@@ -3,7 +3,7 @@
 from __future__ import print_function
 
 from bokeh.io import gridplot
-from bokeh.plotting import figure, output_file, show
+from bokeh.plotting import output_file, show, save, ColumnDataSource
 from aps.data.season_dummy import seasonData
 from aps.plotting.bokeh_plots import timeline_figure
 '''
@@ -50,6 +50,10 @@ fc_obs = sd.data[mask]
 mask = sd.data['FacetsWarn'] != 0.0
 fc_warn = sd.data[mask]
 
+# TODO: print out datetime as readable string
+source = ColumnDataSource({'x': fc_warn['Time'], 'y': fc_warn['FacetsWarn'],
+                           'Date': fc_warn['Time'].values})
+
 p2 = timeline_figure(x_range=p1.x_range, y_range=[0, 9])
 p2.inverted_triangle(x=sh_obs['Time'], y=sh_obs['SurfaceHoarObs'], size=10, color="red", legend="SH obs")
 p2.inverted_triangle(x=sh_warn['Time'], y=sh_warn['SurfaceHoarWarn'], size=10, color="blue", legend="SH var")
@@ -58,7 +62,8 @@ p2.triangle(x=dh_obs['Time'], y=dh_obs['DepthHoarObs'], size=10, color="red", le
 p2.triangle(x=dh_warn['Time'], y=dh_warn['DepthHoarWarn'], size=10, color="blue", legend="DH var")
 
 p2.square(x=fc_obs['Time'], y=fc_obs['FacetsObs'], size=10, color="red", legend="FC obs")
-p2.square(x=fc_warn['Time'], y=fc_warn['FacetsWarn'], size=10, color="blue", legend="FC var")
+# p2.square(x=fc_warn['Time'], y=fc_warn['FacetsWarn'], size=10, color="blue", legend="FC var")
+p2.square('x', 'y', source=source, size=10, color="blue", legend="FC var")
 
 p2.yaxis.axis_label = 'VSL'
 p2.yaxis.major_tick_line_color = None
@@ -67,5 +72,5 @@ p2.yaxis.major_label_text_color = None
 
 # TODO: get legend out of the way
 p = gridplot([[p1], [p2]])#, toolbar_location=None)
-show(p)
+save(p)
 
