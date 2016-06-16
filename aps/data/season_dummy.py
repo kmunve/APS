@@ -23,9 +23,13 @@ class seasonData:
         # self.timearr = np.arange(0,100,2)
         self.precipitation()
         self.surface_hoar()
+        self.depth_hoar()
+        self.facets()
         dummy_y = np.zeros_like(self.preciparr)
         self.data = DataFrame(data={'Time': self.timearr, 'Precipitation': self.preciparr, 'Dummy-y': dummy_y,
-                                    'SurfaceHoarObs': self.sh_obs_arr, 'SurfaceHoarWarn': self.sh_warn_arr})
+                                    'SurfaceHoarObs': self.sh_obs_arr, 'SurfaceHoarWarn': self.sh_warn_arr,
+                                    'DepthHoarObs': self.dh_obs_arr, 'DepthHoarWarn': self.dh_warn_arr,
+                                    'FacetsObs': self.fc_obs_arr, 'FacetsWarn': self.fc_warn_arr})
 
 
     def precipitation(self):
@@ -40,15 +44,39 @@ class seasonData:
 
     def surface_hoar(self):
         sh_obs_arr = np.zeros_like(self.timearr, dtype=float)
-        i = np.random.random_integers(0, len(self.timearr)-1, 12)
+        i = np.random.random_integers(0, len(self.timearr)-1, 7)
         sh_obs_arr[i] = 1.0
 
         sh_warn_arr = np.zeros_like(self.timearr, dtype=float)
-        i = np.random.random_integers(0, len(self.timearr) - 1, 12)
-        sh_warn_arr[i] = -1.0
+        i = np.random.random_integers(0, len(self.timearr) - 1, 3)
+        sh_warn_arr[i] = 2.0
 
         self.sh_obs_arr = sh_obs_arr
         self.sh_warn_arr = sh_warn_arr
+
+    def depth_hoar(self):
+        dh_obs_arr = np.zeros_like(self.timearr, dtype=float)
+        i = np.random.random_integers(0, len(self.timearr) - 1, 12)
+        dh_obs_arr[i] = 4.0
+
+        dh_warn_arr = np.zeros_like(self.timearr, dtype=float)
+        i = np.random.random_integers(0, len(self.timearr) - 1, 6)
+        dh_warn_arr[i] = 5.0
+
+        self.dh_obs_arr = dh_obs_arr
+        self.dh_warn_arr = dh_warn_arr
+
+    def facets(self):
+        fc_obs_arr = np.zeros_like(self.timearr, dtype=float)
+        i = np.random.random_integers(0, len(self.timearr) - 1, 23)
+        fc_obs_arr[i] = 7.0
+
+        fc_warn_arr = np.zeros_like(self.timearr, dtype=float)
+        i = np.random.random_integers(0, len(self.timearr) - 1, 17)
+        fc_warn_arr[i] = 8.0
+
+        self.fc_obs_arr = fc_obs_arr
+        self.fc_warn_arr = fc_warn_arr
 
 
 def usage():

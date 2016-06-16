@@ -32,18 +32,34 @@ p1.ygrid.band_fill_alpha = 0.1
 # alternatives are 'rect' or 'circle'+'segment'
 
 
-# Surface hoar example plot
+# Persistent weak layers example plot
 mask = sd.data['SurfaceHoarObs'] != 0.0
 sh_obs = sd.data[mask]
 mask = sd.data['SurfaceHoarWarn'] != 0.0
 sh_warn = sd.data[mask]
 
-p2 = timeline_figure(x_range=p1.x_range, y_range=[-2, 2])
+mask = sd.data['DepthHoarObs'] != 0.0
+dh_obs = sd.data[mask]
+mask = sd.data['DepthHoarWarn'] != 0.0
+dh_warn = sd.data[mask]
+
+mask = sd.data['FacetsObs'] != 0.0
+fc_obs = sd.data[mask]
+mask = sd.data['FacetsWarn'] != 0.0
+fc_warn = sd.data[mask]
+
+p2 = timeline_figure(x_range=p1.x_range, y_range=[0, 9])
 p2.inverted_triangle(x=sh_obs['Time'], y=sh_obs['SurfaceHoarObs'], size=10, color="red")
 p2.inverted_triangle(x=sh_warn['Time'], y=sh_warn['SurfaceHoarWarn'], size=10, color="blue")
+
+p2.triangle(x=dh_obs['Time'], y=dh_obs['DepthHoarObs'], size=10, color="red")
+p2.triangle(x=dh_warn['Time'], y=dh_warn['DepthHoarWarn'], size=10, color="blue")
+
+p2.square(x=fc_obs['Time'], y=fc_obs['FacetsObs'], size=10, color="red")
+p2.square(x=fc_warn['Time'], y=fc_warn['FacetsWarn'], size=10, color="blue")
+
 p2.yaxis.axis_label = 'VSL'
-# TODO: remove y-axis ticks
-# Use triangle for depth hoar and square for facets
+# TODO: remove y-axis ticks and labels
 
 p = gridplot([[p1], [p2]])#, toolbar_location=None)
 show(p)
