@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from bokeh.plotting import figure
-from bokeh.models import Span
+from bokeh.models import Span, CrosshairTool, HoverTool, ResetTool, PanTool
 from datetime import datetime
 '''
 
@@ -19,7 +19,11 @@ def timeline_figure(title=None, x_range=None, y_range=None):
     # TODO: align x-axis
 
     # TOOLS = "resize,crosshair,pan,wheel_zoom,box_zoom,reset,box_select,lasso_select,save"
-    TOOLS = "resize,crosshair,pan,wheel_zoom,box_zoom,reset,save"
+    # TOOLS = "resize,crosshair,xpan,xwheel_zoom,box_zoom,reset,save"
+    TOOLS = [CrosshairTool(dimensions=['height']),
+             PanTool(dimensions=['width']),
+             HoverTool(tooltips=[("Dato", "@Date")]),
+             ResetTool()]
 
     # Setting up the bokeh figure
     fig = figure(width=800, height=250, title=title, x_axis_type="datetime",
