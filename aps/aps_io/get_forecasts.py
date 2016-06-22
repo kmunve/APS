@@ -139,6 +139,10 @@ if __name__ == "__main__":
                                       simple=True, lang_key=1, recursive_count=5)
     # p = get_valid_regids(10, "2013-03-01", "2013-03-09")
 
+    # Retrieve danger level for a specific region
+    # TODO: make the output two separate lists - one containing DL the other date
+    dl = [{warns['ValidFrom']: warns['DangerLevel']} for warns in warns_json if warns['RegionId']==29]
+
     df = pd.DataFrame(warns_json[0]) # all elements get doubled when converting to DataFrame
     # conversion to dataframe does not work with api_type='Simple' - but maybe I don't need the dataframe at all.
     print(warns_json[0]['DangerLevel'], warns_json[0]['AvalancheWarning'])
