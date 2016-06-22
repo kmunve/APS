@@ -20,12 +20,16 @@ mask = sd.data['Precipitation'] >= 20.0
 filtered_sd = sd.data[mask]
 tags = [filtered_sd['Precipitation']]
 
+precip_src = ColumnDataSource({'x': filtered_sd['Time'], 'y': filtered_sd['Dummy-y'], 'y1': filtered_sd['Precipitation']})
+
 output_file("season_timeline.html", mode="cdn")
 
 
 p1 = timeline_figure(title="Sesong oversikt", y_range=[-0.1, 60])
-p1.segment(x0=filtered_sd['Time'], y0=filtered_sd['Dummy-y'], x1=filtered_sd['Time'], y1=filtered_sd['Precipitation'],
-           line_width=4)
+# p1.segment(x0=filtered_sd['Time'], y0=filtered_sd['Dummy-y'], x1=filtered_sd['Time'], y1=filtered_sd['Precipitation'],
+#            line_width=4)
+p1.segment(x0='x', y0='y', x1='x', y1='y1', source=precip_src, line_width=4)
+
 p1.yaxis.axis_label = 'Døgnnedbør [mm]'
 p1.ygrid.grid_line_alpha = 0.5
 p1.ygrid.grid_line_dash = [6, 4]
@@ -64,6 +68,8 @@ p2.triangle(x=dh_warn['Time'], y=dh_warn['DepthHoarWarn'], size=10, color="blue"
 p2.square(x=fc_obs['Time'], y=fc_obs['FacetsObs'], size=10, color="red", legend="FC obs")
 # p2.square(x=fc_warn['Time'], y=fc_warn['FacetsWarn'], size=10, color="blue", legend="FC var")
 p2.square('x', 'y', source=source, size=10, color="blue", legend="FC var")
+
+p2.square('x', 'y', source=precip_src, color=None)
 
 p2.yaxis.axis_label = 'VSL'
 p2.yaxis.major_tick_line_color = None

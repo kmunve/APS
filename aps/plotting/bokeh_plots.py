@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from __future__ import print_function
-from bokeh.plotting import figure
-from bokeh.models import Span, CrosshairTool, HoverTool, ResetTool, PanTool
+from bokeh.plotting import figure, ColumnDataSource, output_file, save
+from bokeh.models import Span, CrosshairTool, HoverTool, ResetTool, PanTool, WheelZoomTool
 from datetime import datetime
 '''
 
@@ -23,6 +23,7 @@ def timeline_figure(title=None, x_range=None, y_range=None):
     TOOLS = [CrosshairTool(dimensions=['height']),
              PanTool(dimensions=['width']),
              HoverTool(tooltips=[("Dato", "@Date")]),
+             WheelZoomTool(dimensions=['width']),
              ResetTool()]
 
     # Setting up the bokeh figure
@@ -56,3 +57,30 @@ def timeline_figure(title=None, x_range=None, y_range=None):
     fig.renderers.extend([dec, jan, feb, mar, apr, may])
 
     return fig
+
+
+def usage():
+    import numpy as np
+    from datetime import timedelta
+    from bokeh.io import gridplot
+
+    output_file("test.html", mode="cdn")
+
+    d_start = datetime(2016, 6, 1)
+    d_step = timedelta(days=1)
+
+    t = [d_start + (i * d_step) for i in range(0, 12)]
+    s1 = np.random. randint(2, 10, 12)
+    s2 = np.random.randint(2, 10, 12)
+    source = ColumnDataSource({'t': t, 's1': s1, 's2': s2})
+
+    p1 = timeline_figure()
+    p1.triangle(x='t', y='s1', source=source, size=10, color="blue")
+    p2 = timeline_figure()
+    p2.square(x='t', y='s2', source=source, size=10, color="red")
+
+    p = gridplot([[p1], [p2]])
+    save(p)
+
+if __name__ == "__main__":
+    usage()
