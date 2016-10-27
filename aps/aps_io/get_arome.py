@@ -12,11 +12,11 @@ def nc_info(nc_data):
     print('### DIMENSIONS ###')
     print(nc_data.dimensions)
     for k in nc_data.dimensions.keys():
-        print(k)
+        print("-\t{0}".format(k))
 
     print('### VARIABLES ###')
     for k in nc_data.variables.keys():
-        print(k)
+        print("-\t{0}".format(k))
 
 def nc_load(nc_object, vars, bounding_box=None, time_period=None):
     """
@@ -37,28 +37,38 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
     nc_info(nc)
 
     # Get coordinates and other standard variables
-    x_var = nc.variables['x']
-    y_var = nc.variables['y']
+    try:
+        x_var = nc.variables['x']
+        y_var = nc.variables['y']
+    except KeyError:
+        print("Variables 'x' and 'y' are not provided.")
     latitude_var = nc.variables['latitude']
     longitude_var = nc.variables['longitude']
     time_var = nc.variables['time']
     altitude_var = nc.variables['altitude']
-    land_area_fraction_var = nc.variables['land_area_fraction']
+    try:
+        land_area_fraction_var = nc.variables['land_area_fraction']
+    except KeyError:
+        print("Variable 'land_area_fraction' is not provided.")
 
-    # Bounding box for Rauland
-    lat1 = np.where(latitude_var[:] >= bounding_box[0])[1][0]
-    lat2 = np.where(latitude_var[:] <= bounding_box[1])[1][-1]
-    lon1 = np.where(longitude_var[:] >= bounding_box[2])[1][0]
-    lon2 = np.where(longitude_var[:] <= bounding_box[3])[1][-1]
+    # Apply bounding box if given
+    if bounding_box is not None:
+        lat1 = np.where(latitude_var[:] >= bounding_box[0])[1][0]
+        lat2 = np.where(latitude_var[:] <= bounding_box[1])[1][-1]
+        lon1 = np.where(longitude_var[:] >= bounding_box[2])[1][0]
+        lon2 = np.where(longitude_var[:] <= bounding_box[3])[1][-1]
 
     altitude = altitude_var[lat1:lat2, lon1:lon2] # retrieve model topography
-    land_area_fraction = land_area_fraction_var[lat1:lat2, lon1:lon2]
+    try:
+        land_area_fraction = land_area_fraction_var[lat1:lat2, lon1:lon2]
+    except UnboundLocalError:
+        land_area_fraction = None
     times = time_var[time_period[0]:time_period[1]]
     jd = netCDF4.num2date(times[:], time_var.units)
 
     nc_vars = {}
     for var in vars:
-        nc_vars[var] = nc.variables[var][:].squeeze()[time_period[0]:time_period[1], lat1:lat2, lon1:lon2]
+        nc_vars[var] = nc.variables[var][:].squeeze()[time_period[0]:time_period[1], lon1:lon2, lat1:lat2]
 
     return jd, altitude, land_area_fraction, nc_vars
 
