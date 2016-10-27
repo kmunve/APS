@@ -1,6 +1,12 @@
 from numpy import ma
 from aps.aps_io.get_arome import nc_load
 import matplotlib.pyplot as plt
+
+"""
+DEPRECATED see notebooks/regional_temperature_distribution
+"""
+
+
 jd, altitude, land_area_fraction, nc_vars = nc_load('http://thredds.met.no/thredds/dodsC/arome25/arome_metcoop_default2_5km_latest.nc',
                                                     ['air_temperature_2m'], [59.9, 60.0, 8.5, 9.0], [6, 30])
 
