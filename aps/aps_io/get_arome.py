@@ -8,6 +8,7 @@ __author__ = 'kmu'
 Retrieve data from netcdf files from thredds.met.no and do some statistics.
 """
 
+
 def nc_info(nc_data):
     print('### DIMENSIONS ###')
     print(nc_data.dimensions)
@@ -17,6 +18,7 @@ def nc_info(nc_data):
     print('### VARIABLES ###')
     for k in nc_data.variables.keys():
         print("-\t{0}".format(k))
+
 
 def nc_load(nc_object, vars, bounding_box=None, time_period=None):
     """
@@ -51,6 +53,8 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
     except KeyError:
         print("Variable 'land_area_fraction' is not provided.")
 
+    nc_vars = {}
+
     # Apply bounding box if given
     if bounding_box is not None:
         lat1 = np.where(latitude_var[:] >= bounding_box[0])[1][0]
@@ -58,17 +62,29 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
         lon1 = np.where(longitude_var[:] >= bounding_box[2])[1][0]
         lon2 = np.where(longitude_var[:] <= bounding_box[3])[1][-1]
 
-    altitude = altitude_var[lat1:lat2, lon1:lon2] # retrieve model topography
-    try:
-        land_area_fraction = land_area_fraction_var[lat1:lat2, lon1:lon2]
-    except UnboundLocalError:
-        land_area_fraction = None
+        altitude = altitude_var[lon1:lon2, lat1:lat2] # retrieve model topography
+        try:
+            land_area_fraction = land_area_fraction_var[lon1:lon2, lat1:lat2]
+        except UnboundLocalError:
+            land_area_fraction = None
+
+        for var in vars:
+            nc_vars[var] = nc.variables[var][:].squeeze()[time_period[0]:time_period[1], lon1:lon2, lat1:lat2]
+
+    else:
+        altitude = altitude_var[:, :]
+        try:
+            land_area_fraction = land_area_fraction_var[lon1:lon2, lat1:lat2]
+        except UnboundLocalError:
+            land_area_fraction = None
+        for var in vars:
+            nc_vars[var] = nc.variables[var][:].squeeze()[time_period[0]:time_period[1], :, :]
+
     times = time_var[time_period[0]:time_period[1]]
     jd = netCDF4.num2date(times[:], time_var.units)
 
-    nc_vars = {}
-    for var in vars:
-        nc_vars[var] = nc.variables[var][:].squeeze()[time_period[0]:time_period[1], lon1:lon2, lat1:lat2]
+
+
 
     return jd, altitude, land_area_fraction, nc_vars
 

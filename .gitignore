@@ -90,3 +90,4 @@ ENV/
 
 # PyCharm
 .idea/
+/aps/data/t2myr_kf0_5km_20161027_00.nc

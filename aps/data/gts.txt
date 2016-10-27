@@ -1,0 +1,11 @@
+http://h-web01.nve.no/chartserver/ShowData.aspx?req=getchart&ver=1.0&vfmt=json
+&time=20160211T0600;20160219T0600
+&chs=10x10
+&lang=no
+&chlf=desc
+&chsl=0;+0
+&chhl=2|0|2
+&timeo=-06:00
+&app=3d
+&chd=ds=hgts,da=29,id=139984;6794735;tm,cht=line,mth=inst
+&nocache=0.3118186572934877

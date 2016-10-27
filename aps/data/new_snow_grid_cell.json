@@ -1,0 +1,53 @@
+[
+  {
+    "LegendText": "72674;6742496 (1253 moh.), Nysnø siste døgn",
+    "SeriesPoints": [
+      {
+        "Key": "\/Date(1455145200000)\/",
+        "Value": 1,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455231600000)\/",
+        "Value": 0,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455318000000)\/",
+        "Value": 0,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455404400000)\/",
+        "Value": 0,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455490800000)\/",
+        "Value": 0,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455577200000)\/",
+        "Value": 0,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455663600000)\/",
+        "Value": 6,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455750000000)\/",
+        "Value": 4,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455836400000)\/",
+        "Value": 0,
+        "CorrectionMark": 0
+      }
+    ],
+    "Statistics": []
+  }
+]

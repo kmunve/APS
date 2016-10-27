@@ -1,0 +1,53 @@
+[
+  {
+    "LegendText": "72674;6742496 (1253 moh.), Døgntemperatur v2.0",
+    "SeriesPoints": [
+      {
+        "Key": "\/Date(1455145200000)\/",
+        "Value": -8.0500001907348633,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455231600000)\/",
+        "Value": -13.25,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455318000000)\/",
+        "Value": -13.949999809265137,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455404400000)\/",
+        "Value": -17.649999618530273,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455490800000)\/",
+        "Value": -17.75,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455577200000)\/",
+        "Value": -15.75,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455663600000)\/",
+        "Value": -6.9499998092651367,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455750000000)\/",
+        "Value": -7.8499999046325684,
+        "CorrectionMark": 0
+      },
+      {
+        "Key": "\/Date(1455836400000)\/",
+        "Value": -9.3500003814697266,
+        "CorrectionMark": 0
+      }
+    ],
+    "Statistics": []
+  }
+]
