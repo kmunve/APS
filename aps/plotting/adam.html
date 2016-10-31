@@ -8,108 +8,131 @@
 </head>
 <body>
 
-<div class="rcorners">
+<div class="w3-container">
 
-    <table style="width:100%">
-        <tr>
-            <th colspan="2" rowspan="2" class="title">Likelihood Matrix</th>
-            <th colspan="3">Spatial Distribution</th>
-            <th rowspan="6" class="title"><img src="Arrow_sans_right.svg" width="10px"></th>
-            <!-- <th rowspan="6" class="title"></th> -->
-            <th colspan="2" rowspan="2" class="title">Danger Matrix</th>
-            <th colspan="5">Destructive Avalanche Size</th>
-        </tr>
+    <h1>ADAM</h1>
+    <h4>Avalanche Danger Assessment Matrix</h4>
 
-        <tr>
-            <th onclick="document.getElementById('modal_widespread').style.display='block'">Widespread</th>
-            <th>Specific</th>
-            <th>Isolated</th>
-            <th>Size 1</th>
-            <th>Size 2</th>
-            <th>Size 3</th>
-            <th>Size 4</th>
-            <th>Size 5</th>
-        </tr>
-
-        <tr>
-            <th rowspan="4" class="vertical">Sensitivity to triggers</th>
-            <th>Touchy</th>
-            <td class="vl">Very likely</td>
-            <td class="li">Likely</td>
-            <td class="po">Possible</td>
-            <th rowspan="4" class="vertical">Likelihood of triggering</th>
-            <th>Very likely</th>
-            <td class="dl3">3</td>
-            <td class="dl4">4</td>
-            <td class="dl4">4</td>
-            <td class="dl5">5</td>
-            <td class="dl5">5</td>
-        </tr>
-
-        <tr>
-            <th>Reactive</th>
-            <td class="li">Likely</td>
-            <td class="po">Possible</td>
-            <td class="po">Possible</td>
-            <th>Likely</th>
-            <td class="dl2">2</td>
-            <td class="dl3">3</td>
-            <td class="dl4">4</td>
-            <td class="dl4">4</td>
-            <td class="dl5">5</td>
-        </tr>
-
-        <tr>
-            <th onclick="document.getElementById('modal_stubborn').style.display='block'">Stubborn</th>
-            <td class="po">Possible</td>
-            <td class="po">Possible</td>
-            <td class="ul">Unlikely</td>
-            <th>Possible</th>
-            <td class="dl1">1</td>
-            <td class="dl2">2</td>
-            <td class="dl3">3</td>
-            <td class="dl4">4</td>
-            <td class="dl4">4</td>
-        </tr>
-
-        <tr>
-            <th>Unreactive</th>
-            <td class="ul" colspan="3">Unlikely</td>
-            <th>Unlikely</th>
-            <td class="dl1">1</td>
-            <td class="dl1">1</td>
-            <td class="dl2">2</td>
-            <td class="dl3">3</td>
-            <td class="dl4">4</td>
-        </tr>
-    </table>
 
 </div>
 
-<!-- Modal that contains the definitions -->
-<div id="id01" class="w3-modal">
-    <div class="w3-modal-content">
-        <div class="w3-container">
-            <span onclick="document.getElementById('modal_widespread').style.display='none'"
-                  class="w3-closebtn">&times;</span>
-            <p>Some text. Some text. Some text.</p>
-            <p>Some text. Some text. Some text.</p>
+<div class="w3-container">
+
+    <div class="rcorners cmah_color">
+
+        <table style="width:100%">
+            <tr>
+                <th colspan="2" rowspan="2" class="title">Likelihood Matrix</th>
+                <th colspan="3">Spatial Distribution</th>
+                <th rowspan="6" class="title"><img src="Arrow_sans_right.svg" width="10px"></th>
+                <!-- <th rowspan="6" class="title"></th> -->
+                <th colspan="2" rowspan="2" class="title">Danger Matrix</th>
+                <th colspan="5">Destructive Avalanche Size</th>
+            </tr>
+
+            <tr>
+                <th onclick="document.getElementById('modal_widespread').style.display='block'">
+                    <p class="w3-tooltip">Widespread <span style="position:absolute;left:0;top:28px" class="w3-text w3-tag w3-tiny">Click for definitions</span></p>
+                </th>
+                <th>Specific</th>
+                <th>Isolated</th>
+                <th>Size 1</th>
+                <th>Size 2</th>
+                <th>Size 3</th>
+                <th>Size 4</th>
+                <th>Size 5</th>
+            </tr>
+
+            <tr>
+                <th rowspan="4" class="vertical">Sensitivity to triggers</th>
+                <th>Touchy</th>
+                <td class="vl w3-hover-opacity">Very likely</td>
+                <td class="li w3-hover-opacity">Likely</td>
+                <td class="po">Possible</td>
+                <th rowspan="4" class="vertical">Likelihood of triggering</th>
+                <th>Very likely</th>
+                <td class="dl3">3</td>
+                <td class="dl4">4</td>
+                <td class="dl4">4</td>
+                <td class="dl5">5</td>
+                <td class="dl5">5</td>
+            </tr>
+
+            <tr>
+                <th>Reactive</th>
+                <td class="li">Likely</td>
+                <td class="po">Possible</td>
+                <td class="po">Possible</td>
+                <th>Likely</th>
+                <td class="dl2">2</td>
+                <td class="dl3">3</td>
+                <td class="dl4">4</td>
+                <td class="dl4">4</td>
+                <td class="dl5">5</td>
+            </tr>
+
+            <tr>
+                <th onclick="document.getElementById('modal_stubborn').style.display='block'">Stubborn</th>
+                <td class="po">Possible</td>
+                <td class="po">Possible</td>
+                <td class="ul">Unlikely</td>
+                <th>Possible</th>
+                <td class="dl1">1</td>
+                <td class="dl2">2</td>
+                <td class="dl3">3</td>
+                <td class="dl4">4</td>
+                <td class="dl4">4</td>
+            </tr>
+
+            <tr>
+                <th>Unreactive</th>
+                <td class="ul" colspan="3">Unlikely</td>
+                <th>Unlikely</th>
+                <td class="dl1">1</td>
+                <td class="dl1">1</td>
+                <td class="dl2">2</td>
+                <td class="dl3">3</td>
+                <td class="dl4">4</td>
+            </tr>
+        </table>
+
+    </div>
+
+    <!-- Modal that contains the definitions -->
+    <div id="modal_widespread" class="w3-modal">
+        <div class="w3-modal-content">
+            <header class="w3-container cmah_color">
+                <span onclick="document.getElementById('modal_widespread').style.display='none'"
+                      class="w3-closebtn">&times;</span>
+                <h2>Spatial Distribution: <u>Widespread</u></h2>
+            </header>
+            <div class="w3-container">
+                <p><b>Density:</b> The instability is found in many locations and terrain features</p>
+                <p><b>Evidence:</b> Evidence is everywhere and easy to find</p>
+            </div>
+            <header class="w3-container eaws_color">
+                <h2>Spatial Distribution: <u>Many / Most</u></h2>
+            </header>
+            <div class="w3-container">
+                <p>Over 30% of the potential avalanche terrain is considered unstable.</p>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="modal_stubborn" class="w3-modal">
-    <div class="w3-modal-content">
-        <header class="w3-container w3-teal">
-        <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn">&times;</span>
-            <h2>Stubborn</h2>
-        </header>
-        <div class="w3-container">
-            <p><b>Natural avalanches:</b> Few</p>
-            <p><b>Human triggering:</b> Difficult to trigger</p>
+    <div id="modal_stubborn" class="w3-modal">
+        <div class="w3-modal-content">
+            <header class="w3-container cmah_color">
+                <span onclick="document.getElementById('modal_stubborn').style.display='none'"
+                      class="w3-closebtn">&times;</span>
+                <h2>Sensitivity to triggers: <u>Stubborn</u></h2>
+            </header>
+            <div class="w3-container">
+                <p><b>Natural avalanches:</b> Few</p>
+                <p><b>Human triggering:</b> Difficult to trigger</p>
+            </div>
         </div>
     </div>
-</div>
 
+</div>
 </body>
 </html>
