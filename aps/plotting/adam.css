@@ -68,11 +68,15 @@ td.dl1 {
 }
 
 
+
+/*
+
 .tooltip {
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted black;
 }
+
 
 .tooltip .tooltiptext {
     visibility: hidden;
@@ -106,3 +110,4 @@ td.dl1 {
     visibility: visible;
     opacity: 1;
 }
+*/

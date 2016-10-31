@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>ADAM</title>
+    <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
     <link rel="stylesheet" type="text/css" href="adam.css">
 </head>
 <body>
@@ -11,32 +12,33 @@
 
     <table style="width:100%">
         <tr>
-          <th colspan="2" rowspan="2" class="title">Likelihood Matrix</th>
-          <th colspan="3">Spatial Distribution</th>
-          <th rowspan="6" class="title"></th>
-          <th colspan="2" rowspan="2" class="title">Danger Matrix</th>
-          <th colspan="5">Destructive Avalanche Size</th>
+            <th colspan="2" rowspan="2" class="title">Likelihood Matrix</th>
+            <th colspan="3">Spatial Distribution</th>
+            <th rowspan="6" class="title"><img src="Arrow_sans_right.svg" width="10px"></th>
+            <!-- <th rowspan="6" class="title"></th> -->
+            <th colspan="2" rowspan="2" class="title">Danger Matrix</th>
+            <th colspan="5">Destructive Avalanche Size</th>
         </tr>
 
         <tr>
-          <th>Widespread</th>
-          <th>Specific</th>
-          <th>Isolated</th>
-          <th>Size 1</th>
-          <th>Size 2</th>
-          <th>Size 3</th>
-          <th>Size 4</th>
-          <th>Size 5</th>
+            <th onclick="document.getElementById('modal_widespread').style.display='block'">Widespread</th>
+            <th>Specific</th>
+            <th>Isolated</th>
+            <th>Size 1</th>
+            <th>Size 2</th>
+            <th>Size 3</th>
+            <th>Size 4</th>
+            <th>Size 5</th>
         </tr>
 
         <tr>
-          <th rowspan="4" class="vertical">Sensitivity to triggers</th>
-          <th>Touchy</th>
-          <td class="vl">Very likely</td>
-          <td class="li">Likely</td>
-          <td class="po">Possible</td>
-          <th rowspan="4" class="vertical">Likelihood of triggering</th>
-          <th>Very likely</th>
+            <th rowspan="4" class="vertical">Sensitivity to triggers</th>
+            <th>Touchy</th>
+            <td class="vl">Very likely</td>
+            <td class="li">Likely</td>
+            <td class="po">Possible</td>
+            <th rowspan="4" class="vertical">Likelihood of triggering</th>
+            <th>Very likely</th>
             <td class="dl3">3</td>
             <td class="dl4">4</td>
             <td class="dl4">4</td>
@@ -58,11 +60,7 @@
         </tr>
 
         <tr>
-            <th>
-                <div class="tooltip">Stubborn
-                  <span class="tooltiptext">Difficult to trigger</span>
-                </div>
-            </th>
+            <th onclick="document.getElementById('modal_stubborn').style.display='block'">Stubborn</th>
             <td class="po">Possible</td>
             <td class="po">Possible</td>
             <td class="ul">Unlikely</td>
@@ -86,6 +84,31 @@
         </tr>
     </table>
 
+</div>
+
+<!-- Modal that contains the definitions -->
+<div id="id01" class="w3-modal">
+    <div class="w3-modal-content">
+        <div class="w3-container">
+            <span onclick="document.getElementById('modal_widespread').style.display='none'"
+                  class="w3-closebtn">&times;</span>
+            <p>Some text. Some text. Some text.</p>
+            <p>Some text. Some text. Some text.</p>
+        </div>
+    </div>
+</div>
+
+<div id="modal_stubborn" class="w3-modal">
+    <div class="w3-modal-content">
+        <header class="w3-container w3-teal">
+        <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn">&times;</span>
+            <h2>Stubborn</h2>
+        </header>
+        <div class="w3-container">
+            <p><b>Natural avalanches:</b> Few</p>
+            <p><b>Human triggering:</b> Difficult to trigger</p>
+        </div>
+    </div>
 </div>
 
 </body>
