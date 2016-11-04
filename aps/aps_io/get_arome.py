@@ -9,7 +9,7 @@ Retrieve data from netcdf files from thredds.met.no and do some statistics.
 """
 
 
-def nc_info(nc_data):
+def _nc_info(nc_data):
     print('### DIMENSIONS ###')
     print(nc_data.dimensions)
     for k in nc_data.dimensions.keys():
@@ -36,7 +36,7 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
     nc = netCDF4.Dataset(nc_object)
 
     # Get content
-    nc_info(nc)
+    _nc_info(nc)
 
     # Get coordinates and other standard variables
     try:
@@ -61,6 +61,8 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
         lat2 = np.where(latitude_var[:] <= bounding_box[1])[1][-1]
         lon1 = np.where(longitude_var[:] >= bounding_box[2])[1][0]
         lon2 = np.where(longitude_var[:] <= bounding_box[3])[1][-1]
+
+        print(lon1, lon2, lat1, lat2)
 
         altitude = altitude_var[lon1:lon2, lat1:lat2] # retrieve model topography
         try:
