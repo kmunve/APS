@@ -14,6 +14,32 @@ CREATE TABLE Regions(
   extent TEXT -- probably a polygon or other element that maps to the seNorge grid
   );
 
+-- could also be a part of the Regions table if there are not good reasons to separate it.
+CREATE TABLE Regional_terrain_attributes(
+  ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+  name TEXT,
+  total_land_area REAL,
+  min_elevation REAL,
+  max_elevation REAL,
+  avg_elevation REAL,
+  elevation_band_1 (bot REAL, top REAL),
+  elevation_band_2 (bot REAL, top REAL),
+  elevation_band_3 (bot REAL, top REAL),
+  elevation_band_4 (bot REAL, top REAL),
+  elevation_band_5 (bot REAL, top REAL),
+  elevation_band_1_total_area REAL,
+  elevation_band_2_total_area REAL,
+  elevation_band_3_total_area REAL,
+  elevation_band_4_total_area REAL,
+  elevation_band_5_total_area REAL,
+  percentage_aval_terrain REAL,
+  elevation_band_1_aval_terrain REAL,
+  elevation_band_2_aval_terrain REAL,
+  elevation_band_3_aval_terrain REAL,
+  elevation_band_4_aval_terrain REAL,
+  elevation_band_5_aval_terrain REAL,
+  avg_treeline REAL
+  );
 
 /*
 Table containing information on the temperature distribution within a forecasting region
