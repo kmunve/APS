@@ -13,6 +13,7 @@
           "elevation_band_1": {
             "elevation_bottom": "",
             "elevation_top": "",
+            "areal_percentage": "",
             "median": "",
             "first_quartile": "",
             "third_quartile": "",
@@ -22,6 +23,7 @@
           "elevation_band_2": {
             "elevation_bottom": "",
             "elevation_top": "",
+            "areal_percentage": "",
             "median": "",
             "first_quartile": "",
             "third_quartile": "",
@@ -31,6 +33,7 @@
           "elevation_band_3": {
             "elevation_bottom": "",
             "elevation_top": "",
+            "areal_percentage": "",
             "median": "",
             "first_quartile": "",
             "third_quartile": "",
@@ -40,6 +43,7 @@
           "elevation_band_4": {
             "elevation_bottom": "",
             "elevation_top": "",
+            "areal_percentage": "",
             "median": "",
             "first_quartile": "",
             "third_quartile": "",
@@ -49,6 +53,7 @@
           "elevation_band_5": {
             "elevation_bottom": "",
             "elevation_top": "",
+            "areal_percentage": "",
             "median": "",
             "first_quartile": "",
             "third_quartile": "",
