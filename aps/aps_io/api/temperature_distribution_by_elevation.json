@@ -1,0 +1,67 @@
+// Approximately the json-structure that should be returned by the API when calling "temperature_destibution..."
+// attribute names should of course match those used in the DB when existing.
+{
+  "product_name_no": "Temperaturfordeling med høyden",
+  "product_name_en": "Temperature distribution by elevation",
+  "dates": [
+    {
+      "date": "",
+      "temperatures": [
+        {
+          "region_id": "",
+          "region_name": "",
+          "elevation_band_1": {
+            "elevation_bottom": "",
+            "elevation_top": "",
+            "areal_percentage": "",
+            "median": "",
+            "first_quartile": "",
+            "third_quartile": "",
+            "minimum": "",
+            "maximum": ""
+          },
+          "elevation_band_2": {
+            "elevation_bottom": "",
+            "elevation_top": "",
+            "areal_percentage": "",
+            "median": "",
+            "first_quartile": "",
+            "third_quartile": "",
+            "minimum": "",
+            "maximum": ""
+          },
+          "elevation_band_3": {
+            "elevation_bottom": "",
+            "elevation_top": "",
+            "areal_percentage": "",
+            "median": "",
+            "first_quartile": "",
+            "third_quartile": "",
+            "minimum": "",
+            "maximum": ""
+          },
+          "elevation_band_4": {
+            "elevation_bottom": "",
+            "elevation_top": "",
+            "areal_percentage": "",
+            "median": "",
+            "first_quartile": "",
+            "third_quartile": "",
+            "minimum": "",
+            "maximum": ""
+          },
+          "elevation_band_5": {
+            "elevation_bottom": "",
+            "elevation_top": "",
+            "areal_percentage": "",
+            "median": "",
+            "first_quartile": "",
+            "third_quartile": "",
+            "minimum": "",
+            "maximum": ""
+          }
+        }
+      ]
+    }
+  ]
+}
