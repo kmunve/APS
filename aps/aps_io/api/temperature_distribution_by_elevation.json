@@ -1,67 +1,41 @@
-// Approximately the json-structure that should be returned by the API when calling "temperature_destibution..."
-// attribute names should of course match those used in the DB when existing.
 {
-  "product_name_no": "Temperaturfordeling med høyden",
-  "product_name_en": "Temperature distribution by elevation",
-  "dates": [
+  "ProductName_en": "Temperature distribution by elevation",
+  "ProductName_no": "Temperaturfordeling etter høyde",
+  "Dates": [
     {
-      "date": "",
-      "temperatures": [
-        {
-          "region_id": "",
-          "region_name": "",
-          "elevation_band_1": {
-            "elevation_bottom": "",
-            "elevation_top": "",
-            "areal_percentage": "",
-            "median": "",
-            "first_quartile": "",
-            "third_quartile": "",
-            "minimum": "",
-            "maximum": ""
+      "Date": "/Date(1481792873162+0100)/",
+      "Temperatures": {
+        "RegionId": 3005,
+        "RegionName": "Øst-Finnmark",
+        "ElevationBands": [
+          {
+            "ElevationBand": 1,
+            "ElevationBottom": 0,
+            "ElevationTop": 200,
+            "ArealPercentage": 50,
+            "Minimum": 1,
+            "FirstQuartile": 2,
+            "Median": 3,
+            "ThirdQuartile": 4,
+            "Maximum": 5
           },
-          "elevation_band_2": {
-            "elevation_bottom": "",
-            "elevation_top": "",
-            "areal_percentage": "",
-            "median": "",
-            "first_quartile": "",
-            "third_quartile": "",
-            "minimum": "",
-            "maximum": ""
-          },
-          "elevation_band_3": {
-            "elevation_bottom": "",
-            "elevation_top": "",
-            "areal_percentage": "",
-            "median": "",
-            "first_quartile": "",
-            "third_quartile": "",
-            "minimum": "",
-            "maximum": ""
-          },
-          "elevation_band_4": {
-            "elevation_bottom": "",
-            "elevation_top": "",
-            "areal_percentage": "",
-            "median": "",
-            "first_quartile": "",
-            "third_quartile": "",
-            "minimum": "",
-            "maximum": ""
-          },
-          "elevation_band_5": {
-            "elevation_bottom": "",
-            "elevation_top": "",
-            "areal_percentage": "",
-            "median": "",
-            "first_quartile": "",
-            "third_quartile": "",
-            "minimum": "",
-            "maximum": ""
+          {
+            "ElevationBand": 2,
+            "ElevationBottom": 200,
+            "ElevationTop": 400,
+            "ArealPercentage": 50,
+            "Minimum": 3,
+            "FirstQuartile": 4,
+            "Median": 5,
+            "ThirdQuartile": 6,
+            "Maximum": 7
           }
-        }
-      ]
+        ]
+      }
     }
   ]
 }
+
+
+
+
