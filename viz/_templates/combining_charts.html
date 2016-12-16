@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://cdn.zingchart.com/zingchart.min.js"></script>
+    <script>
+        var myChart1 = {
+            "type": "area",
+            "series": [
+                {"values": [76, 23, 15, 85, 13]}
+            ]
+        };
+        var myChart2 = {
+            "type": "bullet",
+            "series": [
+                {"values": [14, 29, 18, 20, 34], "goals": [15, 30, 21, 5, 30]}
+            ]
+        };
+        var myChart3 = {
+            "type": "pie",
+            "series": [
+                {"values": [15]},
+                {"values": [30]},
+                {"values": [34]}
+            ]
+        };
+        var myDashboard = {
+            "graphset": [
+                {
+                    "type": "line",
+                    "height": "30%",
+                    "width": "90%",
+                    "x": "5%",
+                    "y": "5%",
+                    "series": [
+                        {"values": [11, 21, 19, 54, 6, 19, 19, 59]}
+                    ]
+                },
+                {
+                    "type": "funnel",
+                    "height": "55%",
+                    "width": "40%",
+                    "x": "5%",
+                    "y": "40%",
+                    "series": [
+                        {"values": [30]},
+                        {"values": [15]},
+                        {"values": [5]},
+                        {"values": [3]}
+                    ]
+                },
+                {
+                    "type": "radar",
+                    "height": "55%",
+                    "width": "45%",
+                    "x": "50%",
+                    "y": "40%",
+                    "series": [
+                        {"values": [20, 87, 59, 85, 54]}
+                    ]
+                }
+            ]
+        };
+        window.onload = function () {
+            zingchart.render({
+                id: 'chartDiv1',
+                data: myChart1,
+                height: 300,
+                width: 500
+            });
+            zingchart.render({
+                id: 'chartDiv2',
+                data: myChart2,
+                height: 300,
+                width: 500
+            });
+            zingchart.render({
+                id: 'chartDiv3',
+                data: myChart3,
+                height: 300,
+                width: 500
+            });
+            zingchart.render({
+                id: 'dashboardDiv',
+                data: myDashboard,
+                height: 500,
+                width: 700
+            });
+        };
+    </script>
+</head>
+<body>
+<h1>Adding Additional Charts Template</h1>
+<h2>Individual Charts</h2>
+<p>Below is an area chart, bullet chart, and pie chart.</p>
+<p><u>Remember</u>: Each chart requires its own div element, variable (to contain chart data), and render method.</p>
+<h3>Area Chart</h3>
+<div id='chartDiv1'></div>
+<h3>Bullet Chart</h3>
+<div id='chartDiv2'></div>
+<h3>Pie Chart</h3>
+<div id='chartDiv3'></div>
+<h2>Dashboard Chart</h2>
+<p> Below is a dashboard chart, containing an area chart, bullet chart, and radar chart.</p>
+<p><u>Remember</u>: You can size and position your charts using the "height", "width", "x", and "y" attributes. Chart
+    positioning is relative to the top-left corner. You can use percentages (which allow for proportional scaling) or
+    pixels (which offer more specific control) for your measurements.</p>
+<div id='dashboardDiv'></div>
+</body>
+</html>
