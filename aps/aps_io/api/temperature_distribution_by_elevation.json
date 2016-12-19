@@ -4,34 +4,36 @@
   "Dates": [
     {
       "Date": "/Date(1481792873162+0100)/",
-      "Temperatures": {
-        "RegionId": 3005,
-        "RegionName": "Øst-Finnmark",
-        "ElevationBands": [
-          {
-            "ElevationBand": 1,
-            "ElevationBottom": 0,
-            "ElevationTop": 200,
-            "ArealPercentage": 50,
-            "Minimum": 1,
-            "FirstQuartile": 2,
-            "Median": 3,
-            "ThirdQuartile": 4,
-            "Maximum": 5
-          },
-          {
-            "ElevationBand": 2,
-            "ElevationBottom": 200,
-            "ElevationTop": 400,
-            "ArealPercentage": 50,
-            "Minimum": 3,
-            "FirstQuartile": 4,
-            "Median": 5,
-            "ThirdQuartile": 6,
-            "Maximum": 7
-          }
-        ]
-      }
+      "Regions": [
+        {
+          "RegionId": 3005,
+          "RegionName": "Øst-Finnmark",
+          "ElevationBands": [
+            {
+              "ElevationBand": 1,
+              "ElevationBottom": 0,
+              "ElevationTop": 200,
+              "ArealPercentage": 50,
+              "Minimum": 1,
+              "FirstQuartile": 2,
+              "Median": 3,
+              "ThirdQuartile": 4,
+              "Maximum": 5
+            },
+            {
+              "ElevationBand": 2,
+              "ElevationBottom": 200,
+              "ElevationTop": 400,
+              "ArealPercentage": 50,
+              "Minimum": 3,
+              "FirstQuartile": 4,
+              "Median": 5,
+              "ThirdQuartile": 6,
+              "Maximum": 7
+            }
+          ]
+        }
+      ]
     }
   ]
 }

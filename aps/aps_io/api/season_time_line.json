@@ -1,0 +1,12 @@
+{
+  "ProductName_en": "Season time line",
+  "ProductName_no": "Sesonghistorikk",
+  "Dates": [
+    {
+      "Date": "/Date(1481792873162+0100)/", // per døgn
+      "Regions": [
+        {}
+      ]
+    }
+  ]
+}
