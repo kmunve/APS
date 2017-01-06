@@ -47,7 +47,7 @@ var myConfig = {
 };
 
 zingchart.render({
-    id: 'myChart',
+    id: 'MixedChart',
     data: myConfig,
     height: 500,
     width: 725
