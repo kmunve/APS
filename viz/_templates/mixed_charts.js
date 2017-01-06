@@ -4,39 +4,52 @@
 zingchart.THEME = "classic";
 
 var myConfig = {
-  "type": "mixed", // 1. Specify your mixed chart type.
-  "plot": {
-    "tooltip": {
-      "text": "%t"
-    }
-  },
-  "series": [ // 2. Specify the chart type for each series object.
-    {
-      "type": "area",
-      "values": [34, 70, 40, 75, 33, 50, 65],
-      "aspect": "stepped",
-      "contour-on-top": false,
-      "text": "Area Chart"
+    "type": "mixed", // 1. Specify your mixed chart type.
+    "plot": {
+        "tooltip": {
+            "text": "%t"
+        }
     },
-    {
-      "type": "bar",
-      "values": [49, 30, 21, 15, 59, 51, 69],
-      "bar-width": "50%",
-      "text": "Bar Chart"
+
+    "utc": true,
+    "timezone": +1,
+
+    "scale-x": {
+        "min-value": 1420232400000,
+        "step": "day",
+        "transform": {
+            "type": "date",
+            "all": "%D<br>%d %M %y"
+        }
     },
-    {
-      "type": "line",
-      "values": [5, 9, 3, 19, 7, 15, 14],
-      "aspect": "spline",
-      "text": "Line Chart"
-    }
-  ]
+
+    "series": [ // 2. Specify the chart type for each series object.
+        {
+            "type": "area",
+            "values": [34, 70, 40, 75, 33, 50, 65],
+            "aspect": "stepped",
+            "contour-on-top": false,
+            "text": "Area Chart"
+        },
+        {
+            "type": "bar",
+            "values": [49, 30, 21, 15, 59, 51, 69],
+            "bar-width": "50%",
+            "text": "Bar Chart"
+        },
+        {
+            "type": "line",
+            "values": [5, 9, 3, 19, 7, 15, 14],
+            "aspect": "spline",
+            "text": "Line Chart"
+        }
+    ]
 };
 
 zingchart.render({
-  id: 'myChart',
-  data: myConfig,
-  height: 500,
-  width: 725
+    id: 'myChart',
+    data: myConfig,
+    height: 500,
+    width: 725
 });
 

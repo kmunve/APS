@@ -76,4 +76,12 @@ var renderObj = {
     //defaultsurl: '../aps_chart_theme.txt'
 };
 
-zingchart.render(renderObj);
+
+var renderSmall = {
+    id: 'BarChart',
+    data: plotConfig,
+    height: "400",
+    width: "700"
+};
+
+//zingchart.render(renderObj); //comment when plot should be loaded interactively
