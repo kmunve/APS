@@ -1,0 +1,28 @@
+{
+  "palette": {
+    "vbar": [
+      ["#ffffff", "#40beeb", "#40beeb", "#40beeb"], // First series palette...
+      ["#ffffff", "#305f74", "#305f74", "#305f74"], // Second series palette...
+      ["#ffffff", "#4492a8", "#4492a8", "#4492a8"], // Third series...
+      ["#ffffff", "#8e8e8e", "#8e8e8e", "#8e8e8e"],
+      ["#ffffff", "#85bdcd", "#85bdcd", "#85bdcd"]
+    ],
+    "line": [
+      ["#ffffff", "#40beeb", "#40beeb", "#40beeb"], // First series palette...
+      ["#ffffff", "#305f74", "#305f74", "#305f74"], // Second series palette...
+      ["#ffffff", "#4492a8", "#4492a8", "#4492a8"], // Third series...
+      ["#ffffff", "#8e8e8e", "#8e8e8e", "#8e8e8e"],
+      ["#ffffff", "#85bdcd", "#85bdcd", "#85bdcd"]
+    ]
+  },
+  "graph": {
+    "title": {
+      "background-color":"#c2af9e",
+      "height":"40px",
+      "font-size":"16px",
+      "font-color":"#333"
+    }
+  }
+}
+
+// Can be used to apply a default styling for many charts.

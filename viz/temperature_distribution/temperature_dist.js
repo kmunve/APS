@@ -2,6 +2,9 @@
  * Created by kmu on 16.12.2016.
  */
 zingchart.THEME = "classic";
+
+
+
 var myConfig = {
         "type": "hboxplot",
         "background-color": "white",
