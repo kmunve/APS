@@ -2,6 +2,17 @@
  * Created by kmu on 16.12.2016.
  */
 
+var Values1 = [
+    20,
+    40,
+    25,
+    50,
+    15,
+    45,
+    33,
+    34
+];
+
 var LineConfig = {
     "type": "line",
     "utc": true,
@@ -21,16 +32,7 @@ var LineConfig = {
     },
     "series": [
         {
-            "values": [
-                20,
-                40,
-                25,
-                50,
-                15,
-                45,
-                33,
-                34
-            ]
+            "values": Values1
         },
         {
             "values": [
@@ -47,10 +49,13 @@ var LineConfig = {
     ]
 };
 
-zingchart.render({
+
+var RenderObj = {
     id: 'LineChart',
     data: LineConfig,
-    height: '100%',
+    height: '400',
     width: '100%'
-});
+};
+
+zingchart.render(RenderObj);
 
