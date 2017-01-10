@@ -15,8 +15,8 @@ var ForecastRegion = "Hallingdal";
 var ElevIntervals = ["0-400", "400-800", "800-1200", "1200-1600", "1600-2000"];
 
 var BoxData = [
-    [0.0, 0.0, 4.19, 10.2, 26.2],
-    [0.2, 2.0, 7.19, 17.2, 44.5]
+    [0.3, 4.6, 12.0, 20.3, 44.5],
+    [5.6, 18.0, 32.6, 41.2, 44.5]
 ];
 
 var plotConfig = {
@@ -54,13 +54,13 @@ var plotConfig = {
                 "font-size": 14,
                 "font-color": "darkgrey"
             },
-            "labels": ForecastDates,
+            "labels": ["Hele region", "Mest utsatt område"],
             "offset-start": 20,
             "offset-end": 20,
             "line-color": "none",
             "format": "%v",
             "tick": {
-                "visible": true
+                "visible": false
             },
             "item": {
                 "font-size": 14
@@ -97,10 +97,10 @@ var plotConfig = {
                 "background-color": "lightgrey",
                 "rules": [{
                     "rule": "%i == 0",
-                    "background-color": "#9A8AAD"
+                    "background-color": "darkgrey"
                 }, {
                     "rule": "%i == 1",
-                    "background-color": "#9A8AAD"
+                    "background-color": "red"
                 }, {
                     "rule": "%i == 2",
                     "background-color": "#9A8AAD"
