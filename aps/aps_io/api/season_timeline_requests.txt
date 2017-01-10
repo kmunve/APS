@@ -1,0 +1,52 @@
+
+
+
+AvalancheProblem {
+AvalancheProblemId (integer, optional),
+AvalancheExtId (integer, optional),
+AvalancheExtName (string, optional),
+AvalCauseId (integer, optional),
+AvalCauseName (string, optional),
+AvalProbabilityId (integer, optional),
+AvalProbabilityName (string, optional),
+AvalTriggerSimpleId (integer, optional),
+AvalTriggerSimpleName (string, optional),
+DestructiveSizeExtId (integer, optional),
+DestructiveSizeExtName (string, optional),
+AvalPropagationId (integer, optional),
+AvalPropagationName (string, optional),
+AvalancheAdvice (string, optional),
+AvalancheTypeId (integer, optional),
+AvalancheTypeName (string, optional),
+AvalancheProblemTypeId (integer, optional),
+AvalancheProblemTypeName (string, optional),
+ValidExpositions (string, optional),
+ExposedHeight1 (integer, optional),
+ExposedHeight2 (integer, optional),
+ExposedHeightFill (integer, optional)
+}
+
+AvalancheProblem {
+    AvalancheProblemId (integer, optional),
+    AvalancheExtId (integer, optional),
+    AvalancheExtName (string, optional),
+    AvalCauseId (integer, optional),
+    AvalCauseName (string, optional),
+    AvalProbabilityId (integer, optional),
+    AvalProbabilityName (string, optional),
+    AvalTriggerSimpleId (integer, optional),
+    AvalTriggerSimpleName (string, optional),
+    DestructiveSizeExtId (integer, optional),
+    DestructiveSizeExtName (string, optional),
+    AvalPropagationId (integer, optional),
+    AvalPropagationName (string, optional),
+    AvalancheAdvice (string, optional),
+    AvalancheTypeId (integer, optional),
+    AvalancheTypeName (string, optional),
+    AvalancheProblemTypeId (integer, optional),
+    AvalancheProblemTypeName (string, optional),
+    ValidExpositions (string, optional),
+    ExposedHeight1 (integer, optional),
+    ExposedHeight2 (integer, optional),
+    ExposedHeightFill (integer, optional)
+}
