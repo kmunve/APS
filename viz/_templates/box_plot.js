@@ -15,8 +15,8 @@ var ForecastRegion = "Hallingdal";
 var ElevIntervals = ["0-400", "400-800", "800-1200", "1200-1600", "1600-2000"];
 
 var BoxData = [
-    [0.3, 4.6, 12.0, 20.3, 44.5],
-    [5.6, 18.0, 32.6, 41.2, 44.5]
+    [9.9, 13.5, 21.6000003815, 26.5, 39.2],
+    [0.3, 35.2999992371, 37.9500007629, 38.2000007629, 39.2]
 ];
 
 var plotConfig = {
@@ -24,7 +24,7 @@ var plotConfig = {
         "background-color": "white",
         "title": {
             "background-color": "none",
-            "text": "Box Plot", // string needs to be constructed using variables ForecastRegion and ForecastDate
+            "text": "Nedbør i regionen", // string needs to be constructed using variables ForecastRegion and ForecastDate
             "color": "black",
             "font-weight": "none",
             "font-size": 24,
