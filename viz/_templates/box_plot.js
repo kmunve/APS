@@ -49,12 +49,7 @@ var plotConfig = {
             "text": "<span style=\"font-style:italic;\">Median temperatur i<br> høydeinterval: %kl</span>:<br><br><b style=\"font-size:18px;\">%data-median C</b><br><br>Maksimum: <b>%data-max</b><br>Øvre kvartil: <b>%data-upper-quartile</b><br>Nedre kvartil: <b>%data-lower-quartile</b><br>Minimum: <b>%data-min</b>"
         },
         "scale-x": {
-            "label": {
-                "text": "Dato",
-                "font-size": 14,
-                "font-color": "darkgrey"
-            },
-            "labels": ["Hele region", "Mest utsatt område"],
+            "labels": ["I hele<br>regionen", "I mest<br>utsatt område"],
             "offset-start": 20,
             "offset-end": 20,
             "line-color": "none",
@@ -71,7 +66,7 @@ var plotConfig = {
         },
         "scale-y": {
             "label": {
-                "text": "Precip (mm)",
+                "text": "Nedbør (mm)",
                 "font-size": 14,
                 "font-color": "darkgrey"
             },
