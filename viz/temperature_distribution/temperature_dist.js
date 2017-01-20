@@ -10,12 +10,12 @@ var ForecastRegion = "Hallingdal";
 var ElevIntervals = ["0-400", "400-800", "800-1200", "1200-1600", "1600-2000"];
 
 var TempElevData = [
-                [-0.500, -0.233, 0.000, 0.233, 0.400],
-                [-2.200, -1.733, -1.200, -0.666, -0.200],
-                [-4.699, -3.958, -3.150, -2.341, -1.500],
-                [-7.199, -6.383, -5.500, -4.616, -3.799],
-                [-8.199, -7.683, -7.199, -6.716, -6.300]
-            ];
+    [-0.500, -0.233, 0.000, 0.233, 0.400],
+    [-2.200, -1.733, -1.200, -0.666, -0.200],
+    [-4.699, -3.958, -3.150, -2.341, -1.500],
+    [-7.199, -6.383, -5.500, -4.616, -3.799],
+    [-8.199, -7.683, -7.199, -6.716, -6.300]
+];
 
 var myConfig = {
         "type": "hboxplot",
@@ -94,20 +94,11 @@ var myConfig = {
                 "border-width": 1,
                 "background-color": "lightgrey",
                 "rules": [{
-                    "rule": "%i == 0",
-                    "background-color": "#9A8AAD"
+                    "rule": "%data-median >= 0",
+                    "background-color": "red"
                 }, {
-                    "rule": "%i == 1",
-                    "background-color": "#9A8AAD"
-                }, {
-                    "rule": "%i == 2",
-                    "background-color": "#9A8AAD"
-                }, {
-                    "rule": "%i == 3",
-                    "background-color": "#9A8AAD"
-                }, {
-                    "rule": "%i == 4",
-                    "background-color": "#9A8AAD"
+                    "rule": "%data-median < 0",
+                    "background-color": "lightblue"
                 }]
             }
             ,
