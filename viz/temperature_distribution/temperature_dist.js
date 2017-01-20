@@ -17,9 +17,14 @@ var TempElevData = [
     [-8.199, -7.683, -7.199, -6.716, -6.300]
 ];
 
-var myConfig = {
+var TempChart = {
         "type": "hboxplot",
         "background-color": "white",
+        x: 0,  //position from left of chart edge
+        y: 0,  //position top of chart
+        height: "100%",
+        width: "70%",
+
         "title": {
             "background-color": "none",
             "text": "Temperaturfordeling for  Hallingdal (6 des. 2016)", // string needs to be constructed using variables ForecastRegion and ForecastDate
@@ -31,7 +36,7 @@ var myConfig = {
         "plotarea": {
             "margin-top": "10%",
             "margin-left": "25%",
-            "margin-right": "12%"
+            "margin-right": "1%"
         },
         "plot": {
             "bar-width": 50,
@@ -134,9 +139,34 @@ var myConfig = {
     }
     ;
 
+var PercChart = {
+    "type": "hbar",
+    backgroundColor: "white",
+    x: "70%",  //position from left of chart edge
+    y: 0,  //position top of chart
+    height: "100%",
+    width: "30%",
+
+
+    "series": [
+        {"values": [20, 40, 25, 50, 15]}
+    ]
+};
+
+var plotConfig = { //root object
+    gui: {
+        contextMenu: {
+            // handles options when the user right-clicks on the chart
+        }
+    },
+    history: {},
+    "layout": "horizontal",
+    graphset: [TempChart, PercChart]
+};
+
 var renderObj = {
     id: 'TempElevChart',
-    data: myConfig,
+    data: plotConfig,
     height: 500,
     width: 700
 };
