@@ -16,6 +16,10 @@ var time_axis = {
     }
 };
 
+var season_plotarea = {
+        marginLeft: 100,
+        marginRight: 150
+    };
 
 var danger_level = [1, 2, 2, 3, 3, 4, 3];
 
@@ -27,6 +31,8 @@ var DLchart = {
     y: "0%",  //position top of chart
     height: "20%",
     width: "100%",
+
+    plotarea: season_plotarea,
 
     "plot": {
         "aspect": "none",
@@ -54,6 +60,8 @@ var DLchart = {
             }
         ]
     },
+
+
 
     "tooltip": {
         "placement": "node:top",
@@ -88,6 +96,8 @@ var APchart = {
     y: "20%",  //position top of chart
     height: "30%",
     width: "100%",
+
+    plotarea: season_plotarea,
 
     "plot": {
         "aspect": "none",
@@ -168,6 +178,8 @@ var METchart = {
     y: "50%",  //position top of chart
     height: "50%",
     width: "100%",
+
+    plotarea: season_plotarea,
 
     "plot": {
         "tooltip": {
@@ -278,7 +290,7 @@ var renderSeason = {
     id: 'GraphSet',
     data: plotConfig,
     height: 1000,
-    width: 725
+    width: "90%"
 };
 
 //zingchart.render(renderSeason);
