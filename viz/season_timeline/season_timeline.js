@@ -17,9 +17,11 @@ var time_axis = {
 };
 
 var season_plotarea = {
-        marginLeft: 100,
-        marginRight: 150
-    };
+    marginLeft: 100,
+    marginRight: 150,
+    marginTop: 20,
+    marginBottom: 50
+};
 
 var danger_level = [1, 2, 2, 3, 3, 4, 3];
 
@@ -29,7 +31,7 @@ var DLchart = {
     backgroundColor: "white",
     x: 0,  //position from left of chart edge
     y: "0%",  //position top of chart
-    height: "20%",
+    height: "10%",
     width: "100%",
 
     plotarea: season_plotarea,
@@ -62,7 +64,6 @@ var DLchart = {
     },
 
 
-
     "tooltip": {
         "placement": "node:top",
         "text": "%vt"
@@ -93,8 +94,8 @@ var APchart = {
     "type": "heatmap",
     backgroundColor: "white",
     x: 0,  //position from left of chart edge
-    y: "20%",  //position top of chart
-    height: "30%",
+    y: "10%",  //position top of chart
+    height: "20%",
     width: "100%",
 
     plotarea: season_plotarea,
@@ -175,7 +176,7 @@ var METchart = {
     "type": "mixed", // 1. Specify your mixed chart type.
     backgroundColor: "white",
     x: 0,  //position from left of chart edge
-    y: "50%",  //position top of chart
+    y: "30%",  //position top of chart
     height: "50%",
     width: "100%",
 
