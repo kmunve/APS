@@ -9,27 +9,32 @@
 
 var time_axis = {
     "min-value": 1420232400000,
-        "step": "day",
-        "transform": {
-            "type": "date",
-            "all": "%D<br>%d %M %y"
-        }
+    "step": "day",
+    "transform": {
+        "type": "date",
+        "all": "%D<br>%d %M %y"
+    }
 };
 
 
 var danger_level = [1, 2, 2, 3, 3, 4, 3];
 
-
+// Heat map showing the danger level
 var DLchart = {
-    "type": "bar",
+    "type": "heatmap",
+    backgroundColor: "white",
+    x: 0,  //position from left of chart edge
+    y: "0%",  //position top of chart
+    height: "20%",
+    width: "100%",
 
     "plot": {
-        //"aspect": "vertical",
-        //"border-radius": "15px",
+        "aspect": "none",
+        "border-radius": "15px",
         "rules": [
             {
                 "rule": "%v == 1",
-                "background-color": "#75B100",
+                "background-color": "#75B100"
             },
             {
                 "rule": "%v == 2",
@@ -58,9 +63,8 @@ var DLchart = {
     "scale-x": time_axis,
 
     "scale-y": {
-        "min-value": 0,
-        "max-value": 5,
-        "labels": ["Ikke gitt", "1-Liten", "2-Moderat", "3-Betydelig", "4-Stor", "5-Meget stor"]
+        "mirrored": true,
+        "labels": ["Faregrad"]
     },
 
 
@@ -76,8 +80,14 @@ var windslabs = [0, 1, 1, 2, 2, 0, 0];
 var stormslabs = [1, 0, 0, 1, 1, 0, 0];
 var pwl = [0, 0, 0, 0, 3, 1, 1];
 
+// Heat map showing the avalanche problems
 var APchart = {
     "type": "heatmap",
+    backgroundColor: "white",
+    x: 0,  //position from left of chart edge
+    y: "20%",  //position top of chart
+    height: "30%",
+    width: "100%",
 
     "plot": {
         "aspect": "none",
@@ -111,9 +121,8 @@ var APchart = {
     },
 
 
-
     "tooltip": {
-      "text": "Skredproblemer"
+        "text": "Skredproblemer"
     },
 
     "series": [
@@ -123,23 +132,139 @@ var APchart = {
     ]
 };
 
-var plotConfig =     { //root object
-      gui:{
-        contextMenu:{
+
+///////////////
+// MET CHART //
+///////////////
+
+
+var precip_axis = {
+    "values": "0.0:60:5" //Min/Max/Step
+};
+
+var temperature_axis = {"values": "-20:10:5"};
+
+var elevation_axis = {"values": "0:2000:300"};
+
+// Bar and line plots showing the regional meteorological conditions
+var METchart = {
+
+    "type": "mixed", // 1. Specify your mixed chart type.
+    backgroundColor: "white",
+    x: 0,  //position from left of chart edge
+    y: "50%",  //position top of chart
+    height: "50%",
+    width: "100%",
+
+    "plot": {
+        "tooltip": {
+            "text": "%t"
+        }
+    },
+
+    "utc": true,
+    "timezone": +1,
+
+    "scale-x": time_axis,
+
+    "scale-y": precip_axis,
+
+    "scale-y-2": temperature_axis,
+
+    "scale-y-3": elevation_axis,
+
+
+    "series": [ // 2. Specify the chart type for each series object.
+        {
+            "type": "area",
+            "scales": "scale-x, scale-y-3",
+            "values": [0, 0, 200, 550, 670, 310, 69],
+            "aspect": "spline",
+            "contour-on-top": false,
+            "text": "Nullgradersgrense",
+            "background-color": "#83b480",
+            "line-color": "#83b480",
+            "marker": {
+                visible: false
+            }
+        },
+        {
+            "type": "bar",
+            "scales": "scale-x, scale-y",
+
+            "values": [34, 70, 4, 0, 0, 5, 6],
+            "background-color": "#b41216",
+            "text": "regn",
+            "tooltip": {
+                "text": "%v mm %t"
+            },
+            "bar-width": "50%"
+        },
+        {
+            "type": "bar",
+            "scales": "scale-x, scale-y",
+
+            "values": [15, 30, 20, 75, 33, 5, 7],
+            "background-color": "#9eb2c7",
+            "text": "snø",
+            "tooltip": {
+                "text": "%v mm %t"
+            },
+            "bar-width": "50%"
+        },
+        {
+            "type": "line",
+            "scales": "scale-x, scale-y-2",
+            "values": [-5, -9, -3, 1, 7, 5, -4],
+            "aspect": "spline",
+            "text": "Temperatur",
+            "marker": {
+                "rules": [
+                    {
+                        "rule": "%v >= 0",
+                        "background-color": "#e82818"
+                    },
+                    {
+                        "rule": "%v < 0",
+                        "background-color": "#0a2b90"
+                    }
+                ],
+
+                "size": 6, /* in pixels */
+                "border-color": "none", /* hexadecimal or RBG value */
+                "border-width": 0 /* in pixels */
+            },
+            "rules": [
+                {
+                    "rule": "%v >= 0",
+                    "line-color": "#e82818"
+                },
+                {
+                    "rule": "%v < 0",
+                    "line-color": "#0a2b90"
+                }
+            ]
+        }
+    ]
+};
+
+
+var plotConfig = { //root object
+    gui: {
+        contextMenu: {
             // handles options when the user right-clicks on the chart
         }
-      },
-      history:{
-
-      },
-      graphset:[DLchart, APchart]
-    };
+    },
+    history: {},
+    "layout": "vertical",
+    graphset: [DLchart, APchart, METchart]
+};
 
 
 var renderSeason = {
     id: 'GraphSet',
     data: plotConfig,
-    height: 500,
+    height: 1000,
     width: 725
 };
 
