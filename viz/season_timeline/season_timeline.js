@@ -139,12 +139,25 @@ var APchart = {
 
 
 var precip_axis = {
-    "values": "0.0:60:5" //Min/Max/Step
+    "values": "0.0:60:5", //Min/Max/Step
+    "label": {
+        text: "Nedbør (mm)"
+    }
 };
 
-var temperature_axis = {"values": "-20:10:5"};
+var temperature_axis = {
+    "values": "-20:10:5",
+    "label": {
+        text: "Temperatur (C)"
+    }
+};
 
-var elevation_axis = {"values": "0:2000:300"};
+var elevation_axis = {
+    "values": "0:2000:300",
+    "label": {
+        text: "Høyde over havet (m)"
+    }
+};
 
 // Bar and line plots showing the regional meteorological conditions
 var METchart = {
