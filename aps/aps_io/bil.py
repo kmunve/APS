@@ -8,6 +8,8 @@ Binary (.bil) input/output class.
 
 :Author: kmu
 :Created: 14. okt. 2010
+
+Originally part of pysenorge.
 '''
 
 # Built-in
@@ -17,10 +19,38 @@ import sys
 sys.path.append(os.path.abspath('../..'))
 
 # Additional
-import numpy as np
+from numpy import zeros, fromfile, int8, int16, uint8, uint16, float32, nan
+
+
 
 # Own
-#from pysenorge.converters import get_FillValue
+# from pysenorge.converters import get_FillValue
+
+def get_FillValue(dt):
+    """
+    Determines the FillValue based on the data-type.
+
+    No-data values are internally represented as numpy.nan values. These will be replaced by FillValues before writing to BIL or netCDF files.
+    """
+    UintFillValue = 65535
+    IntFillValue = 32767
+    FloatFillValue = 9.9692e+36
+
+    if dt == uint8:
+        FillValue = uint8(UintFillValue)
+    elif dt == uint16:
+        FillValue = uint16(UintFillValue)
+    elif dt == int8:
+        FillValue = int8(IntFillValue)
+    elif dt == int16:
+        FillValue = int16(IntFillValue)
+    elif dt == float32:
+        FillValue = float32(FloatFillValue)
+    elif dt == float64:
+        FillValue = float64(FloatFillValue)
+    else:
+        FillValue = dt(-9999)
+    return FillValue
 
 
 class BILdata(object):
@@ -41,7 +71,7 @@ class BILdata(object):
         self.ncols = 1195
         self.datatype = eval(datatype)
         self.nodata = get_FillValue(self.datatype)
-        self.data = np.zeros((self.nrows, self.ncols), self.datatype)
+        self.data = zeros((self.nrows, self.ncols), self.datatype)
         self.filename = filename
 
     def _set_dimension(self, nrows, ncols):
@@ -54,20 +84,17 @@ class BILdata(object):
         '''
         self.nrows = nrows
         self.ncols = ncols
-        self.data = np.zeros((self.nrows, self.ncols), self.datatype)
+        self.data = zeros((self.nrows, self.ncols), self.datatype)
 
     def read(self):
         """
         Reads data from BIL file.
         """
-        #        self._read_hdr()
         fid = open(self.filename, "rb")
-        tmpdata = np.fromfile(fid, self.datatype)
+        tmpdata = fromfile(fid, self.datatype)
         fid.close()
         tmpdata.shape = (self.nrows, self.ncols)
         self.data[:] = tmpdata
-
-    #        self._get_mask()
 
 
     def write(self, data):
@@ -147,8 +174,8 @@ class BILdata(object):
             from pysenorge.grid import senorge_mask
 
             mask = senorge_mask()
-            data = np.float32(self.data)
-            data[mask] = np.nan
+            data = float32(self.data)
+            data[mask] = nan
 
             plt.figure(facecolor='lightgrey')
             plt.imshow(data, interpolation='nearest', cmap=jet, alpha=1.0,
