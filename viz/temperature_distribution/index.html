@@ -5,10 +5,16 @@
     <title>Temperatur fordeling</title>
     <link rel="stylesheet" type="text/css" href="../aps.css">
     <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script src="temperature_dist.js"></script>
+    <script>
+        window.onload=function(){
+            zingchart.render(renderObj);
+        };
+    </script>
 </head>
 <body>
 <div id='TempElevChart'><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a></div>
 
-<script src="temperature_dist.js"></script>
+
 </body>
 </html>

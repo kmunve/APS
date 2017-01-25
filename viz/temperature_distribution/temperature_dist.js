@@ -57,8 +57,8 @@ var TempChart = {
                 "font-size": 14,
                 "font-color": "darkgrey"
             },
-            "offset-start": 20,
-            "offset-end": 20,
+            "offset-start": 0,
+            "offset-end": 0,
             "line-color": "none",
             "labels": ElevIntervals,
             "format": "%v moh",
@@ -81,6 +81,13 @@ var TempChart = {
             "offset-start": 20,
             "offset-end": 20,
             "values": "-10:2:2",
+            "ref-value": 0,
+            "ref-line": {
+                "visible": true,
+                "line-color": "darkgrey",
+                "line-width": 2,
+                "line-style": "solid"
+            },
             "format": "%v C",
             "line-color": "darkgrey",
             "tick": {
@@ -140,16 +147,66 @@ var TempChart = {
     ;
 
 var PercChart = {
-    "type": "hbar",
+    type: "hbar",
     backgroundColor: "white",
     x: "70%",  //position from left of chart edge
     y: 0,  //position top of chart
     height: "100%",
     width: "30%",
 
+    /*"plotarea": {
+     "adjust-layout": true /!* For automatic margin adjustment. *!/
+     },*/
+    "plot": {
+        //"aspect": "stepped"
 
+    },
+
+    "scale-x": {
+        "offset-start": 0,
+        "offset-end": 0,
+        "line-color": "none",
+        "tick": {
+            "visible": false
+        },
+        "guide": {
+            "visible": false
+        },
+        "item": {
+            "visible": false
+        },
+
+    },
+    "scale-y": {
+        "label": {
+            "text": "Areal i høydesonen",
+            "font-size": 14,
+            "font-color": "darkgrey"
+        },
+        "offset-start": 0,
+        "offset-end": 0,
+        "format": "%v %",
+        "line-color": "darkgrey",
+        "tick": {
+            "line-color": "darkgrey"
+        },
+        "item": {
+            "font-size": 14
+        },
+        "guide": {
+            "visible": true
+        }
+    },
     "series": [
-        {"values": [20, 40, 25, 50, 15]}
+        {
+            "values": [20, 40, 25, 50, 15],
+            "background-color": "darkgrey",
+            "line-color": "none",
+            "alpha": 0.5,
+            "bar-width": "100%",
+            "bars-space-left": 0,
+            "bars-space-right": 0
+        }
     ]
 };
 
@@ -171,4 +228,4 @@ var renderObj = {
     width: 700
 };
 
-zingchart.render(renderObj);
+//zingchart.render(renderObj);
