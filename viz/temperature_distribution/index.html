@@ -1,40 +1,48 @@
-<!DOCTYPE html>
-<html lang="no">
+﻿<!DOCTYPE html>
+<html  ng-app="APS">
 <head>
-    <meta charset="UTF-8">
-    <title>Temperatur fordeling</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-            crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="../aps.css">
-    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperaturdistribusjon etter dato</title>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+	<script src="./viewModel.js"></script>
+	
+	<script src="http://cdn.zingchart.com/zingchart.min.js"></script>
+	<script src="http://cdn.zingchart.com/angular/zingchart-angularjs.js"></script>
 
-    <script src="../aps_theme.js"></script>
-    <script src="temperature_dist.js"></script>
-    <script>
-        window.onload = function () {
-            zingchart.render(renderObj);
-            $("#ForecastRegion").text(ForecastRegion);
-            $("#ForecastDate").text(ForecastDate);
-            $("#FreezingLevel").text(FreezingLevel);
-        };
-    </script>
 </head>
-<body>
-<div align="center">
-    <div class="page-header">
-        <h1>Temperaturfordeling i <span id="ForecastRegion"></span>
-            <small id="ForecastDate"></small>
-        </h1>
-    </div>
-    <div id='TempElevChart'><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a></div>
-    <h3>Nullgradersgrense: <span class="label label-default" id="FreezingLevel">New</span> moh</h3>
-</div>
 
+<body>
+<div ng-controller="DistributionByDateController"  ng-init="init({&quot;Regions&quot;:[{&quot;Id&quot;:&quot;3044.0&quot;,&quot;Name&quot;:&quot;Akershus&quot;},{&quot;Id&quot;:&quot;3038.0&quot;,&quot;Name&quot;:&quot;Aust-Agder&quot;},{&quot;Id&quot;:&quot;3041.0&quot;,&quot;Name&quot;:&quot;Buskerud s&#248;r&quot;},{&quot;Id&quot;:&quot;3006.0&quot;,&quot;Name&quot;:&quot;Finnmarkskysten&quot;},{&quot;Id&quot;:&quot;3008.0&quot;,&quot;Name&quot;:&quot;Finnmarksvidda&quot;},{&quot;Id&quot;:&quot;3032.0&quot;,&quot;Name&quot;:&quot;Hallingdal&quot;},{&quot;Id&quot;:&quot;3034.0&quot;,&quot;Name&quot;:&quot;Hardanger&quot;},{&quot;Id&quot;:&quot;3043.0&quot;,&quot;Name&quot;:&quot;Hedmark&quot;},{&quot;Id&quot;:&quot;3018.0&quot;,&quot;Name&quot;:&quot;Helgeland&quot;},{&quot;Id&quot;:&quot;3033.0&quot;,&quot;Name&quot;:&quot;Hordalandskysten&quot;},{&quot;Id&quot;:&quot;3027.0&quot;,&quot;Name&quot;:&quot;Indre Fjordane&quot;},{&quot;Id&quot;:&quot;3029.0&quot;,&quot;Name&quot;:&quot;Indre Sogn&quot;},{&quot;Id&quot;:&quot;3013.0&quot;,&quot;Name&quot;:&quot;Indre Troms&quot;},{&quot;Id&quot;:&quot;3028.0&quot;,&quot;Name&quot;:&quot;Jotunheimen&quot;},{&quot;Id&quot;:&quot;3014.0&quot;,&quot;Name&quot;:&quot;Lofoten og Vester&#229;len&quot;},{&quot;Id&quot;:&quot;3010.0&quot;,&quot;Name&quot;:&quot;Lyngen&quot;},{&quot;Id&quot;:&quot;3003.0&quot;,&quot;Name&quot;:&quot;Nordenski&#246;ld Land&quot;},{&quot;Id&quot;:&quot;3025.0&quot;,&quot;Name&quot;:&quot;Nord-Gudbrandsdalen&quot;},{&quot;Id&quot;:&quot;3009.0&quot;,&quot;Name&quot;:&quot;Nord-Troms&quot;},{&quot;Id&quot;:&quot;3019.0&quot;,&quot;Name&quot;:&quot;Nord-Tr&#248;ndelag&quot;},{&quot;Id&quot;:&quot;3015.0&quot;,&quot;Name&quot;:&quot;Ofoten&quot;},{&quot;Id&quot;:&quot;3042.0&quot;,&quot;Name&quot;:&quot;Oppland s&#248;r&quot;},{&quot;Id&quot;:&quot;3045.0&quot;,&quot;Name&quot;:&quot;Oslo&quot;},{&quot;Id&quot;:&quot;3036.0&quot;,&quot;Name&quot;:&quot;Rogaland&quot;},{&quot;Id&quot;:&quot;3023.0&quot;,&quot;Name&quot;:&quot;Romsdal&quot;},{&quot;Id&quot;:&quot;3016.0&quot;,&quot;Name&quot;:&quot;Salten&quot;},{&quot;Id&quot;:&quot;3024.0&quot;,&quot;Name&quot;:&quot;Sunnm&#248;re&quot;},{&quot;Id&quot;:&quot;3004.0&quot;,&quot;Name&quot;:&quot;Svalbard s&#248;r&quot;},{&quot;Id&quot;:&quot;3002.0&quot;,&quot;Name&quot;:&quot;Svalbard vest&quot;},{&quot;Id&quot;:&quot;3001.0&quot;,&quot;Name&quot;:&quot;Svalbard &#248;st&quot;},{&quot;Id&quot;:&quot;3017.0&quot;,&quot;Name&quot;:&quot;Svartisen&quot;},{&quot;Id&quot;:&quot;3012.0&quot;,&quot;Name&quot;:&quot;S&#248;r-Troms&quot;},{&quot;Id&quot;:&quot;3020.0&quot;,&quot;Name&quot;:&quot;S&#248;r-Tr&#248;ndelag&quot;},{&quot;Id&quot;:&quot;3039.0&quot;,&quot;Name&quot;:&quot;Telemark s&#248;r&quot;},{&quot;Id&quot;:&quot;3022.0&quot;,&quot;Name&quot;:&quot;Trollheimen&quot;},{&quot;Id&quot;:&quot;3011.0&quot;,&quot;Name&quot;:&quot;Troms&#248;&quot;},{&quot;Id&quot;:&quot;3037.0&quot;,&quot;Name&quot;:&quot;Vest-Agder&quot;},{&quot;Id&quot;:&quot;3007.0&quot;,&quot;Name&quot;:&quot;Vest-Finnmark&quot;},{&quot;Id&quot;:&quot;3040.0&quot;,&quot;Name&quot;:&quot;Vestfold&quot;},{&quot;Id&quot;:&quot;3035.0&quot;,&quot;Name&quot;:&quot;Vest-Telemark&quot;},{&quot;Id&quot;:&quot;3031.0&quot;,&quot;Name&quot;:&quot;Voss&quot;},{&quot;Id&quot;:&quot;3026.0&quot;,&quot;Name&quot;:&quot;Ytre Fjordane&quot;},{&quot;Id&quot;:&quot;3021.0&quot;,&quot;Name&quot;:&quot;Ytre Nordm&#248;re&quot;},{&quot;Id&quot;:&quot;3030.0&quot;,&quot;Name&quot;:&quot;Ytre Sogn&quot;},{&quot;Id&quot;:&quot;3005.0&quot;,&quot;Name&quot;:&quot;&#216;st-Finnmark&quot;},{&quot;Id&quot;:&quot;3046.0&quot;,&quot;Name&quot;:&quot;&#216;stfold&quot;}],&quot;FromDate&quot;:&quot;2017-01-15T14:28:46.8927536+01:00&quot;,&quot;ToDate&quot;:&quot;2017-01-16T14:28:46.8927536+01:00&quot;})">
+
+    <div class="jumbotron">
+        Temperaturdistribusjon etter dato
+    </div>
+
+    <div class="row">
+        <p>
+            <label for="from">Dato:</label>
+            <input type="date" name="from" id="from"  ng-model="fromDate" placeholder="yyyy-MM-dd" required/> <br />
+        </p>
+        <p>
+            <label for="regionSelect"> Velg område: </label>
+            <select name="regionSelect" id="regionSelect" ng-model="selectedRegion">
+                <option ng-repeat="region in regions" value="{{region.Id}}">{{region.Name}}</option>
+            </select>
+        </p>
+        <p>
+            <input type="button" ng-click="submitForm()" value="Hent data"/>
+        </p>
+        
+    </div>
+    <div class="row">
+        <div id='TempElevChart'>
+        </div>
+        <a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a>
+    </div>
+</div>
 
 </body>
 </html>

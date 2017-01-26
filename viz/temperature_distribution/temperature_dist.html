@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Temperatur fordeling</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="../aps.css">
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+
+    <script src="../aps_theme.js"></script>
+    <script src="temperature_dist.js"></script>
+    <script>
+        window.onload = function () {
+            zingchart.render(renderObj);
+            $("#ForecastRegion").text(ForecastRegion);
+            $("#ForecastDate").text(ForecastDate);
+            $("#FreezingLevel").text(FreezingLevel);
+        };
+    </script>
+</head>
+<body>
+<div align="center">
+    <div class="page-header">
+        <h1>Temperaturfordeling i <span id="ForecastRegion"></span>
+            <small id="ForecastDate"></small>
+        </h1>
+    </div>
+    <div id='TempElevChart'><a class="zc-ref" href="https://www.zingchart.com/">Charts by ZingChart</a></div>
+    <h3>Nullgradersgrense: <span class="label label-default" id="FreezingLevel">New</span> moh</h3>
+</div>
+
+
+</body>
+</html>
