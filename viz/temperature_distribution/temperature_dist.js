@@ -3,19 +3,21 @@
  */
 zingchart.THEME = "classic";
 
-var ForecastDate = "6 des. 2016";
+var ForecastDate = "26 jan. 2017";
 
-var ForecastRegion = "Hallingdal";
+var ForecastRegion = "Salten";
 
 var ElevIntervals = ["0-400", "400-800", "800-1200", "1200-1600", "1600-2000"];
-
+var ElevPercentages = [56, 27, 14, 3, 0];
 var TempElevData = [
-    [-0.500, -0.233, 0.000, 0.233, 0.400],
-    [-2.200, -1.733, -1.200, -0.666, -0.200],
-    [-4.699, -3.958, -3.150, -2.341, -1.500],
-    [-7.199, -6.383, -5.500, -4.616, -3.799],
-    [-8.199, -7.683, -7.199, -6.716, -6.300]
+    [-1.1, 1.95866668, 4.25, 6.635083, 8.7],
+    [-1.6, 0.5003333, 3.2, 5.99133348, 8.2],
+    [-3.7, -1.2955, 1.8, 4.7205, 7.8],
+    [-6.1, -2.97675, -0.075, 1.81216669, 4.4],
+    [-7.8, -3.97466683, -1.7, -0.05416667, 1.3]
 ];
+var TempRange = "-10:10:5" // Min:Max:Step
+var FreezingLevel = 1350;
 
 var TempChart = {
         "type": "hboxplot",
@@ -27,7 +29,7 @@ var TempChart = {
 
         "title": {
             "background-color": "none",
-            "text": "Temperaturfordeling for  Hallingdal (6 des. 2016)", // string needs to be constructed using variables ForecastRegion and ForecastDate
+            //"text": "Temperaturfordeling for  Hallingdal (6 des. 2016)", // string needs to be constructed using variables ForecastRegion and ForecastDate
             "color": "black",
             "font-weight": "none",
             "font-size": 24,
@@ -61,7 +63,7 @@ var TempChart = {
             "offset-end": 0,
             "line-color": "none",
             "labels": ElevIntervals,
-            "format": "%v moh",
+            "format": "%v<br>moh",
             "tick": {
                 "visible": false
             },
@@ -80,7 +82,7 @@ var TempChart = {
             },
             "offset-start": 20,
             "offset-end": 20,
-            "values": "-10:2:2",
+            "values": TempRange,
             "ref-value": 0,
             "ref-line": {
                 "visible": true,
@@ -199,7 +201,7 @@ var PercChart = {
     },
     "series": [
         {
-            "values": [20, 40, 25, 50, 15],
+            "values": ElevPercentages,
             "background-color": "darkgrey",
             "line-color": "none",
             "alpha": 0.5,
