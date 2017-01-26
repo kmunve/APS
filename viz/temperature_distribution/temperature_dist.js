@@ -8,7 +8,7 @@ var ForecastDate = "26 jan. 2017";
 var ForecastRegion = "Salten";
 
 var ElevIntervals = ["0-400", "400-800", "800-1200", "1200-1600", "1600-2000"];
-var ElevPercentages = [56, 27, 14, 3, 0];
+var ElevPercentages = [56, 27, 14, 3, 1];
 var TempElevData = [
     [-1.1, 1.95866668, 4.25, 6.635083, 8.7],
     [-1.6, 0.5003333, 3.2, 5.99133348, 8.2],
@@ -55,9 +55,7 @@ var TempChart = {
         },
         "scale-x": {
             "label": {
-                "text": "Høydeintervall",
-                "font-size": 14,
-                "font-color": "darkgrey"
+                "text": "Høydeintervall"
             },
             "offset-start": 0,
             "offset-end": 0,
@@ -76,9 +74,7 @@ var TempChart = {
         },
         "scale-y": {
             "label": {
-                "text": "Temperatur (Celsius)",
-                "font-size": 14,
-                "font-color": "darkgrey"
+                "text": "Temperatur (Celsius)"
             },
             "offset-start": 20,
             "offset-end": 20,
@@ -181,9 +177,7 @@ var PercChart = {
     },
     "scale-y": {
         "label": {
-            "text": "Areal i høydesonen",
-            "font-size": 14,
-            "font-color": "darkgrey"
+            "text": "Areal i høydesonen"
         },
         "offset-start": 0,
         "offset-end": 0,
@@ -228,6 +222,7 @@ var renderObj = {
     data: plotConfig,
     height: 500,
     width: 700
+    //defaults: apsTheme // uncomment to use the apsTheme in aps_theme.js
 };
 
 //zingchart.render(renderObj);
