@@ -40,6 +40,9 @@
     }).addTo(mymap);
 
 
+    //
+    var wmsLayer = L.tileLayer.wms('http://gis3.nve.no/arcgis/rest/services/mapservice/VARSEL_PUBLISERT/MapServer/6').addTo(mymap);
+
     var aval_1 = L.polygon([   // similar to WKT but with x-y swapped and brackets instead of parenthesis.
             [69.550902, 19.264285],
             [69.55295, 19.281022],
@@ -60,6 +63,21 @@
         [69.518225, 19.301300]
     ]).addTo(mymap);
     aval_2.bindPopup("<b>Detected:</b> 2017-03-21<br> <b>Size:</b> 2");
+
+    /*
+    // Convert WKt to geojson:
+
+    var wkt_geom = "POINT(34.0218531, -81.0707438)";
+var wicket = new Wkt.Wkt();
+wicket.read(wkt_geom);
+
+// "greenIcon from official documentation noted above.
+var feature = wicket.toObject({icon: greenIcon});
+
+// Presumably featureGroup is already instantiated and added to your map.
+featureGroup.addLayer(feature);
+
+     */
 
 </script>
 
