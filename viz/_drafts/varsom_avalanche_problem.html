@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Avalanche Problems</title>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <script> zingchart.MODULESDIR = "https://cdn.zingchart.com/modules/";
+    ZC.LICENSE = ["569d52cefae586f634c54f86dc99e6a9", "ee6b7db5b51705a13dc2339db3edaf6d"];</script>
+</head>
+<body>
+
+
+
+
+<div id="AP_chart"></div>
+
+
+<script>
+    var chart_config = {
+        type: "bar",
+        plot: {
+            stacked: false,
+            tooltip: { //HTML Tooltips
+      text: '<p><h2>%kl</h2></p><p>Tørre flakskred</p><p><img src="../resources/sp_icon.png"></p>',
+      htmlMode: true
+    }
+        },
+        //legend: {},
+        tooltip: {
+            text: 'offset: %offset-values<br> value: %v',
+            textAlign: 'left'
+        },
+        scaleX: {
+            labels: ['Nysnø', 'Fokknsø', 'Ved. svake lag', 'Våt snø']
+        },
+        scaleY: {
+            minValue: 0,
+            maxValue: 70,
+            step: 10,
+            visible: false
+        },
+
+
+        series: [
+            {
+                values: [55, 32, 11, 5]
+            }
+        ]
+    };
+
+    zingchart.render({
+        id: 'AP_chart',
+        data: chart_config,
+        height: "500",
+        width: "100%"
+    });
+
+
+</script>
+
+
+
+</body>
+</html>
