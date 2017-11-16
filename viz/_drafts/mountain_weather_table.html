@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+p {
+    font-family: arial, sans-serif;
+}
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+.value {
+	font-weight: bold;
+}
+.optional {
+	color: #FF6347;
+}
+.tblbutton {
+	background-color: #666699;
+	text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div>
+
+<br /><br />
+<table>
+  <thead>
+    <tr>
+      <th colspan="2">Fjellvær 01.12.2017</th>
+		<th colspan="2">(gårsdagens vær i en kollpaset mini tabell)</th>
+		<th colspan="2" class="tblbutton">^</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Nedbør</td>
+      <td class="value">7 mm (15 mm)</td>
+      <td>Vind</td>
+      <td class="value">NV frisk bris</td>
+      <td >Nullgradersgrense</td>
+	  <td class="value">100 moh</td>
+    </tr>
+	</tbody>
+</table>
+</div>
+
+<div>
+
+<br /><br />
+<table>
+  <thead>
+    <tr>
+      <th colspan="4">Fjellvær 02.12.2017</th>
+
+		<th class="tblbutton">^</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Nedbør</td>
+      <td class="value">10 mm</td>
+      <td class="optional">opp mot</td>
+      <td class="value optional">25 mm</td>
+      <td class="optional">i mest utsatt område</td>
+    </tr>
+    <tr>
+      <td>Vind</td>
+      <td class="value">Frisk bris</td>
+      <td>fra</td>
+      <td colspan="2">NV</td>
+    </tr>
+    <tr>
+      <td class="optional">Vindendring til</td>
+      <td class="value optional">Sterk kuling</td>
+      <td class="optional">fra</td>
+      <td class="value optional">SV</td>
+      <td class="optional">om formiddagen</td>
+    </tr>
+     <tr>
+      <td>Temperatur (1200 moh)</td>
+      <td class="value">-7.2</td>
+      <td>til</td>
+      <td class="value" colspan="2">-3.5</td>
+    </tr>
+     <tr>
+      <td>Nullgradersgrense</td>
+      <td class="value">300 moh</td>
+      <td>til</td>
+      <td class="value" colspan="2">550 moh</td>
+    </tr>
+     <tr>
+      <td>Skydekke</td>
+      <td class="value" colspan="4">Klarvær</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><b>Kommentar: </b>Mest nedbør om ettermiddagen.</p>
+
+<br>
+<p class="optional">Felt som ikke alltid er med.</p>
+</div>
+</body>
+</html>
