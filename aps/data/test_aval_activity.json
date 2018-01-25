@@ -1,218 +1,226 @@
 [
-  {
-    "OMRAADEID": 3010,
-    "OMRAADENAVN": "Lyngen",
-    "safeName": "Lyngen",
-    "avalanche_count": 151,
-    "N_D1": 0,
-    "N_D2": 0,
-    "N_D3": 2,
-    "N_D4": 2,
-    "N_D5": 0,
-    "NO_D1": 0,
-    "NO_D2": 0,
-    "NO_D3": 5,
-    "NO_D4": 31,
-    "NO_D5": 1,
-    "O_D1": 0,
-    "O_D2": 0,
-    "O_D3": 10,
-    "O_D4": 25,
-    "O_D5": 1,
-    "SO_D1": 0,
-    "SO_D2": 0,
-    "SO_D3": 6,
-    "SO_D4": 25,
-    "SO_D5": 0,
-    "S_D1": 0,
-    "S_D2": 0,
-    "S_D3": 2,
-    "S_D4": 10,
-    "S_D5": 1,
-    "SV_D1": 0,
-    "SV_D2": 0,
-    "SV_D3": 3,
-    "SV_D4": 10,
-    "SV_D5": 0,
-    "V_D1": 0,
-    "V_D2": 0,
-    "V_D3": 3,
-    "V_D4": 9,
-    "V_D5": 0,
-    "NV_D1": 0,
-    "NV_D2": 0,
-    "NV_D3": 0,
-    "NV_D4": 5,
-    "NV_D5": 0,
-    "size_min_m2": 2202,
-    "size_max_m2": 151222,
-    "size_avg_m2": 29520,
-    "elevation_debris_min": 74,
-    "elevation_debris_10": 205,
-    "elevation_debris_50": 382,
-    "elevation_debris_90": 662,
-    "elevation_debris_max": 876
-  },
-  {
-    "OMRAADEID": 3011,
-    "OMRAADENAVN": "Tromsø",
-    "safeName": "Tromso",
-    "avalanche_count": 148,
-    "N_D1": 0,
-    "N_D2": 0,
-    "N_D3": 3,
-    "N_D4": 5,
-    "N_D5": 0,
-    "NO_D1": 0,
-    "NO_D2": 0,
-    "NO_D3": 8,
-    "NO_D4": 43,
-    "NO_D5": 0,
-    "O_D1": 0,
-    "O_D2": 0,
-    "O_D3": 22,
-    "O_D4": 35,
-    "O_D5": 1,
-    "SO_D1": 0,
-    "SO_D2": 0,
-    "SO_D3": 1,
-    "SO_D4": 8,
-    "SO_D5": 1,
-    "S_D1": 0,
-    "S_D2": 0,
-    "S_D3": 3,
-    "S_D4": 6,
-    "S_D5": 0,
-    "SV_D1": 0,
-    "SV_D2": 0,
-    "SV_D3": 1,
-    "SV_D4": 2,
-    "SV_D5": 0,
-    "V_D1": 0,
-    "V_D2": 0,
-    "V_D3": 0,
-    "V_D4": 3,
-    "V_D5": 0,
-    "NV_D1": 0,
-    "NV_D2": 0,
-    "NV_D3": 4,
-    "NV_D4": 2,
-    "NV_D5": 0,
-    "size_min_m2": 2002,
-    "size_max_m2": 135025,
-    "size_avg_m2": 24226,
-    "elevation_debris_min": 70,
-    "elevation_debris_10": 204,
-    "elevation_debris_50": 404,
-    "elevation_debris_90": 618,
-    "elevation_debris_max": 856
-  },
-  {
-    "OMRAADEID": 3013,
-    "OMRAADENAVN": "Indre Troms",
-    "safeName": "Indre_Troms",
-    "avalanche_count": 2,
-    "N_D1": 0,
-    "N_D2": 0,
-    "N_D3": 0,
-    "N_D4": 0,
-    "N_D5": 0,
-    "NO_D1": 0,
-    "NO_D2": 0,
-    "NO_D3": 0,
-    "NO_D4": 0,
-    "NO_D5": 0,
-    "O_D1": 0,
-    "O_D2": 0,
-    "O_D3": 0,
-    "O_D4": 0,
-    "O_D5": 0,
-    "SO_D1": 0,
-    "SO_D2": 0,
-    "SO_D3": 0,
-    "SO_D4": 0,
-    "SO_D5": 0,
-    "S_D1": 0,
-    "S_D2": 0,
-    "S_D3": 0,
-    "S_D4": 0,
-    "S_D5": 0,
-    "SV_D1": 0,
-    "SV_D2": 0,
-    "SV_D3": 0,
-    "SV_D4": 0,
-    "SV_D5": 0,
-    "V_D1": 0,
-    "V_D2": 0,
-    "V_D3": 0,
-    "V_D4": 0,
-    "V_D5": 0,
-    "NV_D1": 0,
-    "NV_D2": 0,
-    "NV_D3": 2,
-    "NV_D4": 0,
-    "NV_D5": 0,
-    "size_min_m2": 2202,
-    "size_max_m2": 9605,
-    "size_avg_m2": 5903,
-    "elevation_debris_min": 488,
-    "elevation_debris_10": 488,
-    "elevation_debris_50": 573,
-    "elevation_debris_90": 0,
-    "elevation_debris_max": 573
-  },
-  {
-    "OMRAADEID": 3009,
-    "OMRAADENAVN": "Nord-Troms",
-    "safeName": "Nord_Troms",
-    "avalanche_count": 29,
-    "N_D1": 0,
-    "N_D2": 0,
-    "N_D3": 1,
-    "N_D4": 0,
-    "N_D5": 0,
-    "NO_D1": 0,
-    "NO_D2": 0,
-    "NO_D3": 1,
-    "NO_D4": 6,
-    "NO_D5": 0,
-    "O_D1": 0,
-    "O_D2": 0,
-    "O_D3": 4,
-    "O_D4": 10,
-    "O_D5": 1,
-    "SO_D1": 0,
-    "SO_D2": 0,
-    "SO_D3": 1,
-    "SO_D4": 3,
-    "SO_D5": 0,
-    "S_D1": 0,
-    "S_D2": 0,
-    "S_D3": 0,
-    "S_D4": 1,
-    "S_D5": 0,
-    "SV_D1": 0,
-    "SV_D2": 0,
-    "SV_D3": 0,
-    "SV_D4": 0,
-    "SV_D5": 0,
-    "V_D1": 0,
-    "V_D2": 0,
-    "V_D3": 0,
-    "V_D4": 0,
-    "V_D5": 0,
-    "NV_D1": 0,
-    "NV_D2": 0,
-    "NV_D3": 0,
-    "NV_D4": 1,
-    "NV_D5": 0,
-    "size_min_m2": 2002,
-    "size_max_m2": 242938,
-    "size_avg_m2": 34227,
-    "elevation_debris_min": 223,
-    "elevation_debris_10": 249,
-    "elevation_debris_50": 440,
-    "elevation_debris_90": 747,
-    "elevation_debris_max": 852
-  }
+{
+"region_id":3010
+,"region_name":"Lyngen"
+,"safeName":"Lyngen"
+,"avalanche_count":151
+,"N_D1":0
+,"N_D2":0
+,"N_D3":2
+,"N_D4":2
+,"N_D5":0
+,"NE_D1":0
+,"NE_D2":0
+,"NE_D3":0
+,"NE_D4":0
+,"NE_D5":0
+,"E_D1":0
+,"E_D2":0
+,"E_D3":0
+,"E_D4":0
+,"E_D5":0
+,"SE_D1":0
+,"SE_D2":0
+,"SE_D3":0
+,"SE_D4":0
+,"SE_D5":0
+,"S_D1":0
+,"S_D2":0
+,"S_D3":2
+,"S_D4":10
+,"S_D5":1
+,"SW_D1":0
+,"SW_D2":0
+,"SW_D3":0
+,"SW_D4":0
+,"SW_D5":0
+,"W_D1":0
+,"W_D2":0
+,"W_D3":0
+,"W_D4":0
+,"W_D5":0
+,"NW_D1":0
+,"NW_D2":0
+,"NW_D3":0
+,"NW_D4":0
+,"NW_D5":0
+,"size_min_m2":2202
+,"size_max_m2":151222
+,"size_avg_m2":29520
+,"elevation_debris_min":74
+,"elevation_debris_10":205
+,"elevation_debris_50":382
+,"elevation_debris_90":662
+,"elevation_debris_max":876
+,"start_date":"20170407"
+,"end_date":"20170408"
+}
+,{
+"region_id":3011
+,"region_name":"Tromsø"
+,"safeName":"Tromso"
+,"avalanche_count":148
+,"N_D1":0
+,"N_D2":0
+,"N_D3":3
+,"N_D4":5
+,"N_D5":0
+,"NE_D1":0
+,"NE_D2":0
+,"NE_D3":0
+,"NE_D4":0
+,"NE_D5":0
+,"E_D1":0
+,"E_D2":0
+,"E_D3":0
+,"E_D4":0
+,"E_D5":0
+,"SE_D1":0
+,"SE_D2":0
+,"SE_D3":0
+,"SE_D4":0
+,"SE_D5":0
+,"S_D1":0
+,"S_D2":0
+,"S_D3":3
+,"S_D4":6
+,"S_D5":0
+,"SW_D1":0
+,"SW_D2":0
+,"SW_D3":0
+,"SW_D4":0
+,"SW_D5":0
+,"W_D1":0
+,"W_D2":0
+,"W_D3":0
+,"W_D4":0
+,"W_D5":0
+,"NW_D1":0
+,"NW_D2":0
+,"NW_D3":0
+,"NW_D4":0
+,"NW_D5":0
+,"size_min_m2":2002
+,"size_max_m2":135025
+,"size_avg_m2":24226
+,"elevation_debris_min":70
+,"elevation_debris_10":204
+,"elevation_debris_50":404
+,"elevation_debris_90":618
+,"elevation_debris_max":856
+,"start_date":"20170407"
+,"end_date":"20170408"
+}
+,{
+"region_id":3013
+,"region_name":"Indre Troms"
+,"safeName":"Indre_Troms"
+,"avalanche_count":2
+,"N_D1":0
+,"N_D2":0
+,"N_D3":0
+,"N_D4":0
+,"N_D5":0
+,"NE_D1":0
+,"NE_D2":0
+,"NE_D3":0
+,"NE_D4":0
+,"NE_D5":0
+,"E_D1":0
+,"E_D2":0
+,"E_D3":0
+,"E_D4":0
+,"E_D5":0
+,"SE_D1":0
+,"SE_D2":0
+,"SE_D3":0
+,"SE_D4":0
+,"SE_D5":0
+,"S_D1":0
+,"S_D2":0
+,"S_D3":0
+,"S_D4":0
+,"S_D5":0
+,"SW_D1":0
+,"SW_D2":0
+,"SW_D3":0
+,"SW_D4":0
+,"SW_D5":0
+,"W_D1":0
+,"W_D2":0
+,"W_D3":0
+,"W_D4":0
+,"W_D5":0
+,"NW_D1":0
+,"NW_D2":0
+,"NW_D3":0
+,"NW_D4":0
+,"NW_D5":0
+,"size_min_m2":2202
+,"size_max_m2":9605
+,"size_avg_m2":5903
+,"elevation_debris_min":488
+,"elevation_debris_10":488
+,"elevation_debris_50":573
+,"elevation_debris_90":0
+,"elevation_debris_max":573
+,"start_date":"20170407"
+,"end_date":"20170408"
+}
+,{
+"region_id":3009
+,"region_name":"Nord-Troms"
+,"safeName":"Nord_Troms"
+,"avalanche_count":29
+,"N_D1":0
+,"N_D2":0
+,"N_D3":1
+,"N_D4":0
+,"N_D5":0
+,"NE_D1":0
+,"NE_D2":0
+,"NE_D3":0
+,"NE_D4":0
+,"NE_D5":0
+,"E_D1":0
+,"E_D2":0
+,"E_D3":0
+,"E_D4":0
+,"E_D5":0
+,"SE_D1":0
+,"SE_D2":0
+,"SE_D3":0
+,"SE_D4":0
+,"SE_D5":0
+,"S_D1":0
+,"S_D2":0
+,"S_D3":0
+,"S_D4":1
+,"S_D5":0
+,"SW_D1":0
+,"SW_D2":0
+,"SW_D3":0
+,"SW_D4":0
+,"SW_D5":0
+,"W_D1":0
+,"W_D2":0
+,"W_D3":0
+,"W_D4":0
+,"W_D5":0
+,"NW_D1":0
+,"NW_D2":0
+,"NW_D3":0
+,"NW_D4":0
+,"NW_D5":0
+,"size_min_m2":2002
+,"size_max_m2":242938
+,"size_avg_m2":34227
+,"elevation_debris_min":223
+,"elevation_debris_10":249
+,"elevation_debris_50":440
+,"elevation_debris_90":747
+,"elevation_debris_max":852
+,"start_date":"20170407"
+,"end_date":"20170408"
+}
 ]
