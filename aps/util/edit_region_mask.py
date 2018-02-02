@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+import numpy as np
 import netCDF4
 import matplotlib.pyplot as plt
 from aps.util.nc_index_by_coordinate import tunnel_fast
@@ -8,15 +9,47 @@ from aps.util.nc_index_by_coordinate import tunnel_fast
 def create_small_regions_mask():
     p = Path(os.path.dirname(os.path.abspath(__file__))).parent
     nc_file = p / 'data' / 'terrain_parameters' / 'VarslingsOmr_2017.nc'
-    vr_nc = netCDF4.Dataset(nc_file, "r")
+    nc = netCDF4.Dataset(nc_file, "a")
 
-    regions = vr_nc.variables["VarslingsOmr_2017"][:]
+    # removes inconsistencies wrt fill_value in VarslingsOmr_2017
+    vr = nc.variables["VarslingsOmr_2017"]
+    regions = vr[:]
+    regions[regions == 0] = 65536
+    regions[regions == 65535] = 65536
 
+    vr[:] = regions
+
+    # create mask based on dictionary with small regions to monitor
     regions_small = regions
-    regions_small[1197:1218, 202:223] = 4001
+    regions_small[regions > 3000] = 65536
 
-    plt.imshow(regions_small, vmin=3007, vmax=3040)
-    plt.show()
+    # extend in each direction from center in km
+    ext_x, ext_y = 10, 10
+
+    # dict over smaller region with Id and coordinates of center-point
+    # VarslingsOmr have Id in range 3000-3999 - LokalOmr in 4000-4999
+    s_reg = {"Hemsedal": {"Id": 4001, "Lat": 60.95, "Lon": 8.28},
+             "Tyin": {"Id": 4002, "Lat": 61.255, "Lon": 8.2},
+             "Kattfjordeidet": {"Id": 4003, "Lat": 69.65, "Lon": 18.5},
+             "Lavangsdalen": {"Id": 4004, "Lat": 69.46, "Lon": 19.24}}
+
+    for key in s_reg:
+        y, x = get_xgeo_indicies(s_reg[key]['Lat'], s_reg[key]['Lon'])
+        regions_small[y - ext_y : y + ext_y, x - ext_x : x + ext_x] = s_reg[key]['Id']
+
+    # set up new netCDF variable and attributes
+    lr = nc.createVariable('LokalOmr_2018', np.int32, ('y', 'x'))
+    lr.units = vr.units
+    lr.long_name = 'Mindre test omraader'
+    lr.missing_value = vr.missing_value
+    lr.coordinates = vr.coordinates
+    lr.grid_mapping = vr.grid_mapping
+    lr.esri_pe_string = vr.esri_pe_string
+    lr[:] = regions_small
+
+    nc.close()
+    print('Dataset is closed!')
+
 
 def get_xgeo_indicies(lat, lon):
     # region mask is flipped up-down with regard to MET-data in netCDF files
@@ -30,6 +63,5 @@ def get_xgeo_indicies(lat, lon):
 if __name__ == "__main__":
 
     print("BLING BLING")
-    y, x = get_xgeo_indicies(61.0, 8.1)
-    print(y, x)
+    #y, x = get_xgeo_indicies(60.95, 8.28); print(y, x)
     create_small_regions_mask()
