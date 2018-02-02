@@ -3,10 +3,16 @@ import numpy as np
 from netCDF4 import Dataset
 
 
-def load_region(region_id):
-    _vr = Dataset(os.path.join(os.path.dirname(os.path.abspath(__file__)), r"data/terrain_parameters/VarslingsOmr_2017.nc"), "r")
-    # flup up-down becuase Meps data is upside down
-    _regions = np.flipud(_vr.variables["VarslingsOmr_2017"][:])
+def load_region(region_id, local=False):
+    _vr = Dataset(
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), r"data/terrain_parameters/VarslingsOmr_2017.nc"), "r")
+    if local:
+        # flip up-down becuase Meps data is upside down
+        _regions = np.flipud(_vr.variables["LokalOmr_2018"][:])
+
+    else:
+        # flip up-down becuase Meps data is upside down
+        _regions = np.flipud(_vr.variables["VarslingsOmr_2017"][:])
 
     _region_mask = np.where(_regions == region_id)
 
@@ -15,6 +21,8 @@ def load_region(region_id):
                                  min(_region_mask[1].flatten()), max(_region_mask[1].flatten())
 
     reg_mask = np.ma.masked_where(_regions[y_min:y_max, x_min:x_max] == region_id, _regions[y_min:y_max, x_min:x_max]).mask
+
+    _vr.close()
 
     return reg_mask, y_min, y_max, x_min, x_max
 

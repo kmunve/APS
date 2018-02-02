@@ -35,7 +35,7 @@ def create_small_regions_mask():
 
     for key in s_reg:
         y, x = get_xgeo_indicies(s_reg[key]['Lat'], s_reg[key]['Lon'])
-        regions_small[y - ext_y : y + ext_y, x - ext_x : x + ext_x] = s_reg[key]['Id']
+        regions_small[y - ext_y : y + ext_y + 1, x - ext_x : x + ext_x + 1] = s_reg[key]['Id']
 
     # set up new netCDF variable and attributes
     lr = nc.createVariable('LokalOmr_2018', np.int32, ('y', 'x'))
