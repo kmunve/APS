@@ -50,6 +50,31 @@ def create_small_regions_mask():
     nc.close()
     print('Dataset is closed!')
 
+def add_lat_lon():
+    p = Path(os.path.dirname(os.path.abspath(__file__))).parent
+    nc_file = p / 'data' / 'terrain_parameters' / 'VarslingsOmr_2017.nc'
+    nc = netCDF4.Dataset(nc_file, "a")
+
+    nc_ref = netCDF4.Dataset(r"\\hdata\grid\metdata\prognosis\meps\det\archive\2018\meps_det_pp_1km_20180127T00Z.nc", "r")
+    lat_ref = nc_ref.variables['lat']
+    lon_ref = nc_ref.variables['lon']
+
+    lat = nc.createVariable('lat', np.float64, ('y', 'x'))
+    lat.units = lat_ref.units
+    lat.standard_name = lat_ref.standard_name
+    lat.long_name = lat_ref.long_name
+
+    lon = nc.createVariable('lon', np.float64, ('y', 'x'))
+    lon.units = lon_ref.units
+    lon.standard_name = lon_ref.standard_name
+    lon.long_name = lon_ref.long_name
+
+    nc.close()
+    nc_ref.close()
+
+
+
+
 
 def get_xgeo_indicies(lat, lon):
     # region mask is flipped up-down with regard to MET-data in netCDF files
@@ -64,4 +89,5 @@ if __name__ == "__main__":
 
     print("BLING BLING")
     #y, x = get_xgeo_indicies(60.95, 8.28); print(y, x)
-    create_small_regions_mask()
+    #create_small_regions_mask()
+    add_lat_lon()

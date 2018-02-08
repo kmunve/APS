@@ -41,7 +41,10 @@
 
 
     //
-    var wmsLayer = L.tileLayer.wms('http://gis3.nve.no/arcgis/rest/services/mapservice/VARSEL_PUBLISERT/MapServer/6').addTo(mymap);
+    var wmsLayer = L.tileLayer.wms('http://gis3.nve.no/arcgis/rest/services/mapservice/VARSEL_PUBLISERT/MapServer/6');
+
+    wmsLayer.addTo(mymap);
+
 
     var aval_1 = L.polygon([   // similar to WKT but with x-y swapped and brackets instead of parenthesis.
             [69.550902, 19.264285],

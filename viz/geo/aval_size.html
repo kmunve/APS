@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Test - Leaflet</title>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico"/>
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+
+</head>
+<body>
+
+
+<div id="mapid" style="width: 1000px; height: 800px;"></div>
+<script>
+
+    /*
+    Plot the outline of avalanches as polygons and a add a pop-up with additional information from the DB.
+    Can use different colors for e.g. different size.
+
+    Based on example: http://leafletjs.com/examples/quick-start/
+    Check also: https://arthur-e.github.io/Wicket/sandbox-gmaps3.html
+
+     */
+
+    var mymap = L.map('mapid').setView([61.223, 6.47], 14);
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        id: 'mapbox.streets'
+    }).addTo(mymap);
+
+
+    //
+    var wmsLayer = L.tileLayer.wms('http://gis3.nve.no/arcgis/rest/services/mapservice/VARSEL_PUBLISERT/MapServer/6').addTo(mymap);
+
+    var wmsTopo4 = L.tileLayer.wms('http://openwms.statkart.no/skwms1/wms.topo4?LAYERS=topo4_WMS').addTo(mymap);
+
+    // var aval_1 = L.polygon([   // similar to WKT but with x-y swapped and brackets instead of parenthesis.
+    //         [69.550902, 19.264285],
+    //         [69.55295, 19.281022],
+    //         [69.551340, 19.287771]
+    //     ],
+    //     {
+    //         color: 'red',
+    //         fillColor: '#f03',
+    //         fillOpacity: 0.5
+    //     }
+    // ).addTo(mymap);
+    // aval_1.bindPopup("<b>Detected:</b> 2017-02-19<br> <b>Size:</b> 3").openPopup();
+    //
+    //
+    // var aval_2 = L.polygon([
+    //     [69.522408, 19.303984],
+    //     [69.517888, 19.305093],
+    //     [69.518225, 19.301300]
+    // ]).addTo(mymap);
+    // aval_2.bindPopup("<b>Detected:</b> 2017-03-21<br> <b>Size:</b> 2");
+
+    /*
+    // Convert WKt to geojson:
+
+    var wkt_geom = "POINT(34.0218531, -81.0707438)";
+var wicket = new Wkt.Wkt();
+wicket.read(wkt_geom);
+
+// "greenIcon from official documentation noted above.
+var feature = wicket.toObject({icon: greenIcon});
+
+// Presumably featureGroup is already instantiated and added to your map.
+featureGroup.addLayer(feature);
+
+     */
+
+</script>
+
+
+</body>
+</html>
