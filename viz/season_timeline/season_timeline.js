@@ -286,7 +286,6 @@ var plotConfig = { //root object
     graphset: [DLchart, APchart, METchart]
 };
 
-
 var renderSeason = {
     id: 'GraphSet',
     data: plotConfig,
