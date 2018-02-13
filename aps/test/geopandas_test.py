@@ -8,6 +8,7 @@ print(aval.head(5))
 for a in aval:
     print(a)#, a['AREA m2'], a.area)
 
+# I think it is in UTM 33N
 aval.crs = {'init': 'EPSG:32633'}
 print(aval.crs)
 
