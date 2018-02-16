@@ -6,7 +6,6 @@ import georaster as gr
 
 
 
-
 # data_nc = netCDF4.Dataset(r'Y:\tmp\kmu\meps\arome_arctic_pp_1km_latest.nc')
 # la = data_nc.variables['land_area_fraction'][:]
 #
@@ -28,12 +27,16 @@ raster = r'N:\Prosjekter\APS\svalbard_regions\VarslingsOmr2018Land.tif'
 rdata = gr.SingleBandRaster(raster)
 #(xmin, xsize, x, ymax, y, ysize) = data.geot
 
-#print(rdata.projection)
-print(rdata.extent, type(rdata.srs))
+# print(rdata.projection)
+print(rdata.extent, rdata.srs)
 
+print(rdata.srs.GetProjParm('central_meridian'))
+print(rdata.ds)
 
-print(rdata.srs)
 plt.imshow(rdata.r, vmin=3000, vmax=3005)
 plt.show()
+
+
+
 
 ### ...export to netCDF
