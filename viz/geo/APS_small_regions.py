@@ -16,7 +16,7 @@ lat, lon = 65.0, 13.0
 m = folium.Map(location=[lat, lon], zoom_start=6, tiles="OpenStreetMap")
 
 topo4 = folium.features.WmsTileLayer(url="http://openwms.statkart.no/skwms1/wms.topo4?",
-                                     layers="topo4_WMS", transparent=True, format="image/jpeg",
+                                     layers="topo4_WMS", transparent=True, fmt="image/jpeg",
                                      name="Topo4")
 # topo4.add_to(m)
 

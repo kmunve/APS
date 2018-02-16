@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import folium
 from folium.plugins import MarkerCluster
 
+print(folium.__version__)
 
 def get_aval_data():
     aval = gpd.read_file(r'D:\Dev\APS\aps\data\satskred\S1_Tromsoe_20180116_052732\S1_Tromsoe_20180116_052732.shp')
@@ -22,16 +23,38 @@ def get_aval_data():
 def show_on_map(gdf):
 
     gdf_wgs84 = gdf.to_crs({'init': 'epsg:4326'})
-    print(gdf_wgs84.geometry[20].centroid.x)
 
     #
-    lat, lon = 69.6, 19.4
-    m = folium.Map(location=[lat, lon], zoom_start=9, tiles="OpenStreetMap")
+    lat, lon, zs = 69.6, 19.4, 13#9
+    m = folium.Map(location=[lat, lon], zoom_start=zs, tiles="OpenStreetMap")
 
     topo4 = folium.features.WmsTileLayer(url="http://openwms.statkart.no/skwms1/wms.topo4?",
-                                         layers="topo4_WMS", transparent=True, format="image/jpeg",
+                                         layers="topo4_WMS", transparent=True, fmt="image/jpeg",
                                          name="Topo4")
     topo4.add_to(m)
+
+    faresoner = folium.features.WmsTileLayer(url="https://gis3.nve.no/map/services/SkredSnoAktR/MapServer/WmsServer?",
+                                         layers="Utlopsomrade", transparent=True, fmt="image/png",
+                                         name="Avalanche run-out sone")
+    faresoner.add_to(m)
+
+    """
+    Can request WMS data as geojson
+    e.g.
+    https://gis3.nve.no/map/rest/services/SkredSnoAktR/MapServer/2/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=geojson
+    
+    """
+
+
+    kwargs = {"attribution": "NVE", "minZoom": "10"}
+    # seems like a bug in folium prohibits that these parameters
+    # are passed on to leaflet - can be set manually in the .html file
+
+    bratthet = folium.features.WmsTileLayer(url="https://gis3.nve.no/map/services/Bratthet/MapServer/WmsServer?",
+                                            layers="Bratthet_snoskred", transparent=True,
+                                            fmt="image/png", name='Bratthet',
+                                            **kwargs)
+    bratthet.add_to(m)
 
     mc = MarkerCluster(name='Avalanches 2018-01-16').add_to(m)
     # for a in gdf_wgs84.geometry[:]:
@@ -55,6 +78,10 @@ def show_on_map(gdf):
 
     m.save('aval_activity.html')
 
+
+def compare_subregions():
+    pass
+    # create choropleth maps like in https://blog.dominodatalab.com/creating-interactive-crime-maps-with-folium/
 
 if __name__ == '__main__':
     gdf = get_aval_data()
