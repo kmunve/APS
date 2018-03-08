@@ -1,7 +1,7 @@
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import folium
-from folium.plugins import MarkerCluster
+from folium.plugins import MarkerCluster, ImageOverlay
 
 print(folium.__version__)
 
@@ -19,6 +19,7 @@ def get_aval_data():
     #aval.plot()
     #plt.show()
     return aval
+
 
 def show_on_map(gdf):
 
@@ -55,6 +56,13 @@ def show_on_map(gdf):
                                             fmt="image/png", name='Bratthet',
                                             **kwargs)
     bratthet.add_to(m)
+
+    skredlop = folium.features.WmsTileLayer(url="https://www.vegvesen.no/kart/ogc/geodata_1_0/ows?",
+                                            layers="Skredlop", transparent=True, fmt="image/png", name='SVV Skredløp')
+    skredlop.add_to(m)
+
+    #varslingsregioner = ImageOverlay(image='http://gis3.nve.no/map/rest/services/Mapservices/XgeoStatic/MapServer/export?dpi=96&transparent=true&format=png8&layers=show%3A25%2C26%2C29&bbox=-635878.2758445519%2C6520140.001693336%2C1616936.8964524597%2C7851779.998306664&bboxSR=32633&imageSR=32633&size=1663%2C983&f=image',
+     #                                bounds=[[lat_min, lon_min], [lat_max, lon_max]])
 
     mc = MarkerCluster(name='Avalanches 2018-01-16').add_to(m)
     # for a in gdf_wgs84.geometry[:]:
