@@ -1,12 +1,17 @@
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import os
 import folium
 from folium.plugins import MarkerCluster, ImageOverlay
 
 print(folium.__version__)
 
-def get_aval_data():
-    aval = gpd.read_file(r'D:\Dev\APS\aps\data\satskred\S1_Tromsoe_20180116_052732\S1_Tromsoe_20180116_052732.shp')
+def get_aval_data(shp_file):
+    dt = os.path.split(shp_file)[1].split('.')[0].split('_')
+
+    aval = gpd.read_file(shp_file)
 
     # print(aval.head(5))
     # for a in aval:
@@ -16,9 +21,85 @@ def get_aval_data():
     aval.crs = {'init': 'EPSG:32633'}
     # print(aval.crs)
 
+    aval['DATE'] = dt[2]
+    aval['TIME'] = dt[3]
+
+
     #aval.plot()
     #plt.show()
     return aval
+
+
+def get_aval_stats(gdf, plot_results=False):
+    """
+    gdf: geo-dataframe
+    """
+    stats = gdf['AREA m2'].describe()
+    print(stats)
+
+    if plot_results:
+
+        aval_volumes = np.array([100, 1_000, 10_000, 100_000])
+        D30 = aval_volumes / 0.3 # avalanche size class at 30 cm slab thickness
+        D50 = aval_volumes / 0.5 # avalanche size class at 50 cm slab thickness
+        D100 = aval_volumes # avalanche size class at 100 cm slab thickness
+        D200 = aval_volumes / 2. # avalanche size class at 200 cm slab thickness
+
+        sns.set_style("whitegrid")
+        #stat_data = np.concatenate((stats[''], stats[''], stats[''], stats[''], stats['']), 0)
+        ax = sns.boxplot(y=gdf['AREA m2'])
+        # fig, ax = plt.boxplot(x=gdf['AREA m2'])
+
+        ax.set_ylim([0, stats['max']])
+        ax.set_xlabel('{0}T{1}'.format(gdf['DATE'][0], gdf['TIME'][0]))
+        ax.set_ylabel('Debris area (m2)')
+
+        plt.figtext(0.78, 0.95, stats, style='italic', fontsize=8,
+                    verticalalignment='top', horizontalalignment='left',
+                    bbox={'facecolor': 'red', 'alpha': 0.5, 'pad': 10})
+
+
+        s = 1
+        for d in D30:
+            c = '#007F00'
+            plt.axhline(y=d, xmin=0, xmax=0.25, linestyle='--', color=c)
+            ax.text(-0.5, d, 'D{0} @ {1} m'.format(s, 0.3),
+                    verticalalignment='bottom', horizontalalignment='left',
+                    #transform=ax.transAxes,
+                    color=c, fontsize=12)
+            s += 1
+
+        s = 1
+        for d in D50:
+            c = '#1F7C1F'
+            plt.axhline(y=d, xmin=0.25, xmax=0.5, linestyle='--', color=c)
+            ax.text(-0.25, d, 'D{0} @ {1} m'.format(s, 0.5),
+                    verticalalignment='bottom', horizontalalignment='left',
+                    # transform=ax.transAxes,
+                    color=c, fontsize=12)
+            s += 1
+
+        s = 1
+        for d in D100:
+            c = '#3D7A3D'
+            plt.axhline(y=d, xmin=0.5, xmax=0.75, linestyle='--', color=c)
+            ax.text(0, d, 'D{0} @ {1} m'.format(s, 1.0),
+                    verticalalignment='bottom', horizontalalignment='left',
+                    # transform=ax.transAxes,
+                    color=c, fontsize=12)
+            s += 1
+
+        s = 1
+        for d in D200:
+            c = '#597759'
+            plt.axhline(y=d, xmin=0.75, xmax=1.0, linestyle='--', color=c)
+            ax.text(0.25, d, 'D{0} @ {1} m'.format(s, 2.0),
+                    verticalalignment='bottom', horizontalalignment='left',
+                    # transform=ax.transAxes,
+                    color=c, fontsize=12)
+            s += 1
+
+        plt.show()
 
 
 def show_on_map(gdf):
@@ -45,7 +126,6 @@ def show_on_map(gdf):
     https://gis3.nve.no/map/rest/services/SkredSnoAktR/MapServer/2/query?where=1%3D1&text=&objectIds=&time=&geometry=&geometryType=esriGeometryEnvelope&inSR=&spatialRel=esriSpatialRelIntersects&relationParam=&outFields=*&returnGeometry=true&returnTrueCurves=false&maxAllowableOffset=&geometryPrecision=&outSR=&returnIdsOnly=false&returnCountOnly=false&orderByFields=&groupByFieldsForStatistics=&outStatistics=&returnZ=false&returnM=false&gdbVersion=&returnDistinctValues=false&resultOffset=&resultRecordCount=&queryByDistance=&returnExtentsOnly=false&datumTransformation=&parameterValues=&rangeValues=&f=geojson
     
     """
-
 
     kwargs = {"attribution": "NVE", "minZoom": "10"}
     # seems like a bug in folium prohibits that these parameters
@@ -91,6 +171,13 @@ def compare_subregions():
     pass
     # create choropleth maps like in https://blog.dominodatalab.com/creating-interactive-crime-maps-with-folium/
 
+
 if __name__ == '__main__':
-    gdf = get_aval_data()
-    show_on_map(gdf)
+    # shp_file = r'D:\Dev\APS\aps\data\satskred\S1_Tromsoe_20180116_052732\S1_Tromsoe_20180116_052732.shp'
+    shp_file = r'D:\Dev\APS\aps\data\satskred\S1_IndreTroms_20180120_161440\S1_IndreTroms_20180120_161440\S1_IndreTroms_20180120_161440.shp'
+    gdf = get_aval_data(shp_file)
+    print(gdf.describe())
+    get_aval_stats(gdf, plot_results=True)
+    # print(gdf['AREA m2'].describe()['75%'])
+    # print(type(gdf['AREA m2'].describe()))
+    # show_on_map(gdf)
