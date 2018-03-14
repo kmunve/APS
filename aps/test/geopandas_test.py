@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import os
-import folium
-from folium.plugins import MarkerCluster, ImageOverlay
+#import folium
+#from folium.plugins import MarkerCluster, ImageOverlay
 
-print(folium.__version__)
+#print(folium.__version__)
 
 def get_aval_data(shp_file):
     dt = os.path.split(shp_file)[1].split('.')[0].split('_')
@@ -30,21 +30,28 @@ def get_aval_data(shp_file):
     return aval
 
 
-def get_aval_stats(gdf, plot_results=False):
+def get_aval_stats(gdf, plot_hist=False, plot_box=False):
     """
     gdf: geo-dataframe
     """
     stats = gdf['AREA m2'].describe()
     print(stats)
 
-    if plot_results:
+    aval_volumes = np.array([100, 1_000, 10_000, 100_000])
+    D30 = aval_volumes / 0.3  # avalanche size class at 30 cm slab thickness
+    D50 = aval_volumes / 0.5  # avalanche size class at 50 cm slab thickness
+    D100 = aval_volumes  # avalanche size class at 100 cm slab thickness
+    D200 = aval_volumes / 2.  # avalanche size class at 200 cm slab thickness
 
-        aval_volumes = np.array([100, 1_000, 10_000, 100_000])
-        D30 = aval_volumes / 0.3 # avalanche size class at 30 cm slab thickness
-        D50 = aval_volumes / 0.5 # avalanche size class at 50 cm slab thickness
-        D100 = aval_volumes # avalanche size class at 100 cm slab thickness
-        D200 = aval_volumes / 2. # avalanche size class at 200 cm slab thickness
+    if plot_hist:
+        f, axes = plt.subplots(2, 2, figsize=(7, 7), sharex=True, sharey=True)
+        sns.distplot(gdf['AREA m2'], bins=D30, color="skyblue", ax=axes[0, 0], kde=False, hist_kws={"edgecolor": "k", "linewidth": 1})
+        sns.distplot(gdf['AREA m2'], bins=D50, color="olive", ax=axes[0, 1], kde=False, hist_kws={"edgecolor": "k", "linewidth": 1})
+        sns.distplot(gdf['AREA m2'], bins=D100, color="gold", ax=axes[1, 0], kde=False, hist_kws={"edgecolor": "k", "linewidth": 1})
+        sns.distplot(gdf['AREA m2'], bins=D200, color="teal", ax=axes[1, 1], kde=False, hist_kws={"edgecolor": "k", "linewidth": 1})
+        plt.show()
 
+    if plot_box:
         sns.set_style("whitegrid")
         #stat_data = np.concatenate((stats[''], stats[''], stats[''], stats[''], stats['']), 0)
         ax = sns.boxplot(y=gdf['AREA m2'])
@@ -173,11 +180,11 @@ def compare_subregions():
 
 
 if __name__ == '__main__':
-    # shp_file = r'D:\Dev\APS\aps\data\satskred\S1_Tromsoe_20180116_052732\S1_Tromsoe_20180116_052732.shp'
-    shp_file = r'D:\Dev\APS\aps\data\satskred\S1_IndreTroms_20180120_161440\S1_IndreTroms_20180120_161440\S1_IndreTroms_20180120_161440.shp'
+    shp_file = r'C:\Users\kmu\Dev\APS\aps\data\satskred\S1_Tromsoe_20180116_052732\S1_Tromsoe_20180116_052732.shp'
+    #shp_file = r'C:\Users\kmu\Dev\APS\aps\data\satskred\S1_Voss_20180224_170949\S1_Voss_20180224_170949.shp'
     gdf = get_aval_data(shp_file)
     print(gdf.describe())
-    get_aval_stats(gdf, plot_results=True)
+    get_aval_stats(gdf, plot_hist=True)
     # print(gdf['AREA m2'].describe()['75%'])
     # print(type(gdf['AREA m2'].describe()))
     # show_on_map(gdf)
