@@ -21,6 +21,7 @@ def get_aval_data(shp_file):
     aval.crs = {'init': 'EPSG:32633'}
     # print(aval.crs)
 
+    aval['REGION'] = dt[1]
     aval['DATE'] = dt[2]
     aval['TIME'] = dt[3]
 
@@ -35,24 +36,43 @@ def get_aval_stats(gdf, plot_hist=False, plot_box=False):
     gdf: geo-dataframe
     """
     stats = gdf['AREA m2'].describe()
-    print(stats)
+    #print(stats)
 
     aval_volumes = np.array([100, 1_000, 10_000, 100_000])
     D30 = aval_volumes / 0.3  # avalanche size class at 30 cm slab thickness
     D50 = aval_volumes / 0.5  # avalanche size class at 50 cm slab thickness
-    D100 = aval_volumes  # avalanche size class at 100 cm slab thickness
+    D100 = aval_volumes  # §avalanche size class at 100 cm slab thickness
     D200 = aval_volumes / 2.  # avalanche size class at 200 cm slab thickness
 
+    print(D30, D100)
+
     if plot_hist:
+        #sns.set_context('talk')
+
         f, axes = plt.subplots(2, 2, figsize=(7, 7), sharex=True, sharey=True)
-        sns.distplot(gdf['AREA m2'], bins=D30, color="skyblue", ax=axes[0, 0], kde=False, hist_kws={"edgecolor": "k", "linewidth": 1})
-        sns.distplot(gdf['AREA m2'], bins=D50, color="olive", ax=axes[0, 1], kde=False, hist_kws={"edgecolor": "k", "linewidth": 1})
-        sns.distplot(gdf['AREA m2'], bins=D100, color="gold", ax=axes[1, 0], kde=False, hist_kws={"edgecolor": "k", "linewidth": 1})
-        sns.distplot(gdf['AREA m2'], bins=D200, color="teal", ax=axes[1, 1], kde=False, hist_kws={"edgecolor": "k", "linewidth": 1})
-        plt.show()
+
+        plt.subplots_adjust(top=0.9)
+        f.suptitle('{2} {0}T{1} (#avalanches: {3})'.format(gdf['DATE'][0], gdf['TIME'][0], gdf['REGION'][0], len(gdf['AREA m2'])))  # can also get the figure from plt.gcf()
+        c = 'lightgrey'
+
+        for cax, D, l in zip([axes[0 ,0], axes[0 ,1], axes[1 ,0], axes[1 ,1]], [D30, D50, D100, D200], ["@ 0.3 m", "@ 0.5 m", "@ 1.0 m", "@ 2.0 m"]):
+            cax.set(xscale="log")
+            sns.distplot(gdf['AREA m2'], bins=D, color="skyblue", ax=cax, kde=False,
+                         hist_kws={"edgecolor": "k", "linewidth": 1})
+            cax.set_title(l)
+            _s = 1
+            for d in D:
+                cax.axvline(x=d, ymin=0, ymax=0.9, linestyle='--', color=c)
+                cax.text(d*0.5, 0.99*cax.get_ylim()[1], 'D{0}'.format(_s),
+                                verticalalignment='top', horizontalalignment='center',
+                                color=c, fontsize=9)
+                _s += 1
+
+        plt.savefig('{2}_{0}T{1}.png'.format(gdf['DATE'][0], gdf['TIME'][0], gdf['REGION'][0]), dpi=150)
+        # plt.show()
 
     if plot_box:
-        sns.set_style("whitegrid")
+        #sns.set_style("whitegrid")
         #stat_data = np.concatenate((stats[''], stats[''], stats[''], stats[''], stats['']), 0)
         ax = sns.boxplot(y=gdf['AREA m2'])
         # fig, ax = plt.boxplot(x=gdf['AREA m2'])
@@ -64,7 +84,6 @@ def get_aval_stats(gdf, plot_hist=False, plot_box=False):
         plt.figtext(0.78, 0.95, stats, style='italic', fontsize=8,
                     verticalalignment='top', horizontalalignment='left',
                     bbox={'facecolor': 'red', 'alpha': 0.5, 'pad': 10})
-
 
         s = 1
         for d in D30:
@@ -180,8 +199,8 @@ def compare_subregions():
 
 
 if __name__ == '__main__':
-    shp_file = r'C:\Users\kmu\Dev\APS\aps\data\satskred\S1_Tromsoe_20180116_052732\S1_Tromsoe_20180116_052732.shp'
-    #shp_file = r'C:\Users\kmu\Dev\APS\aps\data\satskred\S1_Voss_20180224_170949\S1_Voss_20180224_170949.shp'
+    #shp_file = r'C:\Users\kmu\Dev\APS\aps\data\satskred\S1_Tromsoe_20180116_052732\S1_Tromsoe_20180116_052732.shp'
+    shp_file = r'C:\Users\kmu\Dev\APS\aps\data\satskred\S1_Voss_20180205_171801\S1_Voss_20180205_171801.shp'
     gdf = get_aval_data(shp_file)
     print(gdf.describe())
     get_aval_stats(gdf, plot_hist=True)
