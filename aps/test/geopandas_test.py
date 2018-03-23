@@ -3,10 +3,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import os
-#import folium
-#from folium.plugins import MarkerCluster, ImageOverlay
+import folium
+from folium.plugins import MarkerCluster, ImageOverlay
 
-#print(folium.__version__)
+print(folium.__version__)
 
 def get_aval_data(shp_file):
     dt = os.path.split(shp_file)[1].split('.')[0].split('_')
@@ -189,8 +189,7 @@ def show_on_map(gdf):
     # plugins.MeasureControl().add_to(m)
     # # add drawing functionality
     # #folium.plugins.Draw().add_to(m)
-
-    m.save('aval_activity.html')
+    m.save('aval_activity_{2}_{0}T{1}.html'.format(gdf['DATE'][0], gdf['TIME'][0], gdf['REGION'][0]))
 
 
 def compare_subregions():
@@ -199,11 +198,11 @@ def compare_subregions():
 
 
 if __name__ == '__main__':
-    #shp_file = r'C:\Users\kmu\Dev\APS\aps\data\satskred\S1_Tromsoe_20180116_052732\S1_Tromsoe_20180116_052732.shp'
-    shp_file = r'C:\Users\kmu\Dev\APS\aps\data\satskred\S1_Voss_20180205_171801\S1_Voss_20180205_171801.shp'
+    shp_file = r'D:\Dev\APS\aps\data\satskred\S1_Voss_20180224_170949\S1_Voss_20180224_170949.shp'
     gdf = get_aval_data(shp_file)
     print(gdf.describe())
     get_aval_stats(gdf, plot_hist=True)
     # print(gdf['AREA m2'].describe()['75%'])
     # print(type(gdf['AREA m2'].describe()))
-    # show_on_map(gdf)
+    show_on_map(gdf)
+

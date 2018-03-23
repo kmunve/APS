@@ -18,7 +18,7 @@ m = folium.Map(location=[lat, lon], zoom_start=6, tiles="OpenStreetMap")
 topo4 = folium.features.WmsTileLayer(url="http://openwms.statkart.no/skwms1/wms.topo4?",
                                      layers="topo4_WMS", transparent=True, fmt="image/jpeg",
                                      name="Topo4")
-# topo4.add_to(m)
+topo4.add_to(m)
 
 for key in s_reg:
     reg_marker = folium.Circle(
