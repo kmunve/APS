@@ -35,8 +35,8 @@ def get_warnings_as_json(region_ids, start_date, end_date, lang_key=1, simple=Fa
             # if we are looping the initial list make sure each item gets the recursive count default
             recursive_count = recursive_count_default
 
-        if region_id > 100:
-            region_id = region_id - 100
+        # if region_id > 100:
+        #     region_id = region_id - 100
 
         if simple:
             api_type = 'Simple'
@@ -46,7 +46,7 @@ def get_warnings_as_json(region_ids, start_date, end_date, lang_key=1, simple=Fa
         # md.log_and_print("getForecastApi -> get_warnings_as_json: Getting AvalancheWarnings for {0} from {1} til {2}"\
         #     .format(region_id, start_date, end_date))
 
-        url = "http://api01.nve.no/hydrology/forecast/avalanche/v2.0.2/api/AvalancheWarningByRegion/{4}/{0}/{3}/{1}/{2}"\
+        url = "https://api01.nve.no/hydrology/forecast/avalanche/v4.0.0/api/AvalancheWarningByRegion/{4}/{0}/{3}/{1}/{2}"\
             .format(region_id, start_date, end_date, lang_key, api_type)
 
         # If at first you don't succeed, try and try again.
@@ -62,7 +62,7 @@ def get_warnings_as_json(region_ids, start_date, end_date, lang_key=1, simple=Fa
                 # TODO: remove line below and use proper logging
                 print("Rec", recursive_count)
 
-    return warnings
+    return warnings, url
 
 '''
 def get_warnings(region_ids, start_date, end_date, lang_key=1):
