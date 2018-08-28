@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script>L_PREFER_CANVAS = false;
+    L_NO_TOUCH = false;
+    L_DISABLE_3D = false;</script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.2.0/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.2.0/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/>
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet"
+          href="https://rawgit.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+    <style>html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }</style>
+    <style>#map {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+    }</style>
+
+    <style>#pwl_map {
+        position: relative;
+        width: 100.0%;
+        height: 100.0%;
+        left: 0.0%;
+        top: 0.0%;
+    }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css"/>
+    <style>
+        #export {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            z-index: 999;
+            background: white;
+            color: black;
+            padding: 6px;
+            border-radius: 4px;
+            font-family: 'Helvetica Neue';
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: none;
+            top: 90px;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-ajax/2.1.0/leaflet.ajax.min.js"></script>
+
+</head>
+<body>
+
+<div class="folium-map" id="pwl_map"></div>
+<a href='#' id='export'>Save</a>
+</body>
+
+<script>
+
+
+    var bounds = null;
+
+
+    var pwl_map = L.map(
+        'pwl_map', {
+            center: [65.0, 13.0],
+            zoom: 6,
+            maxBounds: bounds,
+            layers: [],
+            worldCopyJump: false,
+            crs: L.CRS.EPSG3857,
+            zoomControl: true,
+        });
+
+
+    var tile_layer_openstreetmap = L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+            "attribution": null,
+            "detectRetina": false,
+            "maxNativeZoom": 18,
+            "maxZoom": 18,
+            "minZoom": 0,
+            "noWrap": false,
+            "subdomains": "abc"
+        }).addTo(pwl_map);
+
+
+    var geo_json_pwl_2 = L.geoJson.ajax("data.geojson").addTo(pwl_map);
+
+    var geo_json_pwl = L.geoJson(
+        {
+            "features": [{
+                "geometry": {
+                    "coordinates": [[[16.21582, 68.911005], [17.358398, 68.244968], [20.236816, 68.997802], [17.556152, 69.349339], [16.435547, 68.926811], [16.21582, 68.911005]]],
+                    "type": "Polygon"
+                }, "properties": {"highlight": {}, "style": {}}, "type": "Feature"
+            }], "type": "FeatureCollection"
+        }
+    ).addTo(pwl_map);
+    geo_json_pwl.setStyle(function (feature) {
+        return feature.properties.style;
+    });
+
+
+    var layer_control_4ae01128207248d8a06d7d101d242c6f = {
+        base_layers: {"openstreetmap": tile_layer_openstreetmap,},
+        overlays: {"Vedv. svake lag": geo_json_pwl,}
+    };
+    L.control.layers(
+        layer_control_4ae01128207248d8a06d7d101d242c6f.base_layers,
+        layer_control_4ae01128207248d8a06d7d101d242c6f.overlays,
+        {
+            position: 'topright',
+            collapsed: true,
+            autoZIndex: true
+        }).addTo(pwl_map);
+
+
+    var lat_lng_popup_9e2e5a4b63c04e7189962c6c1917be15 = L.popup();
+
+    function latLngPop(e) {
+        lat_lng_popup_9e2e5a4b63c04e7189962c6c1917be15
+            .setLatLng(e.latlng)
+            .setContent("Latitude: " + e.latlng.lat.toFixed(4) +
+                "<br>Longitude: " + e.latlng.lng.toFixed(4))
+            .openOn(pwl_map);
+    }
+
+    pwl_map.on('click', latLngPop);
+
+
+    // FeatureGroup is to store editable layers.
+    //var drawnItems = new L.featureGroup().addTo(pwl_map);
+    var drawnItems = geo_json_pwl_2; // make this dataset editable - geo_json_pwl can not be edited
+
+    // here I can load existing polygons using Leaflet AJAX: https://github.com/calvinmetcalf/leaflet-ajax
+
+    var draw_control_77fc3a7990dd4634aa26c4b535c42681 = new L.Control.Draw({
+        "draw": {
+            "marker": false,
+            "polyline": false,
+            "rectangle": false,
+            "circle": false,
+            "circlemarker": false
+        },
+        "edit": {"featureGroup": drawnItems}
+    }).addTo(pwl_map)
+    pwl_map.on(L.Draw.Event.CREATED, function (event) {
+        var layer = event.layer,
+            type = event.layerType,
+            coords;
+        var coords = JSON.stringify(layer.toGeoJSON());
+        layer.on('click', function () {
+            alert(coords);
+            console.log(coords);
+        });
+        drawnItems.addLayer(layer);
+    });
+
+    pwl_map.on('draw:created', function (e) {
+        drawnItems.addLayer(e.layer);
+    });
+
+    document.getElementById('export').onclick = function (e) {
+        var data = drawnItems.toGeoJSON();
+        var convertedData = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data));
+        document.getElementById('export').setAttribute('href', 'data:' + convertedData);
+        document.getElementById('export').setAttribute('download', 'data.geojson');
+    }
+
+</script>
