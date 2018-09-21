@@ -1,0 +1,132 @@
+{
+  "AvalancheTypeId": {
+    "0": "Not given",
+    "10": "Slab avalanche",
+    "20": "Loose snow avalanche"
+  },
+  "AvalancheProblemTypeId": {
+    "0": "Ikke gitt",
+    "3": "Loose dry avalanches",
+    "5": "Loose wet avalanches",
+    "7": "New snow slab",
+    "10": "Wind slab avalanches",
+    "20": "New snow",
+    "30": "Persistent slab avalanches",
+    "37": "Persistent deep slab avalanches",
+    "40": "Wet snow",
+    "45": "Wet slab avalanches",
+    "50": "Glide avalanche",
+    "Comment": "Re-group for classification. See Class_AvalancheProblemType"
+  },
+  "Class_AvalancheProblemTypeId": {
+    "0": "0",
+    "3": "1",
+    "5": "2",
+    "7": "5",
+    "10": "6",
+    "20": "5",
+    "30": "7",
+    "37": "7",
+    "40": "4",
+    "45": "4",
+    "50": "3",
+    "Comment": "Re-grouping of AvalancheProblemTypeId for classification"
+  },
+  "Class_AvalancheProblemTypeName": {
+    "0": "Not given",
+    "1": "Loose dry avalanches",
+    "2": "Loose wet avalanches",
+    "3": "Glide avalanche",
+    "4": "Wet slab avalanches",
+    "5": "New snow slab",
+    "6": "Wind slab avalanches",
+    "7": "Persistent slab avalanches",
+    "Comment": "Re-grouping of AvalancheProblemType for classification"
+  },
+  "AvalTriggerSimpleId": {
+    "22": "Spontaneous release",
+    "21": "Low additional load",
+    "10": "High additional load",
+    "0": "Not given"
+  },
+  "DestructiveSizeId": {
+    "0": "Not given",
+    "1": "Small",
+    "2": "Medium",
+    "3": "Large",
+    "4": "Very large",
+    "5": "Extreme"
+  },
+  "AvalPropagationId": {
+    "5": "Also in moderately steep terrain",
+    "4": "Most steep slopes",
+    "3": "Many steep slopes",
+    "2": "Some steep slopes",
+    "1": "Isolated steep slopes",
+    "0": "Not given"
+  },
+  "Class_AvalDistributionId": {
+    "5": "3",
+    "4": "3",
+    "3": "3",
+    "2": "2",
+    "1": "1",
+    "0": "0"
+  },
+  "Class_AvalDistributionName": {
+    "3": "Widespread",
+    "2": "Specific",
+    "1": "Isolated",
+    "0": "Not given"
+  },
+  "beaufort_scale_no": {
+    "Stille/svak vind": 2,
+    "Bris": 4,
+    "Frisk bris": 5,
+    "Liten kuling": 6,
+    "Stiv kuling": 7,
+    "Sterk kuling": 8,
+    "Liten storm": 9,
+    "Storm": 10,
+    "Orkan": 12
+  },
+  "beaufort_scale_en": {
+    "Calm/light breeze": 2,
+    "Breeze": 4,
+    "Fresh breeze": 5,
+    "Strong breeze": 6,
+    "Moderate gale": 7,
+    "Gale": 8,
+    "Strong gale": 9,
+    "Storm": 10,
+    "Hurricane": 12
+  },
+  "wind_dir_conv_no": {
+    "None": 0,
+    "N": 1,
+    "NØ": 2,
+    "Ø": 3,
+    "SØ": 4,
+    "S": 5,
+    "SV": 6,
+    "V": 7,
+    "NV": 8
+  },
+  "wind_dir_conv_en": {
+    "None": 0,
+    "N": 1,
+    "NE": 2,
+    "E": 3,
+    "SE": 4,
+    "S": 5,
+    "SW": 6,
+    "W": 7,
+    "NW": 8
+  },
+  "": {},
+  "": {},
+  "": {},
+  "": {}
+}
+
+
