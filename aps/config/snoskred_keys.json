@@ -34,13 +34,13 @@
   },
   "Class_AvalancheProblemTypeName": {
     "0": "Not given",
-    "1": "Loose dry avalanches",
-    "2": "Loose wet avalanches",
+    "1": "Loose dry",
+    "2": "Loose wet",
     "3": "Glide avalanche",
-    "4": "Wet slab avalanches",
-    "5": "New snow slab",
-    "6": "Wind slab avalanches",
-    "7": "Persistent slab avalanches",
+    "4": "Wet slab",
+    "5": "Storm slab",
+    "6": "Wind slab",
+    "7": "Persistent slab",
     "Comment": "Re-grouping of AvalancheProblemType for classification"
   },
   "AvalTriggerSimpleId": {
