@@ -5,8 +5,8 @@ from pyproj import Proj
 
 class ModelGrid(metaclass=ABCMeta):
     """Creates a spatial grid"""
-    def __init__(self):
-        pass
+    def __init__(self, parameter: str):
+        self.parameter = parameter
 
     @abstractmethod # flags method that MUST be implemented by all subclasses
     def to_netCDF(self, filename):
@@ -23,7 +23,7 @@ class ModelGrid(metaclass=ABCMeta):
 
 class SeNorgeGrid(ModelGrid):
     def __init__(self):
-        super(ModelGrid, self).__init__()
+        super(ModelGrid, self).__init__(parameter)
 
         # lower left corner in m
         self.LowerLeftEast = -75000
