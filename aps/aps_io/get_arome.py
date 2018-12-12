@@ -22,7 +22,6 @@ def _nc_info(nc_data):
 
 def nc_load(nc_object, vars, bounding_box=None, time_period=None):
     """
-
     Dimensions for the nc-files on thredds are y, x or time, y, x.
 
     :param nc_object: filename or URL of netCDF file, e.g. './Data/arome_metcoop_default2_5km_latest.nc' or 'http://thredds.met.no/thredds/dodsC/arome25/arome_metcoop_default2_5km_latest.nc'
@@ -31,7 +30,6 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
     :param time_period: list of start and end time, e.g. []
     :return:
     """
-
     # Access netcdf file via OpenDAP
     nc = netCDF4.Dataset(nc_object)
 
@@ -44,10 +42,20 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
         y_var = nc.variables['y']
     except KeyError:
         print("Variables 'x' and 'y' are not provided.")
-    latitude_var = nc.variables['latitude']
-    longitude_var = nc.variables['longitude']
+    try:
+        latitude_var = nc.variables['latitude']
+        longitude_var = nc.variables['longitude']
+    except KeyError:
+        try:
+            latitude_var = nc.variables['lat']
+            longitude_var = nc.variables['lon']
+        except KeyError:
+            print("Variables 'lat/latitude' and 'lon/longitude' are not provided.")
     time_var = nc.variables['time']
-    altitude_var = nc.variables['altitude']
+    try:
+        altitude_var = nc.variables['altitude']
+    except KeyError:
+        print("Variable 'altitude' is not provided.")
     try:
         land_area_fraction_var = nc.variables['land_area_fraction']
     except KeyError:
@@ -74,7 +82,10 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
             nc_vars[var] = nc.variables[var][:].squeeze()[time_period[0]:time_period[1], lon1:lon2, lat1:lat2]
 
     else:
-        altitude = altitude_var[:, :]
+        try:
+            altitude = altitude_var[:, :]
+        except UnboundLocalError:
+            altitude = None
         try:
             land_area_fraction = land_area_fraction_var[lon1:lon2, lat1:lat2]
         except UnboundLocalError:
@@ -85,9 +96,13 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
     times = time_var[time_period[0]:time_period[1]]
     jd = netCDF4.num2date(times[:], time_var.units)
 
-
-
-
     return jd, altitude, land_area_fraction, nc_vars
+
+
+if __name__ == "__main__":
+    ncfile = r"\\hdata\grid\metdata\prognosis\meps\det\archive\2018\meps_det_extracted_1km_20181211T00Z.nc"
+    jd, altitude, land_area_fraction, nc_vars = nc_load(ncfile, ["altitude_of_0_degree_isotherm"], time_period=[0, 24])
+
+    k = 'm'
 
 
