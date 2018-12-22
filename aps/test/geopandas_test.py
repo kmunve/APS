@@ -4,7 +4,8 @@ import seaborn as sns
 import numpy as np
 import os
 import folium
-from folium.plugins import MarkerCluster, ImageOverlay
+from folium.raster_layers import ImageOverlay
+from folium.plugins import MarkerCluster
 
 print(folium.__version__)
 
@@ -136,12 +137,12 @@ def show_on_map(gdf):
     lat, lon, zs = 69.6, 19.4, 13#9
     m = folium.Map(location=[lat, lon], zoom_start=zs, tiles="OpenStreetMap")
 
-    topo4 = folium.features.WmsTileLayer(url="http://openwms.statkart.no/skwms1/wms.topo4?",
+    topo4 = folium.raster_layers.WmsTileLayer(url="http://openwms.statkart.no/skwms1/wms.topo4?",
                                          layers="topo4_WMS", transparent=True, fmt="image/jpeg",
                                          name="Topo4")
     topo4.add_to(m)
 
-    faresoner = folium.features.WmsTileLayer(url="https://gis3.nve.no/map/services/SkredSnoAktR/MapServer/WmsServer?",
+    faresoner = folium.raster_layers.WmsTileLayer(url="https://gis3.nve.no/map/services/SkredSnoAktR/MapServer/WmsServer?",
                                          layers="Utlopsomrade", transparent=True, fmt="image/png",
                                          name="Avalanche run-out sone")
     faresoner.add_to(m)
@@ -157,13 +158,13 @@ def show_on_map(gdf):
     # seems like a bug in folium prohibits that these parameters
     # are passed on to leaflet - can be set manually in the .html file
 
-    bratthet = folium.features.WmsTileLayer(url="https://gis3.nve.no/map/services/Bratthet/MapServer/WmsServer?",
+    bratthet = folium.raster_layers.WmsTileLayer(url="https://gis3.nve.no/map/services/Bratthet/MapServer/WmsServer?",
                                             layers="Bratthet_snoskred", transparent=True,
                                             fmt="image/png", name='Bratthet',
                                             **kwargs)
     bratthet.add_to(m)
 
-    skredlop = folium.features.WmsTileLayer(url="https://www.vegvesen.no/kart/ogc/geodata_1_0/ows?",
+    skredlop = folium.raster_layers.WmsTileLayer(url="https://www.vegvesen.no/kart/ogc/geodata_1_0/ows?",
                                             layers="Skredlop", transparent=True, fmt="image/png", name='SVV Skredløp')
     skredlop.add_to(m)
 
@@ -205,4 +206,6 @@ if __name__ == '__main__':
     # print(gdf['AREA m2'].describe()['75%'])
     # print(type(gdf['AREA m2'].describe()))
     show_on_map(gdf)
+
+    k = 'm'
 
