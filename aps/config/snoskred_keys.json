@@ -80,6 +80,7 @@
     "0": "Not given"
   },
   "beaufort_scale_no": {
+    "None": 0,
     "Stille/svak vind": 2,
     "Bris": 4,
     "Frisk bris": 5,
@@ -91,6 +92,7 @@
     "Orkan": 12
   },
   "beaufort_scale_en": {
+    "None": 0,
     "Calm/light breeze": 2,
     "Breeze": 4,
     "Fresh breeze": 5,

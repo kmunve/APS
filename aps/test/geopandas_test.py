@@ -199,7 +199,7 @@ def compare_subregions():
 
 
 if __name__ == '__main__':
-    shp_file = r'D:\Dev\APS\aps\data\satskred\S1_Voss_20180224_170949\S1_Voss_20180224_170949.shp'
+    shp_file = r'D:\Dev\APS\aps\data\satskred\AvalDet_20190106_051945_ref_20181231_trno_168_VV.shp\AvalDet_20190106_051945_ref_20181231_trno_168_VV.shp\AvalDet_20190106_051945_ref_20181231_trno_168_VV.shp'
     gdf = get_aval_data(shp_file)
     print(gdf.describe())
     get_aval_stats(gdf, plot_hist=True)
