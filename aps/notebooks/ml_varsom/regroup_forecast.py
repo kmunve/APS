@@ -26,4 +26,6 @@ def regroup(df_in):
         #df[f'avalanche_problem_{i}_distribution_id'] = df[f'avalanche_problem_{i}_propagation_id'].apply(
         #    lambda i: 0 if str(i) == str(np.nan) else np.int(snoskred_keys['Class_AvalDistributionId'][str(int(i))]))
 
+    # Group the forecasting regions
+    df['region_group_id'] = df['region_id'].apply(lambda i: snoskred_keys['region_group'][i])
     return df
