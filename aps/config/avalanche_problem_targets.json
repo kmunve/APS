@@ -1,0 +1,9 @@
+{
+  "description": "avalanche_problem_type:avalanche_size_sensitivity_distribution:natural",
+  "new_snow_slab:size_1:unreactive:isolated": 1111,
+  "new_snow_slab:size_1:unreactive:specific": 1112,
+  "new_snow_slab:size_1:unreactive:widespread": 1113,
+  "new_snow_slab:size_1:stubborn:isolated": 1121,
+  "new_snow_slab:size_1:stubborn:specific": 1122,
+  "new_snow_slab:size_1:stubborn:widespread": 1123
+}
