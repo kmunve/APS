@@ -43,11 +43,30 @@
     "7": "Persistent slab",
     "Comment": "Re-grouping of AvalancheProblemType for classification"
   },
+  "AvalProbability": {
+    "7": "Very likely",
+    "5": "Likely",
+    "3": "Possible",
+    "2": "Unlikely",
+    "0": "Not given"
+  },
   "AvalTriggerSimpleId": {
     "22": "Spontaneous release",
     "21": "Low additional load",
     "10": "High additional load",
     "0": "Not given"
+  },
+  "Class_AvalTriggerSimpleId": {
+    "22": "3",
+    "21": "2",
+    "10": "1",
+    "0": "0"
+  },
+  "Class_AvalSensitivityId": {
+    "1": "Unreactive",
+    "2": "Stubborn",
+    "3": "Reactive",
+    "4": "Touchy"
   },
   "DestructiveSizeId": {
     "0": "Not given",
