@@ -100,9 +100,13 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
 
 
 if __name__ == "__main__":
-    ncfile = r"\\hdata\grid\metdata\prognosis\meps\det\archive\2018\meps_det_extracted_1km_20181211T00Z.nc"
+    ncfile = r"\\hdata\grid\metdata\prognosis\meps\det\archive\2019\meps_det_extracted_1km_20190120T00Z.nc"
     jd, altitude, land_area_fraction, nc_vars = nc_load(ncfile, ["altitude_of_0_degree_isotherm"], time_period=[0, 24])
 
+    from grid_data import SeNorgeGrid
+    sg = SeNorgeGrid('Freezing level')
+    sg.from_ndarray(nc_vars['altitude_of_0_degree_isotherm'])
+    #TODO: check correct shape; decide if third dimensions should be removed
     k = 'm'
 
 
