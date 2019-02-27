@@ -12,7 +12,6 @@ def load_region(region_id, local=False, return_regions=False):
         # flip up-down because Meps data is upside down
         #_regions = np.flipud(_vr.variables["LokalOmr_2018"][:])
         _regions = _vr.variables["LokalOmr_2018"][:]
-
     else:
         _vr = Dataset(
             os.path.join(os.path.dirname(os.path.abspath(__file__)), r"data/terrain_parameters/VarslingsOmr_2019.nc"),
@@ -20,6 +19,14 @@ def load_region(region_id, local=False, return_regions=False):
         # flip up-down because Meps data is upside down
         #_regions = np.flipud(_vr.variables["skredomr19_km"][:])
         _regions = _vr.variables["skredomr19_km"][:]
+        print("Missing value: {mv}".format(mv=_vr.variables["skredomr19_km"].missing_value))
+
+        #TODO: use attribute "missing_value" to set the no-data vlaues and make sure they appear correctly in the mask.
+
+        # _vr = Dataset(
+        #     os.path.join(os.path.dirname(os.path.abspath(__file__)), r"data/terrain_parameters/VarslingsOmr_2017.nc"),
+        #     "r")
+        # _regions = _vr.variables["VarslingsOmr_2017"][:]
 
     _region_mask = np.where(_regions == region_id)
 
@@ -56,8 +63,8 @@ def clip_region(nc_variable, region_mask, t_index, y_min, y_max, x_min, x_max):
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
-    regions, region_mask, y_min, y_max, x_min, x_max = load_region(3034, return_regions=True)
-    print(region_mask, type(region_mask))
+    regions, region_mask, y_min, y_max, x_min, x_max = load_region(3013, return_regions=True)
+    print(region_mask, type(region_mask), np.unique(region_mask))
     clp = clip_region(regions, region_mask, 0, y_min, y_max, x_min, x_max)
     plt.imshow(clp)
     plt.show()
