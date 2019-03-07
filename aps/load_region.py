@@ -21,21 +21,23 @@ def load_region(region_id, local=False, return_regions=False):
         _regions = _vr.variables["skredomr19_km"][:]
         print("Missing value: {mv}".format(mv=_vr.variables["skredomr19_km"].missing_value))
 
-        #TODO: use attribute "missing_value" to set the no-data vlaues and make sure they appear correctly in the mask.
+        #TODO: use attribute "missing_value" to set the no-data values and make sure they appear correctly in the mask.
 
         # _vr = Dataset(
         #     os.path.join(os.path.dirname(os.path.abspath(__file__)), r"data/terrain_parameters/VarslingsOmr_2017.nc"),
         #     "r")
         # _regions = _vr.variables["VarslingsOmr_2017"][:]
 
-    _region_mask = np.where(_regions == region_id)
+    _region_bounds = np.where(_regions == region_id)  # just to get the bounding box
 
     # get the lower left and upper right corner of a rectangle around the region
-    y_min, y_max, x_min, x_max = min(_region_mask[0].flatten()), max(_region_mask[0].flatten()), \
-                                 min(_region_mask[1].flatten()), max(_region_mask[1].flatten())
+    y_min, y_max, x_min, x_max = min(_region_bounds[0].flatten()), max(_region_bounds[0].flatten()), \
+                                 min(_region_bounds[1].flatten()), max(_region_bounds[1].flatten())
 
-    reg_mask = np.ma.masked_where(_regions[y_min:y_max, x_min:x_max] == region_id, _regions[y_min:y_max, x_min:x_max]).mask
-
+    #reg_mask = np.ma.masked_where(_regions[y_min:y_max, x_min:x_max] == region_id, _regions[y_min:y_max, x_min:x_max]).mask
+    #reg_mask = np.where(_regions[y_min:y_max, x_min:x_max] == region_id, _regions[y_min:y_max, x_min:x_max], np.nan)
+    reg_mask = np.where(_regions[y_min:y_max, x_min:x_max] == region_id, 1., np.nan)
+    #reg_mask = np.ma.masked_where(_reg_mask == region_id).mask
     _vr.close()
 
     if return_regions:
