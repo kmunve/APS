@@ -21,13 +21,6 @@ def load_region(region_id, local=False, return_regions=False):
         _regions = _vr.variables["skredomr19_km"][:]
         print("Missing value: {mv}".format(mv=_vr.variables["skredomr19_km"].missing_value))
 
-        #TODO: use attribute "missing_value" to set the no-data values and make sure they appear correctly in the mask.
-
-        # _vr = Dataset(
-        #     os.path.join(os.path.dirname(os.path.abspath(__file__)), r"data/terrain_parameters/VarslingsOmr_2017.nc"),
-        #     "r")
-        # _regions = _vr.variables["VarslingsOmr_2017"][:]
-
     _region_bounds = np.where(_regions == region_id)  # just to get the bounding box
 
     # get the lower left and upper right corner of a rectangle around the region
