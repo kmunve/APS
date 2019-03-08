@@ -1,6 +1,5 @@
 import imageio
 
-
 def make_gif(in_files, out_file='out.gif', frame_duration=0.3):
     images = []
     for f in in_files:
@@ -20,9 +19,3 @@ if __name__ == "__main__":
         png_files.append('fl_{0:02}.png'.format(i))
 
     make_gif(png_files, 'fl.gif')
-
-
-
-
-
-
