@@ -6,23 +6,23 @@ def get_sensitivity(trigger, probability):
     t = int(trigger)
     p = int(probability)
 
-    if t == 10 & p == 2:
+    if t == 10 and p == 2:
         s = 1  # very difficult to trigger
-    elif t == 10 & p == 3:
+    elif t == 10 and p == 3:
         s = 2  # difficult to trigger
-    elif t == 21 & p == 3:
+    elif t == 21 and p == 3:
         s = 3  # easy to trigger
-    elif t == 21 & p == 5:
+    elif t == 21 and p == 5:
         s = 4  # very easy to trigger
-    elif t == 21 & p == 7:
+    elif t == 21 and p == 7:
         s = 4  # very easy to trigger
-    elif t == 22 & p == 2:
+    elif t == 22 and p == 2:
         s = 5  # very difficult / difficult / easy to trigger + natural
-    elif t == 22 & p == 3:
+    elif t == 22 and p == 3:
         s = 5  # very difficult / difficult / easy to trigger + natural
-    elif t == 22 & p == 5:
+    elif t == 22 and p == 5:
         s = 6  # very easy to trigger + natural
-    elif t == 22 & p == 7:
+    elif t == 22 and p == 7:
         s = 6  # very easy to trigger + natural
     else:
         s = 0
@@ -76,4 +76,6 @@ if __name__ == "__main__":
     varsom_df = pd.read_csv(r'..\..\data\varsom\norwegian_avalanche_warnings_season_17_18.csv', index_col=0)
     varsom_df['mountain_weather_wind_speed'] = varsom_df['mountain_weather_wind_speed'].fillna('None')
     varsom_df['mountain_weather_wind_direction'] = varsom_df['mountain_weather_wind_direction'].fillna('None')
-    varsom_df = regroup(varsom_df)
+    df = regroup(varsom_df)
+
+    k = 'm'
