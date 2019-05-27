@@ -5,16 +5,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
-sns.set(style="dark")
+sns.set(style="white")
 import aps_io.get_arome as ga
 from load_region import load_region, clip_region
-from util.make_gif import make_gif
 from pathlib import Path
 
-region_id = 3028
+region_id = 3029
 
 hour_range = [0, 24]
-date_str = '20190410T00Z'
+date_str = '20190405T00Z'
 var_wet = 'altitude_of_isoTprimW_equal_0'
 var_dry = 'altitude_of_0_degree_isotherm'
 var_rr = 'precipitation_amount'
@@ -44,7 +43,7 @@ def get_periods_with_precip():
     pass
 
 
-precip_high = False
+precip_high = True
 
 if precip_high:
     var_fl = var_wet
@@ -60,10 +59,7 @@ fl_max_12_18 = np.amax(nc_vars[var_fl][12:18,:,:], axis=0)
 fl_max_18_24 = np.amax(nc_vars[var_fl][18:24,:,:], axis=0)
 fl_max = np.amax(nc_vars[var_fl][0:24,:,:], axis=0)
 
-plt.imshow(fl_max)
-plt.savefig(tmp_folder / 'fl_max.png')
-plt.clf()
-
+nsl_list = [fl_max_00_06, fl_max_06_12, fl_max_12_18,fl_max_18_24, fl_max]
 # ### Extract regions
 
 # Load region mask - only for data on 1km xgeo-grid
@@ -73,35 +69,19 @@ print(y_max-y_min, x_max-x_min)
 
 print(np.unique(region_mask))
 plt.imshow(region_mask)
-plt.savefig(tmp_folder / 'region_mask.png')
+plt.savefig(tmp_folder / 'region_mask_nsl.png')
 plt.clf()
 
-png_files = []
-for t in range(len(times)):
-    t2 = t+hour_range[0]
-    t_str = times[t]
-    _fl = clip_region(np.flipud(nc_vars[var_fl][t, :, :]), region_mask, t2, y_min, y_max, x_min, x_max)
-    plt.imshow(_fl, vmin=0, vmax=500, cmap='magma')
-    plt.axis('off')
-    plt.text(5, 5, "{0}: {1}".format(region_id, t_str), bbox=dict(facecolor='white', edgecolor='white', alpha=1.0))
-    cbar = plt.colorbar()
-    cbar.ax.set_ylabel(var_fl)
-    _png = tmp_folder / 'fl_{1:02}.png'.format(region_id, t)
-    png_files.append(_png)
-    plt.savefig(_png, bbox_inches='tight')
-    plt.clf()
-
-# Use _make_gif.py_ in folder _img_ to generate a gif animation.
-make_gif(png_files, tmp_folder / 'fl.gif')
-
 # ### Clip to region
+
+## TODO: Do this for each 6h-period and make distplots.
 t_index = 0
 fl_region = clip_region(np.flipud(fl_max), region_mask, t_index, y_min, y_max, x_min, x_max)
 print(np.count_nonzero(np.isnan(fl_region)))
 print(np.unique(fl_region))
 plt.imshow(fl_region)
 plt.colorbar()
-plt.savefig(tmp_folder / 'fl_region.png')
+plt.savefig(tmp_folder / 'nsl_region.png')
 plt.clf()
 
 fl_region_mean = np.nanmean(fl_region.flatten())
@@ -111,15 +91,15 @@ for p in [0, 5, 25, 50, 75, 80, 85, 90, 95, 100]:
 
 fl_region_flat = fl_region[~np.isnan(fl_region)].data.flatten()
 sns.distplot(fl_region_flat)
-plt.savefig(tmp_folder / 'fl_dist.png')
+plt.savefig(tmp_folder / 'nsl_dist.png')
 plt.clf()
 
-# ## Calculating freezing level with regard to precipitation
+# ## Determine cells with precipitation
 
 nc_file2 = r"\\hdata\grid\metdata\prognosis\meps\det\archive\2019\meps_det_pp_1km_{0}.nc".format(date_str)
 times, altitude, land_area_fraction, nc_vars2 = ga.nc_load(nc_file2, [var_rr], time_period=hour_range)
 
-precip_sum = np.sum(nc_vars2['precipitation_amount'][0:24, :, :], axis=0)
+precip_sum = np.sum(nc_vars2[var_rr][0:24, :, :], axis=0)
 
 t_index = 0
 precip_sum_region = clip_region(np.flipud(precip_sum), region_mask, t_index, y_min, y_max, x_min, x_max)
@@ -128,11 +108,11 @@ print(np.count_nonzero(np.isnan(precip_sum_region)))
 print(np.unique(precip_sum_region))
 plt.imshow(precip_sum_region)
 plt.colorbar()
-plt.savefig(tmp_folder / 'precip_sum region.png')
+plt.savefig(tmp_folder / 'precip_sum_region.png')
 plt.clf()
 
 # Mask where the precipitation during the day exceeds a given value.
-psr_mask = np.where(precip_sum_region > 5., 1, np.nan)
+psr_mask = np.where(precip_sum_region > 1., 1, np.nan)
 
 plt.imshow(psr_mask)
 plt.savefig(tmp_folder / 'psr_mask.png')
@@ -148,22 +128,5 @@ fl_region_wet_flat = fl_region_wet[~np.isnan(fl_region_wet)].data.flatten()
 sns.distplot(fl_region_wet_flat)
 plt.savefig(tmp_folder / 'fl_wet_dist.png')
 plt.clf()
-
-png_files = []
-for t in range(len(times)):
-    t2 = t+hour_range[0]
-    t_str = times[t]
-    _rr = clip_region(np.flipud(nc_vars2[var_rr][t, :, :]), region_mask, t2, y_min, y_max, x_min, x_max)
-    plt.imshow(_rr, vmin=0, vmax=3, cmap='magma')
-    plt.axis('off')
-    plt.text(5, 5, "{0}: {1}".format(region_id, t_str), bbox=dict(facecolor='white', edgecolor='white', alpha=1.0))
-    cbar = plt.colorbar()
-    cbar.ax.set_ylabel(var_rr)
-    _png = tmp_folder / 'rr_{1:02}.png'.format(region_id, t)
-    png_files.append(_png)
-    plt.savefig(_png, bbox_inches='tight')
-    plt.clf()
-
-make_gif(png_files, tmp_folder / 'rr.gif')
 
 print('####################\n# Mean (all): {0:.2} #\n# Mean (wet): {0:.2} #\n####################'.format(fl_region_mean, fl_region_wet_mean))
