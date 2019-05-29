@@ -46,20 +46,20 @@ def get_periods_with_precip():
 precip_high = True
 
 if precip_high:
-    var_fl = var_wet
+    var_nsl = var_wet
     calc_period = get_periods_with_precip()  # choose between 0-6, 6-12, 12-18, 18-24
 else:
-    var_fl = var_dry
+    var_nsl = var_dry
 
 # ### Compress time dimension
 
-fl_max_00_06 = np.amax(nc_vars[var_fl][0:6,:,:], axis=0)
-fl_max_06_12 = np.amax(nc_vars[var_fl][6:12,:,:], axis=0)
-fl_max_12_18 = np.amax(nc_vars[var_fl][12:18,:,:], axis=0)
-fl_max_18_24 = np.amax(nc_vars[var_fl][18:24,:,:], axis=0)
-fl_max = np.amax(nc_vars[var_fl][0:24,:,:], axis=0)
+nsl_max_00_06 = np.amax(nc_vars[var_nsl][0:6,:,:], axis=0)
+nsl_max_06_12 = np.amax(nc_vars[var_nsl][6:12,:,:], axis=0)
+nsl_max_12_18 = np.amax(nc_vars[var_nsl][12:18,:,:], axis=0)
+nsl_max_18_24 = np.amax(nc_vars[var_nsl][18:24,:,:], axis=0)
+nsl_max = np.amax(nc_vars[var_nsl][0:24,:,:], axis=0)
 
-nsl_list = [fl_max_00_06, fl_max_06_12, fl_max_12_18,fl_max_18_24, fl_max]
+nsl_list = [nsl_max_00_06, nsl_max_06_12, nsl_max_12_18,nsl_max_18_24, nsl_max]
 # ### Extract regions
 
 # Load region mask - only for data on 1km xgeo-grid
@@ -76,21 +76,21 @@ plt.clf()
 
 ## TODO: Do this for each 6h-period and make distplots.
 t_index = 0
-fl_region = clip_region(np.flipud(fl_max), region_mask, t_index, y_min, y_max, x_min, x_max)
-print(np.count_nonzero(np.isnan(fl_region)))
-print(np.unique(fl_region))
-plt.imshow(fl_region)
+nsl_region = clip_region(np.flipud(nsl_max), region_mask, t_index, y_min, y_max, x_min, x_max)
+print(np.count_nonzero(np.isnan(nsl_region)))
+print(np.unique(nsl_region))
+plt.imshow(nsl_region)
 plt.colorbar()
 plt.savefig(tmp_folder / 'nsl_region.png')
 plt.clf()
 
-fl_region_mean = np.nanmean(fl_region.flatten())
-print("Mean\t: ", fl_region_mean)
+nsl_region_mean = np.nanmean(nsl_region.flatten())
+print("Mean\t: ", nsl_region_mean)
 for p in [0, 5, 25, 50, 75, 80, 85, 90, 95, 100]:
-    print(p, "\t: ", np.nanpercentile(fl_region.flatten(), p))
+    print(p, "\t: ", np.nanpercentile(nsl_region.flatten(), p))
 
-fl_region_flat = fl_region[~np.isnan(fl_region)].data.flatten()
-sns.distplot(fl_region_flat)
+nsl_region_flat = nsl_region[~np.isnan(nsl_region)].data.flatten()
+sns.distplot(nsl_region_flat)
 plt.savefig(tmp_folder / 'nsl_dist.png')
 plt.clf()
 
@@ -118,15 +118,15 @@ plt.imshow(psr_mask)
 plt.savefig(tmp_folder / 'psr_mask.png')
 plt.clf()
 
-fl_region_wet = fl_region * psr_mask
-fl_region_wet_mean = np.nanmean(fl_region_wet.flatten())
-print("Mean\t: ", fl_region_wet_mean)
+nsl_region_wet = nsl_region * psr_mask
+nsl_region_wet_mean = np.nanmean(nsl_region_wet.flatten())
+print("Mean\t: ", nsl_region_wet_mean)
 for p in [0, 5, 25, 50, 75, 80, 85, 90, 95, 100]:
-    print(p, "\t: ", np.nanpercentile(fl_region_wet.flatten(), p))
+    print(p, "\t: ", np.nanpercentile(nsl_region_wet.flatten(), p))
 
-fl_region_wet_flat = fl_region_wet[~np.isnan(fl_region_wet)].data.flatten()
-sns.distplot(fl_region_wet_flat)
-plt.savefig(tmp_folder / 'fl_wet_dist.png')
+nsl_region_wet_flat = nsl_region_wet[~np.isnan(nsl_region_wet)].data.flatten()
+sns.distplot(nsl_region_wet_flat)
+plt.savefig(tmp_folder / 'nsl_wet_dist.png')
 plt.clf()
 
 print('####################\n# Mean (all): {0:.2} #\n# Mean (wet): {0:.2} #\n####################'.format(fl_region_mean, fl_region_wet_mean))
