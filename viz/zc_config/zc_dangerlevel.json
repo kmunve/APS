@@ -1,0 +1,61 @@
+{
+  "type": "heatmap",
+  "background-color": "white",
+  "x": 0,
+  //position from left of chart edge
+  "width": "100%",
+  "scale-x": "{'min-value': 1420232400000, 'step': 'day', 'transform': {'type': 'date', 'all': '%D<br>%d %M %y'}}",
+  "plotarea": {
+    "margin-left": 150,
+    "margin-right": 150,
+    "margin-top": 20,
+    "margin-bottom": 50
+  },
+  "plot": {
+    "aspect": "none",
+    "border-radius": "15px",
+    "rules": [
+      {
+        "rule": "%v == 0",
+        "background-color": "silver"
+        //"alpha": 0
+      },
+      {
+        "rule": "%v == 1",
+        "background-color": "#75B100"
+      },
+      {
+        "rule": "%v == 2",
+        "background-color": "#FFCC33"
+      },
+      {
+        "rule": "%v == 3",
+        "background-color": "#E46900"
+      },
+      {
+        "rule": "%v == 4",
+        "background-color": "#D21523"
+      },
+      {
+        "rule": "%v == 5",
+        "background-color": "#000000"
+      }
+    ]
+  },
+  "tooltip": {
+    "wrap-text": true,
+    "width": "250px",
+    "text": "%data-ttText"
+  },
+  "scale-y": {
+    "mirrored": true,
+    "labels": [
+      "Faregrad"
+    ]
+  },
+  "series": [
+    {
+      "values": [1, 2, 3, 3, 4, 3, 2, 2, 2, 3, 2, 1, 1, 1, 2, 2, 3, 4, 4]
+    }
+  ]
+}
