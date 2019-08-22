@@ -124,6 +124,7 @@
   },
   "wind_dir_conv_no": {
     "None": 0,
+    "Ikke gitt": 0,
     "N": 1,
     "NØ": 2,
     "Ø": 3,
@@ -135,6 +136,7 @@
   },
   "wind_dir_conv_en": {
     "None": 0,
+    "Not given": 0,
     "N": 1,
     "NE": 2,
     "E": 3,
