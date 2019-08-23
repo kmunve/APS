@@ -5,7 +5,7 @@ import netCDF4
 
 __author__ = 'kmu'
 """
-Retrieve data from netcdf files from thredds.met.no and do some statistics.
+Retrieve data from netcdf files from thredds.met.no or \hdata\grid.
 """
 
 
@@ -100,7 +100,7 @@ def nc_load(nc_object, vars, bounding_box=None, time_period=None):
 
 
 if __name__ == "__main__":
-    ncfile = r"\\hdata\grid\metdata\prognosis\meps\det\archive\2019\meps_det_extracted_1km_20190120T00Z.nc"
+    ncfile = r"\\hdata\grid\metdata\prognosis\meps\det\archive\2019\meps_det_extracted_1km_20190404T00Z.nc"
     jd, altitude, land_area_fraction, nc_vars = nc_load(ncfile, ["altitude_of_0_degree_isotherm"], time_period=[7, 8])
 
     from grid_data import SeNorgeGrid
