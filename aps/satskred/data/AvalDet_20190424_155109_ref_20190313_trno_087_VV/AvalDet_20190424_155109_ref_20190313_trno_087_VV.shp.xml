@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="nb"><Esri><CreaDate>20191105</CreaDate><CreaTime>13051700</CreaTime><ArcGISFormat>1.0</ArcGISFormat><SyncOnce>TRUE</SyncOnce><DataProperties><lineage><Process ToolSource="c:\program files\arcgis\pro\Resources\ArcToolbox\toolboxes\Data Management Tools.tbx\CalculateField" Date="20191105" Time="130517">CalculateField AvalDet_20190424_155109_ref_20190313_trno_087_VV area !Shape.area! "Python 3" #</Process></lineage></DataProperties></Esri></metadata>
