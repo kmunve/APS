@@ -8,7 +8,7 @@ and so on.
 
 __author__: kmu
 """
-
+# Import logging module
 import logging
 
 # Set up the logger and log-file.
@@ -18,6 +18,7 @@ logging.basicConfig(filename='example.log',
                     datefmt='%Y-%m-%d %H:%M:%S',
                     level=logging.DEBUG)
 
+# Some message examples:
 logging.debug('This message is only shown in debug mode.')
 logging.info('This is general information')
 logging.warning('Something runs but should be checked.')
