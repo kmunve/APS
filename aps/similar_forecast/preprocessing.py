@@ -11,8 +11,8 @@ except ImportError:
 
 def knn_preprocessing():
     # Load data
-    v_df = pd.read_csv('https://raw.githubusercontent.com/kmunve/APS/master/aps/notebooks/ml_varsom/varsom_ml_preproc_3y.csv', index_col=0) # where is the time stamp?)
-    v_df.drop_duplicates(keep='first', inplace=True) # for some reason all rows appear twice
+    v_df = pd.read_csv('https://raw.githubusercontent.com/kmunve/APS/master/aps/notebooks/ml_varsom/varsom_ml_preproc_3y.csv', index_col=0)  # where is the time stamp?)
+    v_df.drop_duplicates(keep='first', inplace=True)  # for some reason all rows appear twice
     # print(v_df.describe())
 
 
