@@ -32,6 +32,28 @@ def get_element_info():
 
     print(rsp.text)
 
+def get_time_series():
+    """
+
+    :return:
+    """
+    client_id = get_client_id()
+    url = r"https://frost.met.no/observations/v0.jsonld?referencetime=2019-12-16/2019-12-17&elements=sum(precipitation_amount%20PT10M)&sources=SN55420"
+    rsp = requests.get(url, auth=(client_id, ''))
+    print(rsp.json())
+    data = rsp.json()
+
+    print("{0} observations".format(data["currentItemCount"]))
+
+    for d in data["data"]:
+        station_id = d["sourceId"]
+        dt = d["referenceTime"]
+        for o in d["observations"]:
+            element_id = o["elementId"]
+            value = o["value"]
+            unit = o["unit"]
+
+            print("{0}\t{1}\t{2}: {3} {4}".format(station_id, element_id, dt, value, unit))
 #
 # """
 #
@@ -122,5 +144,6 @@ def get_element_info():
 
 if __name__ == "__main__":
     # a = get_client_id()
-    get_element_info()
+    # get_element_info()
+    get_time_series()
 
