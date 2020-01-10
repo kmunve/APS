@@ -48,6 +48,8 @@ centery = (ymin + ymax) / 2
 bands = raster.RasterCount
 band = raster.GetRasterBand(1)
 dataset = band.ReadAsArray(0, 0, cols, rows)
+
+# 0
 dataimage = dataset
 dataimage[dataimage[:, :] == 128] = 1
 dataimage[dataimage[:, :] == 200] = 1
