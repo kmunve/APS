@@ -1,8 +1,10 @@
 import pyodbc
 import pandas as pd
 import geopandas as gpd
+import numpy as np
 from shapely.wkt import loads
 import folium
+import folium.plugins
 
 
 def connect_to_skredprod():
@@ -70,11 +72,12 @@ def get_avalanche_stats(gdf):
 
 
 def make_avalanche_map(gdf, out='ava_map.html'):
-    gdf.to_crs({'init': 'EPSG:3857'}, inplace=True)
+    # gdf.to_crs({'init': 'EPSG:3857'}, inplace=True)
+    gdf.to_crs({'init': 'EPSG:4326'}, inplace=True)
 
-    b = gdf.bounds
-    mx = min(b['minx']) + (max(b['maxx']) - min(b['minx'])) / 2
-    mx = min(b['miny']) + (max(b['maxy']) - min(b['miny'])) / 2
+    # b = gdf.bounds
+    # mx = min(b['minx']) + (max(b['maxx']) - min(b['minx'])) / 2
+    # my = min(b['miny']) + (max(b['maxy']) - min(b['miny'])) / 2
 
     ava_map = folium.Map(prefer_canvas=True,
                          # tiles='Stamen Terrain',
@@ -82,19 +85,14 @@ def make_avalanche_map(gdf, out='ava_map.html'):
                          zoom_start=10,
                          control_scale=True)
 
-    # m = folium.GeoJson(gdf)
-    m = gdf.geometry.centroid
-    # m.add_to(ava_map)
-
+    # TODO: set min zoom level
     a = folium.GeoJson(gdf,
-                       name='Detected avalanches',
+                       name='Detected avalanches (polygon)',
                        style_function=lambda feature: {
                            'fillColor': 'red',
                            #         'color' : feature['properties']['RGBA'],
                            'color': 'red', 'weight': 1,
-                           'fillOpacity': 0.5,
-                           #         'popup': '{0}'.format(feature['properties']['regStatus'])
-                           'tooltip': 'Click me!'
+                           'fillOpacity': 0.5
                        },
                        tooltip=folium.features.GeoJsonTooltip(fields=['registrertAv', 'skredAreal_m2'],
                                                               aliases=['Registered by:', 'Area (m2):'],
@@ -106,22 +104,16 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     a.add_to(ava_map)
 
     # # Get x and y coordinates for each point
-    # points["x"] = points["geometry"].apply(lambda geom: geom.x)
-    # points["y"] = points["geometry"].apply(lambda geom: geom.y)
-    #
-    # # Create a list of coordinate pairs
-    # locations = list(zip(points["y"], points["x"]))
-    #
-    # # Create a folium marker cluster
-    # marker_cluster = folium.features.MarkerCluster(m)
-    #
-    # # Add marker cluster to map
-    # marker_cluster.add_to(m)
+    m = np.vstack([gdf.centroid.y, gdf.centroid.x]).T
+    # Create a folium marker cluster
+    marker_cluster = folium.plugins.MarkerCluster(locations=m,
+                                                  name='Detected avalanches (point)')
 
+    # Add marker cluster to map
+    marker_cluster.add_to(ava_map)
 
     folium.LayerControl().add_to(ava_map)
     ava_map.save(out)
-
 
 
 if __name__ == '__main__':
