@@ -77,13 +77,17 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     mx = min(b['miny']) + (max(b['maxy']) - min(b['miny'])) / 2
 
     ava_map = folium.Map(prefer_canvas=True,
+                         # tiles='Stamen Terrain',
                          location=[69, 20],
-                         zoom_start=10)
+                         zoom_start=10,
+                         control_scale=True)
 
     # m = folium.GeoJson(gdf)
+    m = gdf.geometry.centroid
     # m.add_to(ava_map)
 
     a = folium.GeoJson(gdf,
+                       name='Detected avalanches',
                        style_function=lambda feature: {
                            'fillColor': 'red',
                            #         'color' : feature['properties']['RGBA'],
@@ -91,10 +95,31 @@ def make_avalanche_map(gdf, out='ava_map.html'):
                            'fillOpacity': 0.5,
                            #         'popup': '{0}'.format(feature['properties']['regStatus'])
                            'tooltip': 'Click me!'
-                       })
+                       },
+                       tooltip=folium.features.GeoJsonTooltip(fields=['registrertAv', 'skredAreal_m2'],
+                                                              aliases=['Registered by:', 'Area (m2):'],
+                                                              labels=True,
+                                                              sticky=False
+                                                              )
+                       )
 
     a.add_to(ava_map)
 
+    # # Get x and y coordinates for each point
+    # points["x"] = points["geometry"].apply(lambda geom: geom.x)
+    # points["y"] = points["geometry"].apply(lambda geom: geom.y)
+    #
+    # # Create a list of coordinate pairs
+    # locations = list(zip(points["y"], points["x"]))
+    #
+    # # Create a folium marker cluster
+    # marker_cluster = folium.features.MarkerCluster(m)
+    #
+    # # Add marker cluster to map
+    # marker_cluster.add_to(m)
+
+
+    folium.LayerControl().add_to(ava_map)
     ava_map.save(out)
 
 
