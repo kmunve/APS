@@ -85,17 +85,20 @@ def make_avalanche_map(gdf, out='ava_map.html'):
                          zoom_start=10,
                          control_scale=True)
 
+    _fields = {'registrertAv': 'Registrert av',
+               'skredAreal_m2': 'Areal (m2)'}
+    _t = _fields.keys()
     # TODO: set min zoom level
     a = folium.GeoJson(gdf,
                        name='Detected avalanches (polygon)',
                        style_function=lambda feature: {
-                           'fillColor': 'red',
+                           'fillColor': '#EE7B04',
                            #         'color' : feature['properties']['RGBA'],
-                           'color': 'red', 'weight': 1,
+                           'color': '#EE7B04', 'weight': 1,
                            'fillOpacity': 0.5
                        },
-                       tooltip=folium.features.GeoJsonTooltip(fields=['registrertAv', 'skredAreal_m2'],
-                                                              aliases=['Registered by:', 'Area (m2):'],
+                       tooltip=folium.features.GeoJsonTooltip(fields=list(_fields.keys()),#['registrertAv', 'skredAreal_m2'],
+                                                              aliases=list(_fields.values()), #['Registered by:', 'Area (m2):'],
                                                               labels=True,
                                                               sticky=False
                                                               )
@@ -103,17 +106,28 @@ def make_avalanche_map(gdf, out='ava_map.html'):
 
     a.add_to(ava_map)
 
+    # Create a folium marker cluster
+    marker_cluster = folium.plugins.MarkerCluster(name='Detected avalanches (point)')
+
     # # Get x and y coordinates for each point
     m = np.vstack([gdf.centroid.y, gdf.centroid.x]).T
-    # Create a folium marker cluster
-    marker_cluster = folium.plugins.MarkerCluster(locations=m,
-                                                  name='Detected avalanches (point)')
+
+    # Create icons for the marker cluster
+    i = [folium.Icon(color='lightgray', icon='mountain', prefix='fa')] * m.shape[0]
+
+    # TODO: loop once over GDF and create markers, polygons, popups and tooltips
+    for m_ in m:
+        m_
+        folium.Marker(m_, icon=folium.Icon(color='lightgray', icon='mountain', prefix='fa')).add_to(marker_cluster)
+    # other icons 'satellite', 'snowflake'
+
 
     # Add marker cluster to map
     marker_cluster.add_to(ava_map)
 
     folium.LayerControl().add_to(ava_map)
     ava_map.save(out)
+    print('Open map: {0}'.format(out))
 
 
 if __name__ == '__main__':
