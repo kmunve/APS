@@ -71,7 +71,44 @@ def get_avalanche_stats(gdf):
     print("Mean area: {mean} square meters".format(mean=round(mean_area, 0)))
 
 
+# def _fr_style(feature, gdf):
+#     # Styling function for forecasting region polygons
+#     a = employed_series.get(int(feature['id'][-5:]), None)
+#     return {
+#         'fillOpacity': 0.5,
+#         'weight': 0,
+#         'fillColor': '#black' if employed is None else colorscale(employed)
+#     }
+#     lambda feature: {
+#         'fillColor': '#9BB9C2',
+#         'color': '#044157', 'weight': 1,
+#         'fillOpacity': 0.5}
+
+
 def make_avalanche_map(gdf, out='ava_map.html'):
+    """
+    https://stackoverflow.com/questions/52428916/python-folium-markercluster-color-customization
+    https://github.com/python-visualization/folium/blob/master/examples/MarkerCluster.ipynb
+    https://www.kaggle.com/rachan/how-to-folium-for-maps-heatmaps-time-analysis
+    
+
+    :param gdf:
+    :param out:
+    :return:
+    """
+
+    _fr_style_1 = {
+        'fillColor': '#EE7B04',
+        'color': '#EE7B04', 'weight': 1,
+        'fillOpacity': 0.2
+    }
+
+    _fr_style_2 = {
+        'fillColor': '#EE7B04',
+        'color': '#EE7B04', 'weight': 0.3,
+        'fillOpacity': 0.0
+    }
+
     # gdf.to_crs({'init': 'EPSG:3857'}, inplace=True)
     gdf.to_crs({'init': 'EPSG:4326'}, inplace=True)
 
@@ -85,6 +122,12 @@ def make_avalanche_map(gdf, out='ava_map.html'):
                          zoom_start=10,
                          control_scale=True)
 
+    forecast_reg = folium.GeoJson(
+        r'C:\Users\kmu\PycharmProjects\APS\aps\data\forecasting_regions\Skred_Varsling.geojson',
+        name='Forecasting regions',
+        style_function=lambda feature: _fr_style_1 if feature['properties']['regionType']=='A' else _fr_style_2
+        ).add_to(ava_map)
+
     _fields = {'registrertAv': 'Registrert av',
                'skredAreal_m2': 'Areal (m2)'}
     _t = _fields.keys()
@@ -95,10 +138,12 @@ def make_avalanche_map(gdf, out='ava_map.html'):
                            'fillColor': '#EE7B04',
                            #         'color' : feature['properties']['RGBA'],
                            'color': '#EE7B04', 'weight': 1,
-                           'fillOpacity': 0.5
+                           'fillOpacity': 0.2
                        },
-                       tooltip=folium.features.GeoJsonTooltip(fields=list(_fields.keys()),#['registrertAv', 'skredAreal_m2'],
-                                                              aliases=list(_fields.values()), #['Registered by:', 'Area (m2):'],
+                       tooltip=folium.features.GeoJsonTooltip(fields=list(_fields.keys()),
+                                                              # ['registrertAv', 'skredAreal_m2'],
+                                                              aliases=list(_fields.values()),
+                                                              # ['Registered by:', 'Area (m2):'],
                                                               labels=True,
                                                               sticky=False
                                                               )
@@ -120,7 +165,6 @@ def make_avalanche_map(gdf, out='ava_map.html'):
         m_
         folium.Marker(m_, icon=folium.Icon(color='lightgray', icon='mountain', prefix='fa')).add_to(marker_cluster)
     # other icons 'satellite', 'snowflake'
-
 
     # Add marker cluster to map
     marker_cluster.add_to(ava_map)
