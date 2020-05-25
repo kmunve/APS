@@ -1,0 +1,8 @@
+{
+  "total": {
+    "number": "int",
+    "largest": "float",
+    "avg_area": "float"
+  },
+  "regions": {}
+}
