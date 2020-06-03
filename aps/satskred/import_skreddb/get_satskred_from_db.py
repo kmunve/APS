@@ -1,4 +1,5 @@
 import pyodbc
+import re
 import pandas as pd
 import geopandas as gpd
 import numpy as np
@@ -30,13 +31,21 @@ def _test_connection(conn):
         print('\n###\n')
 
 
-def get_aval_color(noySkredTidspunkt):
+def get_forecasting_regions():
+    fr_df = gpd.read_file(r'C:\Users\kmu\PycharmProjects\APS\aps\data\forecasting_regions\Skred_Varsling.geojson')
+    return fr_df
+
+def get_aval_color(noySkredTidspunkt, css=False):
     if noySkredTidspunkt in ['Eksakt', '1 min', '1 time', '4 timer', '6 timer', '12 timer', '1 dag']:
-        return 'red' #'#75B100'
-    elif noySkredTidspunkt in ['1 dager', '2 dager']:#, '3 dager']:
-        return 'orange' #'#FFCC33'
+        c = 'red'  # '#75B100'
+    elif noySkredTidspunkt in ['1 dager', '2 dager']:  # , '3 dager']:
+        c = 'orange'  # '#FFCC33'
     else:
-        return 'lightgray' #'#E3000F'
+        c = 'lightgray'  # '#E3000F'
+    if css:
+        return 'background-color: {0}'.fomrat(c)
+    else:
+        return c
 
 
 def get_avalanches_by_date(conn, from_date="2020-04-01", to_date="2020-04-30"):
@@ -45,6 +54,7 @@ def get_avalanches_by_date(conn, from_date="2020-04-01", to_date="2020-04-30"):
           ,h.[noySkredTidspunkt]
           ,h.[registrertDato]
           ,h.[registrertAv]
+          ,h.[regStatus]
           ,t.[skredAreal_m2]
           ,t.[eksposisjonUtlopsomr]
           ,t.[snittHelningUtlopssomr_gr]
@@ -69,8 +79,21 @@ def get_avalanches_by_date(conn, from_date="2020-04-01", to_date="2020-04-30"):
     return gdf
 
 
-def get_avalanche_stats(gdf):
+def _color_html_table(s):
+    if s in ['Eksakt', '1 min', '1 time', '4 timer', '6 timer', '12 timer', '1 dag']:
+        return 'background-color: red'  # '#75B100'
+    elif s in ['1 dager', '2 dager']:  # , '3 dager']:
+        return 'background-color: orange'  # '#FFCC33'
+    else:
+        return 'background-color: lightgray'  # '#E3000F'
 
+
+def _table_hover(hover_color="#ffff99"):
+    return dict(selector="tr:hover",
+                props=[("background-color", "%s" % hover_color)])
+
+
+def get_avalanche_stats(gdf):
     print(gdf.describe())
 
     gdf['area'] = gdf.area
@@ -87,7 +110,29 @@ def get_avalanche_stats(gdf):
 
     print(gdf.groupby(['noySkredTidspunkt']).count())
 
-    # TODO: add statistics per reion - intersect with fr_polygon, count of avalanches per precision level.
+    df_stats = gdf.filter(
+        ['skredTidspunkt', 'noySkredTidspunkt', 'area', 'maksHelningUtlopsomr_gr', 'preci_color', 'registrertDato',
+         'registrertAv'])
+    # s = df_stats.style.apply(_table_hover, axis=1)#, subset=['noySkredTidspunkt'])
+
+    df_stats.to_html('ava_stats.html', index=False,
+                     formatters={'noySkredTidspunkt': _color_html_table})
+
+    # random_id = 'id%d' % np.random.choice(np.arange(1000000))
+    #
+    # style = """
+    #         <style>
+    #             table#{random_id} {{color: blue}}
+    #         </style>
+    #         """.format(random_id=random_id)
+    #
+    # df_html = re.sub(r'<table', r'<table id=%s ' % random_id, df_html)
+    #
+    # with open('ava_stats.html', 'w') as f:
+    #     f.write(style + df_html)
+
+
+# TODO: add statistics per region - intersect with fr_polygon, count of avalanches per precision level.
 # def _fr_style(feature, gdf):
 #     # Styling function for forecasting region polygons
 #     a = employed_series.get(int(feature['id'][-5:]), None)
@@ -130,8 +175,8 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     icon_image = 'avalanche.png'
     # shadow_image = url('leaf-shadow.png')
 
-    ava_icon = folium.CustomIcon(icon_image=icon_image, icon_size=(64, 64), icon_anchor=(22, 94), popup_anchor=(-3, -76))
-
+    ava_icon = folium.CustomIcon(icon_image=icon_image, icon_size=(64, 64), icon_anchor=(22, 94),
+                                 popup_anchor=(-3, -76))
 
     # gdf.to_crs({'init': 'EPSG:3857'}, inplace=True)
     gdf.to_crs({'init': 'EPSG:4326'}, inplace=True)
@@ -141,10 +186,10 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     # my = min(b['miny']) + (max(b['maxy']) - min(b['miny'])) / 2
 
     ava_map = folium.Map(prefer_canvas=True,
-                     # tiles='Stamen Terrain',
-                     location=[69, 20],
-                     zoom_start=10,
-                     control_scale=True)
+                         # tiles='Stamen Terrain',
+                         location=[65, 16],
+                         zoom_start=5,
+                         control_scale=True)
 
     forecast_reg = folium.GeoJson(
         r'C:\Users\kmu\PycharmProjects\APS\aps\data\forecasting_regions\Skred_Varsling.geojson',
@@ -167,21 +212,21 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     _t = _fields.keys()
     # TODO: set min zoom level
     a = folium.GeoJson(gdf,
-                   name='Detected avalanches (polygon)',
-                   style_function=lambda feature: {
-                       # 'fillColor': '#EE7B04',
-                       # 'color': '#EE7B04',
-                       'weight': 1,
-                       'color': feature['properties']['preci_color'],
-                       'fillcolor': feature['properties']['preci_color'],
-                       'fillOpacity': 0.2
-                   },
-                   tooltip=folium.features.GeoJsonTooltip(fields=list(_fields.keys()),
-                                                          aliases=list(_fields.values()),
-                                                          labels=True,
-                                                          sticky=False
-                                                          )
-                   )
+                       name='Detected avalanches (polygon)',
+                       style_function=lambda feature: {
+                           # 'fillColor': '#EE7B04',
+                           # 'color': '#EE7B04',
+                           'weight': 1,
+                           'color': feature['properties']['preci_color'],
+                           'fillcolor': feature['properties']['preci_color'],
+                           'fillOpacity': 0.2
+                       },
+                       tooltip=folium.features.GeoJsonTooltip(fields=list(_fields.keys()),
+                                                              aliases=list(_fields.values()),
+                                                              labels=True,
+                                                              sticky=False
+                                                              )
+                       )
 
     a.add_to(ava_map)
 
@@ -197,7 +242,7 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     # TODO: loop once over GDF and create markers, polygons, popups and tooltips
 
     for row_label, row in gdf.iterrows():
-        a=1
+        a = 1
         _m = [row.geometry.centroid.y, row.geometry.centroid.x]
         folium.Marker(_m, icon=folium.Icon(color=get_aval_color(row['noySkredTidspunkt']))).add_to(marker_cluster)
         #
@@ -222,10 +267,18 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     ava_map.save(out)
     print('Open map: {0}'.format(out))
 
+
 if __name__ == '__main__':
     conn = connect_to_skredprod()
     # _test_connection(conn)
-    gdf = get_avalanches_by_date(conn, from_date="2019-11-01", to_date="2020-05-30")
+
+    fr_df = get_forecasting_regions()
+    reg = fr_df[fr_df['omradeID'] == 3013]
+    gdf = get_avalanches_by_date(conn, from_date="2020-05-10", to_date="2020-05-18")
+    p = gdf.centroid
+    # a = gpd.overlay(reg, gdf, how='intersection')
+    a = p.intersects(reg)
+    print(a)
     # for c in gdf.columns:
     #     print(c)
     conn.close()
