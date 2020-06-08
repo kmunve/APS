@@ -18,6 +18,7 @@
 
 <div class="container">
     <h1>SatSkred info side</h1>
+
     <div class="form-group">
         <!-- Form code begins -->
         <form method="post">
@@ -59,14 +60,14 @@
 
     <iframe src="./ava_map.html" height="900px" width="900px"></iframe>
     <p></p>
-    <div id="satskred_table"></div>
-    <iframe src="./ava_stats.html" height="900px" width="900px"></iframe>
+    <div>
+        <img src="area_hist.svg">
+    </div>
+
+    <div>
+        {{ satskred_table }}
+    </div>
 </div>
-<!--The following script loads the stats page using jquery. Advantage- it uses the same CSS, which iFrame prohibits. -->
-<script>$(document).ready(function () {
-    $('#satskred_table').load('./ava_stats.html');
-});
-</script>
 
 </body>
 </html>

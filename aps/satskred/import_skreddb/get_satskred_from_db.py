@@ -3,6 +3,7 @@ import re
 import pandas as pd
 import geopandas as gpd
 import numpy as np
+import matplotlib.pyplot as plt
 from shapely.wkt import loads
 import folium
 import folium.plugins
@@ -81,11 +82,13 @@ def get_avalanches_by_date(conn, from_date="2020-04-01", to_date="2020-04-30"):
 
 def _color_html_table(s):
     if s in ['Eksakt', '1 min', '1 time', '4 timer', '6 timer', '12 timer', '1 dag']:
-        return 'background-color: red'  # '#75B100'
+        c = 'bg-danger'
     elif s in ['1 dager', '2 dager']:  # , '3 dager']:
-        return 'background-color: orange'  # '#FFCC33'
+        c = 'bg-warning'
     else:
-        return 'background-color: lightgray'  # '#E3000F'
+        c = 'bg-info'
+
+    return '<p class="{0}">{1}</p>'.format(c, s)
 
 
 def _table_hover(hover_color="#ffff99"):
@@ -115,8 +118,14 @@ def get_avalanche_stats(gdf):
          'registrertAv'])
     # s = df_stats.style.apply(_table_hover, axis=1)#, subset=['noySkredTidspunkt'])
 
-    df_stats.to_html('ava_stats.html', index=False,
-                     formatters={'noySkredTidspunkt': _color_html_table})
+    # df_stats.to_html('ava_stats.html', index=False, classes=['table', 'table-striped'],
+    #                  formatters={'noySkredTidspunkt': _color_html_table})
+
+    df_html = df_stats.to_html(index=False, classes=['table', 'table-hover', 'table-condensed']
+                     # formatters={'noySkredTidspunkt': _color_html_table}
+                               )
+
+    return df_html
 
     # random_id = 'id%d' % np.random.choice(np.arange(1000000))
     #
@@ -130,6 +139,12 @@ def get_avalanche_stats(gdf):
     #
     # with open('ava_stats.html', 'w') as f:
     #     f.write(style + df_html)
+
+
+def make_area_histogram(gdf):
+    fig, ax = plt.subplots(1, 1)
+    gdf.hist(column=['area'], bins=8, ax=ax)
+    plt.savefig('area_hist.svg')
 
 
 # TODO: add statistics per region - intersect with fr_polygon, count of avalanches per precision level.
@@ -245,20 +260,6 @@ def make_avalanche_map(gdf, out='ava_map.html'):
         a = 1
         _m = [row.geometry.centroid.y, row.geometry.centroid.x]
         folium.Marker(_m, icon=folium.Icon(color=get_aval_color(row['noySkredTidspunkt']))).add_to(marker_cluster)
-        #
-        # if row['noySkredTidspunkt'] in ['Eksakt', '1 min', '1 time', '4 timer', '6 timer', '12 timer', '1 dag']:
-        #     folium.Marker(_m, icon=folium.Icon(color='red')).add_to(marker_cluster)
-        # elif row['noySkredTidspunkt'] in ['1 dager', '2 dager']:
-        #     folium.Marker(_m, icon=folium.Icon(color='orange')).add_to(marker_cluster)
-        # else:
-        #     folium.Marker(_m, icon=folium.Icon(color='lightgray')).add_to(marker_cluster)
-
-    # for m_ in m:
-    #     # marker_cluster.add_child(m_, name='') # does not work
-    #     # folium.Marker(m_, icon=folium.Icon(color='lightgray', icon='mountain', prefix='fa')).add_to(marker_cluster)
-    #     folium.Marker(m_, icon=folium.Icon(color='lightgray')).add_to(marker_cluster)
-    #     # folium.Marker(m_, icon=ava_icon).add_to(marker_cluster)
-    #     # other icons 'satellite', 'snowflake'
 
     # Add marker cluster to map
     marker_cluster.add_to(ava_map)
@@ -268,13 +269,22 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     print('Open map: {0}'.format(out))
 
 
+def make_html_from_template(satskred_table):
+    from jinja2 import Template
+    with open('ava_info_template.html', 'r') as f:
+        t = Template(f.read())
+
+    with open('ava_info.html', 'w') as f:
+        f.write(t.render(satskred_table=satskred_table))
+
+
 if __name__ == '__main__':
     conn = connect_to_skredprod()
     # _test_connection(conn)
 
     fr_df = get_forecasting_regions()
     reg = fr_df[fr_df['omradeID'] == 3013]
-    gdf = get_avalanches_by_date(conn, from_date="2020-05-10", to_date="2020-05-18")
+    gdf = get_avalanches_by_date(conn, from_date="2020-01-01", to_date="2020-06-30")
     p = gdf.centroid
     # a = gpd.overlay(reg, gdf, how='intersection')
     a = p.intersects(reg)
@@ -283,5 +293,7 @@ if __name__ == '__main__':
     #     print(c)
     conn.close()
 
-    get_avalanche_stats(gdf)
+    table_html = get_avalanche_stats(gdf)
+    make_area_histogram(gdf)
+    make_html_from_template(table_html)
     make_avalanche_map(gdf)
