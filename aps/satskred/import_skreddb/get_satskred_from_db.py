@@ -114,8 +114,18 @@ def get_avalanche_stats(gdf):
     print(gdf.groupby(['noySkredTidspunkt']).count())
 
     df_stats = gdf.filter(
-        ['skredTidspunkt', 'noySkredTidspunkt', 'area', 'maksHelningUtlopsomr_gr', 'preci_color', 'registrertDato',
+        ['skredTidspunkt', 'noySkredTidspunkt', 'area', 'maksHelningUtlopsomr_gr', 'hoydeStoppSkred_moh', 'registrertDato',
          'registrertAv'])
+
+    col_names = {'skredTidspunkt': 'Tidspunkt (utløsning)',
+                 'noySkredTidspunkt': 'Nøyaktighet (tidspunkt)',
+                 'area': 'Area (m2)',
+                 'maksHelningUtlopsomr_gr': 'Maks helning (utløp)',
+                 'hoydeStoppSkred_moh': 'Høyde (stopp)',
+                 'registrertDato': 'Tidspunkt (registrert)',
+                 'registrertAv': 'Registrert av'}
+
+    df_stats.rename(columns=col_names, inplace=True)
     # s = df_stats.style.apply(_table_hover, axis=1)#, subset=['noySkredTidspunkt'])
 
     # df_stats.to_html('ava_stats.html', index=False, classes=['table', 'table-striped'],
