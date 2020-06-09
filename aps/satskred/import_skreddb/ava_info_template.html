@@ -17,57 +17,92 @@
 <body>
 
 <div class="container">
-    <h1>SatSkred info side</h1>
+    <div class="row">
+        <h1>SatSkred info side</h1>
+    </div>
 
-    <div class="form-group">
-        <!-- Form code begins -->
-        <form method="post">
-            <div class="form-group"> <!-- Date input -->
-                <label class="control-label" for="date">Fra</label>
-                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
+
+    <div class="row">
+        <div class="form-group">
+            <!-- Form code begins -->
+            <form method="post">
+                <div class="form-group"> <!-- Date input -->
+                    <label class="control-label" for="date">Fra</label>
+                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
+                </div>
+
+            </form>
+            <!-- Form code ends -->
+
+            <!-- Form code begins -->
+            <form method="post">
+                <div class="form-group"> <!-- Date input -->
+                    <label class="control-label" for="date">Til</label>
+                    <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
+                </div>
+            </form>
+            <!-- Form code ends -->
+
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Region
+                    <span class="caret"></span></button>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Alle</a></li>
+                    <li><a href="#">...</a></li>
+                    <li><a href="#">Tromsø</a></li>
+                    <li><a href="#">Indre Troms</a></li>
+                    <li><a href="#">Sør Troms</a></li>
+                    <li><a href="#">Ofoten</a></li>
+                    <li><a href="#">...</a></li>
+                </ul>
             </div>
 
-        </form>
-        <!-- Form code ends -->
+            <!-- Submit button -->
 
-        <!-- Form code begins -->
-        <form method="post">
-            <div class="form-group"> <!-- Date input -->
-                <label class="control-label" for="date">Til</label>
-                <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text"/>
-            </div>
-        </form>
-        <!-- Form code ends -->
-
-        <div class="dropdown">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Region
-                <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-                <li><a href="#">Alle</a></li>
-                <li><a href="#">...</a></li>
-                <li><a href="#">Tromsø</a></li>
-                <li><a href="#">Indre Troms</a></li>
-                <li><a href="#">Sør Troms</a></li>
-                <li><a href="#">Ofoten</a></li>
-                <li><a href="#">...</a></li>
-            </ul>
+            <button class="btn btn-primary " name="submit" type="submit">Submit</button>
         </div>
 
-        <!-- Submit button -->
-
-        <button class="btn btn-primary " name="submit" type="submit">Submit</button>
     </div>
 
-    <iframe src="./ava_map.html" height="900px" width="900px"></iframe>
-    <p></p>
-    <div>
-        <img src="area_hist.svg">
+    <div class="row">
+        <iframe src="./ava_map.html" height="900px" width="900px"></iframe>
     </div>
 
-    <div>
-        {{ satskred_table }}
+    <div class="row align-items-center">
+        <div class="col">
+            <img src="area_hist.svg">
+        </div>
+        <div class="row">
+            <table border="1" class="table table-stripped">
+                <thead>
+                <tr style="text-align: left;">
+                    <th>Number</th>
+                    <th>{{ n_aval }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Mean size</td>
+                    <td>{{ avg_size }}</td>
+                </tr>
+                <tr>
+                    <td>Min. size</td>
+                    <td>{{ min_size }}</td>
+                </tr>
+                <tr>
+                    <td>Max. size</td>
+                    <td>{{ max_size }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!--<iframe src="./area_hist.html"></iframe> -->
+
+        <div class="row">
+            {{ satskred_table }}
+        </div>
     </div>
-</div>
 
 </body>
 </html>

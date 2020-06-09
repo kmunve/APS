@@ -8,6 +8,8 @@ from shapely.wkt import loads
 import folium
 import folium.plugins
 
+plt.style.use('ggplot')
+
 
 def connect_to_skredprod():
     conn = pyodbc.connect('Driver={SQL Server};'
@@ -113,6 +115,12 @@ def get_avalanche_stats(gdf):
 
     print(gdf.groupby(['noySkredTidspunkt']).count())
 
+    stats_dict = {'n_aval': len(gdf),
+                  'avg_size': round(mean_area, 0),
+                  'min_size': round(min_area, 0),
+                  'max_size': round(max_area, 0)
+                  }
+
     df_stats = gdf.filter(
         ['skredTidspunkt', 'noySkredTidspunkt', 'area', 'maksHelningUtlopsomr_gr', 'hoydeStoppSkred_moh', 'registrertDato',
          'registrertAv'])
@@ -135,7 +143,7 @@ def get_avalanche_stats(gdf):
                      # formatters={'noySkredTidspunkt': _color_html_table}
                                )
 
-    return df_html
+    return df_html, stats_dict
 
     # random_id = 'id%d' % np.random.choice(np.arange(1000000))
     #
@@ -153,8 +161,30 @@ def get_avalanche_stats(gdf):
 
 def make_area_histogram(gdf):
     fig, ax = plt.subplots(1, 1)
-    gdf.hist(column=['area'], bins=8, ax=ax)
+
+    # sm_1day = gdf[(gdf['area'] <= 20000) & (gdf['preci_color'] == 'red')]
+    # sm_1day = gdf[(gdf['area'] <= 20000) & (gdf['noySkredTidspunkt'] in ['Eksakt', '1 min', '1 time', '4 timer', '6 timer', '12 timer', '1 dag'])]
+
+    gdf.groupby('preci_color').hist(column=['area'], stacked=True, bins=8, alpha=0.5, ax=ax)
+    # sm_1day.hist(column=['area'], bins=8, ax=ax)
+    ax.set_xlabel('Area ($m^2$)')
+    ax.set_ylabel('Count')
+    ax.set_title('')
+    plt.legend()
     plt.savefig('area_hist.svg')
+
+
+def make_area_histogram_alt(gdf):
+    import altair
+    # from altair_saver import save
+    base = altair.Chart(gdf)
+
+    bar = base.mark_bar().encode(
+        x=altair.X('area', bin=True, axis=None),
+        y='count()'
+    )
+
+    bar.save('area_hist.html')
 
 
 # TODO: add statistics per region - intersect with fr_polygon, count of avalanches per precision level.
@@ -279,13 +309,18 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     print('Open map: {0}'.format(out))
 
 
-def make_html_from_template(satskred_table):
+def make_html_from_template(satskred_table, stats_dict):
     from jinja2 import Template
     with open('ava_info_template.html', 'r') as f:
         t = Template(f.read())
 
     with open('ava_info.html', 'w') as f:
-        f.write(t.render(satskred_table=satskred_table))
+        f.write(t.render(satskred_table=satskred_table,
+                         n_aval=stats_dict['n_aval'],
+                         avg_size=stats_dict['avg_size'],
+                         min_size=stats_dict['min_size'],
+                         max_size=stats_dict['max_size'],
+                         ))
 
 
 if __name__ == '__main__':
@@ -303,7 +338,10 @@ if __name__ == '__main__':
     #     print(c)
     conn.close()
 
-    table_html = get_avalanche_stats(gdf)
+    table_html, stats_dict = get_avalanche_stats(gdf)
+
     make_area_histogram(gdf)
-    make_html_from_template(table_html)
+    make_area_histogram_alt(gdf)
+
+    make_html_from_template(table_html, stats_dict)
     make_avalanche_map(gdf)
