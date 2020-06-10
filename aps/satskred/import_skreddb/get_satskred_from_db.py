@@ -51,7 +51,12 @@ def get_aval_color(noySkredTidspunkt, css=False):
         return c
 
 
-def get_avalanches_by_date(conn, from_date="2020-04-01", to_date="2020-04-30"):
+def get_avalanches_by_date(conn, from_date="2020-04-01", to_date="2020-04-30", include_deleted=False, print_sql=False):
+    if include_deleted:  # if True only the avalanches with reStatus == 'Sletted' are retrieved.
+        del_sql = ""
+    else:
+        del_sql = " and h.[regStatus] != 'Slettet'"
+
     q = """SELECT h.[skredType] 
           ,h.[skredTidspunkt]
           ,h.[noySkredTidspunkt]
@@ -71,8 +76,11 @@ def get_avalanches_by_date(conn, from_date="2020-04-01", to_date="2020-04-30"):
     FROM [skredprod].[skred].[SKREDHENDELSE] AS h
     LEFT JOIN [skredprod].[skred].[SKREDTEKNISKEPARAMETRE] AS t ON t.[skredID] = h.[skredID]
     LEFT JOIN [skredprod].[skred].[UTLOPUTLOSNINGOMR] AS u ON u.[skredID] = h.[skredID]
-    WHERE h.[registrertAv] = 'Sentinel-1' and h.[regStatus] != 'Slettet' and h.skredTidspunkt >= '{from_date}' and h.skredTidspunkt < '{to_date}'
-    ORDER BY t.[registrertDato] DESC""".format(from_date=from_date, to_date=to_date)
+    WHERE h.[registrertAv] = 'Sentinel-1'{del_sql} and h.skredTidspunkt >= '{from_date}' and h.skredTidspunkt < '{to_date}'
+    ORDER BY t.[registrertDato] DESC""".format(from_date=from_date, to_date=to_date, del_sql=del_sql)
+
+    if print_sql:
+        print(q)
 
     df = pd.read_sql_query(q, conn)
     df['geometry'] = [loads(s) for s in df['SHAPE']]
@@ -123,7 +131,7 @@ def get_avalanche_stats(gdf):
 
     df_stats = gdf.filter(
         ['skredTidspunkt', 'noySkredTidspunkt', 'area', 'maksHelningUtlopsomr_gr', 'hoydeStoppSkred_moh', 'registrertDato',
-         'registrertAv'])
+         'regStatus', 'registrertAv'])
 
     col_names = {'skredTidspunkt': 'Tidspunkt (utløsning)',
                  'noySkredTidspunkt': 'Nøyaktighet (tidspunkt)',
@@ -131,6 +139,7 @@ def get_avalanche_stats(gdf):
                  'maksHelningUtlopsomr_gr': 'Maks helning (utløp)',
                  'hoydeStoppSkred_moh': 'Høyde (stopp)',
                  'registrertDato': 'Tidspunkt (registrert)',
+                 'reStatus': 'Status',
                  'registrertAv': 'Registrert av'}
 
     df_stats.rename(columns=col_names, inplace=True)
@@ -163,7 +172,6 @@ def make_area_histogram(gdf):
     fig, ax = plt.subplots(1, 1)
 
     # sm_1day = gdf[(gdf['area'] <= 20000) & (gdf['preci_color'] == 'red')]
-    # sm_1day = gdf[(gdf['area'] <= 20000) & (gdf['noySkredTidspunkt'] in ['Eksakt', '1 min', '1 time', '4 timer', '6 timer', '12 timer', '1 dag'])]
 
     gdf.groupby('preci_color').hist(column=['area'], stacked=True, bins=8, alpha=0.5, ax=ax)
     # sm_1day.hist(column=['area'], bins=8, ax=ax)
@@ -200,6 +208,18 @@ def make_area_histogram_alt(gdf):
 #         'fillColor': '#9BB9C2',
 #         'color': '#044157', 'weight': 1,
 #         'fillOpacity': 0.5}
+
+
+def in_region(gdf, region_id=3013):
+    # Test if the centroid of an avalanche polygon lies within the forecasting region with ID region_id.
+    fr_df = get_forecasting_regions()
+    reg = fr_df[fr_df['omradeID'] == 3013]
+    p = gdf.centroid
+    a = gpd.overlay(reg, gdf, how='intersection')
+    a = p.intersects(reg)
+    print(a)
+    for c in gdf.columns:
+        print(c)
 
 
 def make_avalanche_map(gdf, out='ava_map.html'):
@@ -269,8 +289,6 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     a = folium.GeoJson(gdf,
                        name='Detected avalanches (polygon)',
                        style_function=lambda feature: {
-                           # 'fillColor': '#EE7B04',
-                           # 'color': '#EE7B04',
                            'weight': 1,
                            'color': feature['properties']['preci_color'],
                            'fillcolor': feature['properties']['preci_color'],
@@ -326,22 +344,13 @@ def make_html_from_template(satskred_table, stats_dict):
 if __name__ == '__main__':
     conn = connect_to_skredprod()
     # _test_connection(conn)
-
-    fr_df = get_forecasting_regions()
-    reg = fr_df[fr_df['omradeID'] == 3013]
-    gdf = get_avalanches_by_date(conn, from_date="2020-01-01", to_date="2020-06-30")
-    p = gdf.centroid
-    # a = gpd.overlay(reg, gdf, how='intersection')
-    a = p.intersects(reg)
-    print(a)
-    # for c in gdf.columns:
-    #     print(c)
+    gdf = get_avalanches_by_date(conn, from_date="2020-01-01", to_date="2020-06-30", include_deleted=True, print_sql=True)
     conn.close()
 
     table_html, stats_dict = get_avalanche_stats(gdf)
 
     make_area_histogram(gdf)
-    make_area_histogram_alt(gdf)
+    # make_area_histogram_alt(gdf)
 
     make_html_from_template(table_html, stats_dict)
     make_avalanche_map(gdf)
