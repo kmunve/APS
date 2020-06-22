@@ -92,3 +92,4 @@ ENV/
 .idea/
 /aps/data/t2myr_kf0_5km_20161027_00.nc
 /aps/similar_forecast/knn_preprocessed.pck
+/aps/satskred/import_skreddb/_tmp_gdf.zip

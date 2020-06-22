@@ -38,15 +38,19 @@ def get_forecasting_regions():
     fr_df = gpd.read_file(r'C:\Users\kmu\PycharmProjects\APS\aps\data\forecasting_regions\Skred_Varsling.geojson')
     return fr_df
 
-def get_aval_color(noySkredTidspunkt, css=False):
-    if noySkredTidspunkt in ['Eksakt', '1 min', '1 time', '4 timer', '6 timer', '12 timer', '1 dag']:
-        c = 'red'  # '#75B100'
-    elif noySkredTidspunkt in ['1 dager', '2 dager']:  # , '3 dager']:
-        c = 'orange'  # '#FFCC33'
+def get_aval_color(row, css=False):
+    if row['regStatus'] == 'Slettet':
+        c = 'blue'
     else:
-        c = 'lightgray'  # '#E3000F'
+        if row['noySkredTidspunkt'] in ['Eksakt', '1 min', '1 time', '4 timer', '6 timer', '12 timer', '1 dag']:
+            c = 'red'  # '#75B100'
+        elif row['noySkredTidspunkt'] in ['1 dager', '2 dager']:  # , '3 dager']:
+            c = 'orange'  # '#FFCC33'
+        else:
+            c = 'lightgray'  # '#E3000F'
+
     if css:
-        return 'background-color: {0}'.fomrat(c)
+        return 'background-color: {0}'.format(c)
     else:
         return c
 
@@ -84,7 +88,7 @@ def get_avalanches_by_date(conn, from_date="2020-04-01", to_date="2020-04-30", i
 
     df = pd.read_sql_query(q, conn)
     df['geometry'] = [loads(s) for s in df['SHAPE']]
-    df['preci_color'] = df['noySkredTidspunkt'].map(get_aval_color)
+    df['preci_color'] = df.apply(get_aval_color, axis=1)
     epsg = 32633
     gdf = gpd.GeoDataFrame(df, crs={'init': 'epsg:' + str(epsg)})
     return gdf
@@ -173,26 +177,57 @@ def make_area_histogram(gdf):
 
     # sm_1day = gdf[(gdf['area'] <= 20000) & (gdf['preci_color'] == 'red')]
 
-    gdf.groupby('preci_color').hist(column=['area'], stacked=True, bins=8, alpha=0.5, ax=ax)
+    gdf.groupby('preci_color').hist(column=['area'], stacked=False, bins=8, alpha=0.5, ax=ax)
     # sm_1day.hist(column=['area'], bins=8, ax=ax)
-    ax.set_xlabel('Area ($m^2$)')
-    ax.set_ylabel('Count')
+    ax.set_xlabel('Flate ($m^2$)')
+    ax.set_ylabel('Antall')
     ax.set_title('')
     plt.legend()
     plt.savefig('area_hist.svg')
 
 
+def make_accuracy_histogram(gdf):
+    fig, ax = plt.subplots(1, 1)
+
+    # sm_1day = gdf[(gdf['area'] <= 20000) & (gdf['preci_color'] == 'red')]
+
+    gb = gdf.groupby('noySkredTidspunkt')
+    gb.hist(column=['area'], stacked=True, bins=8, alpha=0.5, ax=ax)
+    # sm_1day.hist(column=['area'], bins=8, ax=ax)
+    ax.set_xlabel('Area ($m^2$)')
+    ax.set_ylabel('Count')
+    ax.set_title('')
+    plt.legend()
+    plt.savefig('accuracy_hist.svg')
+
+def make_accuracy_histogram_alt(gdf):
+    import plotly.express as px
+
+    fig = px.histogram(gdf, x="noySkredTidspunkt", nbins=10,  labels={'x': 'Tidsnøyaktighet', 'y': 'Antall'})
+    # gb = gdf.groupby('noySkredTidspunkt')
+    #
+    # fig = px.histogram(gb, x="noySkredTidspunkt", labels={'x': 'Tidsnøyaktighet', 'y': 'Antall'})
+    fig.write_image('accuracy_hist.svg')
+
+
+
 def make_area_histogram_alt(gdf):
-    import altair
-    # from altair_saver import save
-    base = altair.Chart(gdf)
+    import plotly.express as px
 
-    bar = base.mark_bar().encode(
-        x=altair.X('area', bin=True, axis=None),
-        y='count()'
+    # counts, bins = np.histogram(gdf.area, bins=[1000, 10000, 100000])
+    # bins = 0.5 * (bins[:-1] + bins[1:])
+    #
+    # fig = px.bar(x=bins, y=counts, labels={'x': 'Flate (m2)', 'y': 'Antall'})
+    fig = px.histogram(gdf, x="area", color="preci_color", nbins=10)
+    fig.update_layout(
+        # title_text='Sampled Results',  # title of plot
+        xaxis_title_text='Flate (m2)',  # xaxis label
+        yaxis_title_text='Antall',  # yaxis label
+        showlegend=False,
+        bargap=0.1  # gap between bars of adjacent location coordinates
+        # bargroupgap=0.1  # gap between bars of the same location coordinates
     )
-
-    bar.save('area_hist.html')
+    fig.write_image('area_hist.svg')
 
 
 # TODO: add statistics per region - intersect with fr_polygon, count of avalanches per precision level.
@@ -276,6 +311,7 @@ def make_avalanche_map(gdf, out='ava_map.html'):
                'noySkredTidspunkt': 'Nøyaktighet (Tid)',
                'registrertAv': 'Registrert av',
                'registrertDato': 'Dato (registrert)',
+               'regStatus': 'Status',
                'skredAreal_m2': 'Areal (m2)',
                'eksposisjonUtlopsomr': 'Eksposisjon',
                'snittHelningUtlopssomr_gr': 'Helning (snitt)',
@@ -299,6 +335,11 @@ def make_avalanche_map(gdf, out='ava_map.html'):
                                                               labels=True,
                                                               sticky=False
                                                               )
+                       # popup=folium.features.GeoJsonPopup(fields=list(_fields.keys()),
+                       #                                        aliases=list(_fields.values()),
+                       #                                        labels=True,
+                       #                                        sticky=False
+                       #                                        )
                        )
 
     a.add_to(ava_map)
@@ -317,7 +358,7 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     for row_label, row in gdf.iterrows():
         a = 1
         _m = [row.geometry.centroid.y, row.geometry.centroid.x]
-        folium.Marker(_m, icon=folium.Icon(color=get_aval_color(row['noySkredTidspunkt']))).add_to(marker_cluster)
+        folium.Marker(_m, icon=folium.Icon(color=get_aval_color(row))).add_to(marker_cluster)
 
     # Add marker cluster to map
     marker_cluster.add_to(ava_map)
@@ -325,6 +366,14 @@ def make_avalanche_map(gdf, out='ava_map.html'):
     folium.LayerControl().add_to(ava_map)
     ava_map.save(out)
     print('Open map: {0}'.format(out))
+
+
+def pickle_df(gdf):
+    gdf.to_pickle('_tmp_gdf.zip')
+
+
+def unpickle_df():
+    return pd.read_pickle('_tmp_gdf.zip')
 
 
 def make_html_from_template(satskred_table, stats_dict):
@@ -344,13 +393,17 @@ def make_html_from_template(satskred_table, stats_dict):
 if __name__ == '__main__':
     conn = connect_to_skredprod()
     # _test_connection(conn)
-    gdf = get_avalanches_by_date(conn, from_date="2020-01-01", to_date="2020-06-30", include_deleted=True, print_sql=True)
+    gdf = get_avalanches_by_date(conn, from_date="2020-01-01", to_date="2020-05-31", include_deleted=False, print_sql=True)
     conn.close()
+    pickle_df(gdf)
+
+    gdf = unpickle_df()
 
     table_html, stats_dict = get_avalanche_stats(gdf)
 
-    make_area_histogram(gdf)
-    # make_area_histogram_alt(gdf)
+    # make_area_histogram(gdf)
+    make_area_histogram_alt(gdf)
+    # make_accuracy_histogram_alt(gdf)
 
     make_html_from_template(table_html, stats_dict)
     make_avalanche_map(gdf)
