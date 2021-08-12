@@ -6,22 +6,22 @@ import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
 sns.set(style="dark")
-import aps_io.get_arome as ga
-from load_region import load_region, clip_region
-from util.make_gif import make_gif
+import aps.aps_io.get_arome as ga
+from aps.load_region import load_region, clip_region
+from aps.util.make_gif import make_gif
 from pathlib import Path
 
 region_id = 3028
 
 hour_range = [0, 24]
-date_str = '20190410T00Z'
+date_str = '20210313T18'
 var_wet = 'altitude_of_isoTprimW_equal_0'
 var_dry = 'altitude_of_0_degree_isotherm'
 var_rr = 'precipitation_amount'
-tmp_folder = Path(r'./tmp')
-met_folder = Path(r'\\nve.no\fil\grid\metdata\prognosis\meps\det\archive\2019')
+tmp_folder = Path(r'.\tmp')
+met_folder = Path(r'\\nve.no\fil\grid\metdata\prognosis\meps\det\archive\2021')
 
-nc_file1 = met_folder / 'meps_det_extracted_1km_{0}.nc'.format(date_str)
+nc_file1 = met_folder / 'meps_det_1km_{0}Z.nc'.format(date_str)
 times, altitude, land_area_fraction, nc_vars = ga.nc_load(nc_file1, [var_dry, var_wet], time_period=hour_range)
 
 print("{2} hours: from {0} to {1}".format(times[0], times[-1], len(times)))
@@ -109,14 +109,14 @@ print("Mean\t: ", fl_region_mean)
 for p in [0, 5, 25, 50, 75, 80, 85, 90, 95, 100]:
     print(p, "\t: ", np.nanpercentile(fl_region.flatten(), p))
 
-fl_region_flat = fl_region[~np.isnan(fl_region)].data.flatten()
-sns.distplot(fl_region_flat)
-plt.savefig(tmp_folder / 'fl_dist.png')
-plt.clf()
+# fl_region_flat = fl_region[~np.isnan(fl_region)].data.flatten()
+# sns.distplot(fl_region_flat)
+# plt.savefig(tmp_folder / 'fl_dist.png')
+# plt.clf()
 
 # ## Calculating freezing level with regard to precipitation
 
-nc_file2 = r"\\hdata\grid\metdata\prognosis\meps\det\archive\2019\meps_det_pp_1km_{0}.nc".format(date_str)
+nc_file2 = r"Y:\metdata\prognosis\met_pp_nordic\forecast\archive\2021\met_forecast_1_0km_nordic_{0}Z.nc".format(date_str)
 times, altitude, land_area_fraction, nc_vars2 = ga.nc_load(nc_file2, [var_rr], time_period=hour_range)
 
 precip_sum = np.sum(nc_vars2['precipitation_amount'][0:24, :, :], axis=0)

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/data.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+
+
+<div id="container" style="height: 400px; min-width: 310px"></div>
+
+<script>
+    //Highcharts.getJSON('https://demo-live-data.highcharts.com/aapl-c.json', function (data) {
+
+    // Create the chart
+    Highcharts.stockChart('container', {
+
+        rangeSelector: {
+            selected: 1
+        },
+
+        title: {
+            text: 'Snow depth (m)'
+        },
+
+        xAxis: {
+            type: 'datetime',
+            labels: {
+                format: '{value:%Y-%m-%d}',
+                rotation: 45,
+                align: 'left'
+            }
+        },
+
+        series: [{
+            name: 'Snow depth',
+            data: [.7, 0.6, 1.1, 1.7],  //{{ data }},
+            pointStart: Date.UTC(2020, 1, 2),
+            pointInterval: 24 * 36e5,
+            step: true,
+            fill: true,
+            tooltip: {
+                valueDecimals: 2
+            }
+        }]
+    });
+</script>
+</body>
+</html>
