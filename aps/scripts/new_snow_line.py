@@ -75,6 +75,11 @@ for d in date_range:
     ts = netCDF4.num2date(time_v[t_index], time_v.units)
     print("\n", ts)
 
+    # precip
+    precip_clip = region_mask * np.flipud(
+        nc_data.variables['precipitation_amount_acc'][t_index, (y_dim - y_max):(y_dim - y_min), x_min:x_max])
+    print(describe(precip_clip))
+
     #
     wetb_clip = region_mask * np.flipud(nc_data.variables['altitude_of_isoTprimW_equal_0'][t_index, (y_dim-y_max):(y_dim-y_min), x_min:x_max])
     print(describe(wetb_clip))
