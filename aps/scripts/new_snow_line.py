@@ -1,73 +1,73 @@
 # coding: utf-8
 
-# TODO: The resulting CSV file can be ploted using ../plotting/new_snow_line_plot.py
+# TODO: The resulting CSV file can be plotted using ../plotting/new_snow_line_plot.py
 
 # -*- coding: utf-8 -*-
-import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.style.use('seaborn-notebook')
-import matplotlib.patches as patches
-plt.rcParams['figure.figsize'] = (14, 6)
+import matplotlib.pyplot as plt
 
 import datetime as dt
 import numpy as np
 import netCDF4
 import pandas as pd
 import warnings
-warnings.filterwarnings("ignore")
 
-import csv
 from pathlib import Path
 
-from aps.load_region import load_region, clip_region
+from aps.load_region import load_region
 from aps.analysis import describe
 
-# check versions (overkill, but why not?)
+matplotlib.style.use('seaborn-notebook')
+plt.rcParams['figure.figsize'] = (14, 6)
+warnings.filterwarnings("ignore")
+
+
+# Check versions
 print('Numpy version: ', np.__version__)
 print('Matplotlib version: ', matplotlib.__version__)
 print('Today: ', dt.date.today())
 
 # Select region and date
-region_id = 3007
-date_range = pd.date_range(start="2020-12-01",end="2021-01-30")
+region_id = 3024
+date_range = pd.date_range(start="2020-02-01", end="2020-04-01")
 
 # Load region mask - only for data on 1km xgeo-grid
+# !!!Important to ensure correct overlay between data- and region-raster
 region_mask, y_min, y_max, x_min, x_max = load_region(region_id)
 
 # Set path
 nc_dir = Path(r"\\DM-CIFS-01\grid5\metdata\prognosis\meps\det\archive")
 tmp_folder = Path(r'./tmp')
-csv_file = tmp_folder / "new_snow_line_{0}_{1}.csv".format(region_id, date_range[0].strftime("%Y%m%d"))
-new_snow_line = {"Date": [], "Hour": [], "Altitude": []}
+csv_file = tmp_folder / "new_snow_line_{0}_{1}_{2}.csv".format(region_id, date_range[0].strftime("%Y%m%d"), date_range[-1].strftime("%Y%m%d"))
+new_snow_line = {"Date": [], "Hour": [], "Altitude": [], "Altitude_std": []}
 
+# Load netcdf files for given date range
 for d in date_range:
-    # Use the 6 o'clock file
-    nc_date = dt.datetime(year=d.year, month=d.month, day=d.day, hour=6)
+    nc_date = dt.datetime(year=d.year, month=d.month, day=d.day, hour=6)  # Use the 6 o'clock file
     nc_datestring = nc_date.strftime("%Y%m%dT%HZ")
     nc_file = "meps_det_1km_{0}.nc".format(nc_datestring)
     nc_path = nc_dir / str(nc_date.year) / nc_file
-
     # Load data
     try:
         nc_data = netCDF4.Dataset(nc_path, "r")
         # Choose a time-step
-        t_index = 18
+        t_index = 18  # 00-next day
     except FileNotFoundError:
         # if 6 o'clock is not available try the 9 o'clock
-        nc_date = dt.datetime(year=d.year, month=d.month, day=d.day, hour=9)
-        nc_datestring = nc_date.strftime("%Y%m%dT%HZ")
-        nc_file = "meps_det_1km_{0}.nc".format(nc_datestring)
-        nc_path = nc_dir / str(nc_date.year) / nc_file
-        nc_data = netCDF4.Dataset(nc_path, "r")
-        # Choose a time-step
-        t_index = 15
-        print("Using 9 o'clock run.")
-    except:
-        print("No data available for {0}".format(nc_date))
+        try:
+            nc_date = dt.datetime(year=d.year, month=d.month, day=d.day, hour=9)
+            nc_datestring = nc_date.strftime("%Y%m%dT%HZ")
+            nc_file = "meps_det_1km_{0}.nc".format(nc_datestring)
+            nc_path = nc_dir / str(nc_date.year) / nc_file
+            nc_data = netCDF4.Dataset(nc_path, "r")
+            # Choose a time-step
+            t_index = 15  # 00-next day
+            print("Using 9 o'clock run.")
+        except FileNotFoundError:
+            print("No data available for {0}".format(nc_date))
+            continue
 
     time_v = nc_data.variables['time']
-    # Choose a pressure level (if applicable)
-    p_index = 12 # 12=1000hPa, 11=925hPa, 10=850hPa, ..., 7=500hPa, ..., 0=50hPa in arome_metcoop_test
 
     x_dim = nc_data.dimensions['x'].size
     y_dim = nc_data.dimensions['y'].size
@@ -80,7 +80,7 @@ for d in date_range:
         nc_data.variables['precipitation_amount_acc'][t_index, (y_dim - y_max):(y_dim - y_min), x_min:x_max])
     print(describe(precip_clip))
 
-    #
+    # Altitude data
     wetb_clip = region_mask * np.flipud(nc_data.variables['altitude_of_isoTprimW_equal_0'][t_index, (y_dim-y_max):(y_dim-y_min), x_min:x_max])
     print(describe(wetb_clip))
 
@@ -91,25 +91,31 @@ for d in date_range:
     plt.savefig(tmp_folder / "wet_bulb_alt_{0}_{1}.png".format(region_id, nc_datestring))
     plt.clf()
 
+    # Loop over six-hour chunks of data
     for k, f in enumerate(range(t_index, t_index+24, 6), start=1):
         t = []
         sl = []
+        sd = []
         for i, d in enumerate(range(f, f + 6), start=1):
             wetb_clip = region_mask * np.flipud(
                 nc_data.variables['altitude_of_isoTprimW_equal_0'][d, (y_dim - y_max):(y_dim - y_min), x_min:x_max])
             _t = netCDF4.num2date(time_v[d], time_v.units)
-            _sl = np.nanmedian(wetb_clip)
+            _sl = np.nanmean(wetb_clip)  #np.nanpercentile(wetb_clip, 90)
+            _sd = np.nanstd(wetb_clip)
             #         print("\t", i, f, d, _t, _sl, np.nanmean(wetb_clip))
             t.append(_t)
             sl.append(_sl)
+            sd.append(_sd)
 
         sl = np.array(sl)
+        sd = np.array(sd)
         print(_t, np.mean(sl), np.max(sl))
         _i = np.argmax(sl)
 
         new_snow_line["Date"].append(t[_i].strftime("%Y-%m-%d"))
         new_snow_line["Hour"].append(t[_i].hour)
         new_snow_line["Altitude"].append(sl[_i])
+        new_snow_line["Altitude_std"].append(sd[_i])
 
 df = pd.DataFrame(new_snow_line)
 df.to_csv(csv_file, sep=";", index=False)
