@@ -3,53 +3,69 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.style.use('seaborn-notebook')
-plt.rcParams['figure.figsize'] = (14, 6)
+plt.rcParams['figure.figsize'] = (14, 12)
 
+REGION_ID = 3034
 
-# Load data for new snow line
-nsl = pd.read_csv(r"C:\Users\kmu\PycharmProjects\APS\aps\scripts\tmp\new_snow_line_3024_20200201_20200401.csv", sep=";", parse_dates=['Date'])
-nsl['Altitude_0'] = np.clip(nsl['Altitude'], a_min=0, a_max=None)
+# Load data for new snow line calculated in *new_snow_line.py*
+nsl = pd.read_csv(r"C:\Users\kmu\PycharmProjects\APS\aps\scripts\tmp\new_snow_line_{0}_20201201_20210531.csv".format(REGION_ID), sep=";", parse_dates=['Date'])
+nsl['Altitude_nsl'] = np.clip(nsl['Altitude'], a_min=0, a_max=None)
 # group by day and keep only the highest value of 00, 06, 12, or 18 o'clock
 nsl_gr = nsl.groupby(by='Date', as_index=False).max()
 
 # Load data for new snow line from APS db
-db = pd.read_csv(r"C:\Users\kmu\PycharmProjects\APS\aps\scripts\tmp\new_snow_line_db_90perc_3024_20200201_20200401.csv", sep=" ", parse_dates=['Date'])
-
+# Used for extraction: exec GetTimeSerieData @RegionId='3034.0', @parameter='2014', @FromDate='2020-12-01', @ToDate='2021-05-31', @Model='met_obs_v2.0'
+db = pd.read_csv(r"C:\Users\kmu\PycharmProjects\APS\aps\scripts\tmp\{0}_newsnowline2021.csv".format(REGION_ID), sep=";", parse_dates=['Time'])
+db['Altitude_wetB'] = np.clip(db['Value'], a_min=0, a_max=None)
+db['Date'] = db['Time'].apply(lambda x: pd.Timestamp(x.date()))
+db['Hour'] = db['Time'].apply(lambda x: x.hour)
 # group by day and keep only the highest value of 00, 06, 12, or 18 o'clock
 db_gr = db.groupby(by='Date', as_index=False).max()
 
+# Load data for 0-isotherm from APS db
+db_0iso = pd.read_csv(r"C:\Users\kmu\PycharmProjects\APS\aps\scripts\tmp\{0}_0isoterm2021.csv".format(REGION_ID), sep=";", parse_dates=['Time'])
+db_0iso['Altitude_0iso'] = np.clip(db_0iso['Value'], a_min=0, a_max=None)
+db_0iso['Date'] = db_0iso['Time'].apply(lambda x: pd.Timestamp(x.date()))
+db_0iso['Hour'] = db_0iso['Time'].apply(lambda x: x.hour)
+# group by day and keep only the highest value of 00, 06, 12, or 18 o'clock
+db_0iso_gr = db_0iso.groupby(by='Date', as_index=False).max()
 
-aw = pd.read_csv(r"C:\Users\kmu\PycharmProjects\varsomdata\localstorage\norwegian_avalanche_warnings_season_19_20.csv", sep=";", header=0, index_col=0, parse_dates=['valid_from', 'date_valid'])
-print(aw.columns)
+# Load varsom-data containing published mountain-weather
+aw2 = pd.read_csv(r"C:\Users\kmu\PycharmProjects\varsomdata\varsomdata\{0}_forecasts_20_21.csv".format(REGION_ID), sep=";", header=0, index_col=0, parse_dates=['valid_from', 'date_valid'])
+aw2['Date'] = aw2['date_valid']
 
-date_filter = (aw['date_valid'] >= nsl['Date'].iloc[0]) & (aw['date_valid'] <= nsl['Date'].iloc[-1])
-region_filter = aw['region_id'] == 3024
-aw2 = aw[region_filter]
-aw2 = aw2[date_filter]
-aw2['precip'] = aw2['mountain_weather_precip_region']*10
-#
-# pd.join
+_merged = pd.merge(nsl_gr, db_gr, how='left', on='Date', suffixes=['_nsl', '_wetB'])
+_merged2 = pd.merge(_merged, db_0iso_gr, how='left', on='Date', suffixes=['_nsl', '_APSwetB'])
+_merged3 = pd.merge(_merged2, aw2, how='left', on='Date', suffixes=['_nsl', '_APS0iso'])
 
-aw3 = pd.merge(aw2, nsl_gr, how='right', left_on='date_valid', right_on='Date')
-aw3 = pd.merge(aw3, db_gr, how='right', left_on='date_valid', right_on='Date')
-
-aw3['diff_alt0'] = aw3['mountain_weather_freezing_level'] - aw3['Altitude_0']
-aw3['diff_altdb'] = aw3['mountain_weather_freezing_level'] - aw3['Altitude_db']
-
+_merged3.set_index('Date', inplace=True)
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
-aw2.plot.bar(x='date_valid', y='mountain_weather_freezing_level', alpha=0.5, ax=ax1)
-nsl_gr.plot.bar(x='Date', y='Altitude_0', alpha=0.5, color='orange', ax=ax1)
-db_gr.plot.bar(x='Date', y='Altitude_db', alpha=0.5, color='darkgrey', ax=ax1)
+_merged3.filter(['mountain_weather_freezing_level', 'Altitude_nsl']).plot.area(alpha=0.5, stacked=False, ax=ax1)
+_merged3.filter(['mountain_weather_freezing_level', 'Altitude_wetB']).plot.area(alpha=0.5, stacked=False, ax=ax2)
+_merged3.filter(['mountain_weather_freezing_level', 'Altitude_0iso']).plot.area(alpha=0.5, stacked=False, ax=ax3)
 
-aw2.plot.bar(x='date_valid', y='mountain_weather_precip_region', ax=ax2)
-# nsl_gr.plot.scatter(x='Date', y='Altitude_std', ax=ax2) # TODO: make as error bars yerr=[...]
+_merged3['diff_nsl'] = _merged3['mountain_weather_freezing_level'] - _merged3['Altitude_nsl']
+_merged3['diff_wetB'] = _merged3['mountain_weather_freezing_level'] - _merged3['Altitude_wetB']
+_merged3['diff_0iso'] = _merged3['mountain_weather_freezing_level'] - _merged3['Altitude_0iso']
 
-aw3.plot.bar(x='date_valid', y='diff_alt0', alpha=0.5, color='orange', ax=ax3)
-aw3.plot.bar(x='date_valid', y='diff_altdb', alpha=0.5, color='darkgrey', ax=ax3)
 plt.tight_layout()
-plt.grid()
+#plt.grid()
 plt.show()
 
+print(_merged3['diff_nsl'].mean(), _merged3['diff_nsl'].std())
+print(_merged3['diff_wetB'].mean(), _merged3['diff_wetB'].std())
+print(_merged3['diff_0iso'].mean(), _merged3['diff_0iso'].std())
+print(_merged3['diff_nsl'].describe())
+print(_merged3['diff_wetB'].describe())
+print(_merged3['diff_0iso'].describe())
+
+print(nsl['Date'].iloc[0])
+print(aw2['Date'].iloc[0])
+print(db_gr['Date'].iloc[0])
+print(db_0iso_gr['Date'].iloc[0])
+
 print(nsl['Date'].iloc[-1])
-print(aw2['date_valid'].iloc[-1])
+print(aw2['Date'].iloc[-1])
+print(db_gr['Date'].iloc[-1])
+print(db_0iso_gr['Date'].iloc[-1])

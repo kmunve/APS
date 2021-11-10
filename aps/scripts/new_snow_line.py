@@ -28,8 +28,8 @@ print('Matplotlib version: ', matplotlib.__version__)
 print('Today: ', dt.date.today())
 
 # Select region and date
-region_id = 3024
-date_range = pd.date_range(start="2020-02-01", end="2020-04-01")
+region_id = 3034
+date_range = pd.date_range(start="2020-12-01", end="2021-05-31")
 
 # Load region mask - only for data on 1km xgeo-grid
 # !!!Important to ensure correct overlay between data- and region-raster
