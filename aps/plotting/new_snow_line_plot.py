@@ -40,8 +40,9 @@ _merged3 = pd.merge(_merged2, aw2, how='left', on='Date', suffixes=['_nsl', '_AP
 
 _merged3.set_index('Date', inplace=True)
 
+
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
-_merged3.filter(['mountain_weather_freezing_level', 'Altitude_nsl']).plot.area(alpha=0.5, stacked=False, ax=ax1)
+_merged3.filter(['mountain_weather_freezing_level', 'Altitude_nsl']).plot.area(alpha=0.5, stacked=False, ax=ax1, title=REGION_ID)
 _merged3.filter(['mountain_weather_freezing_level', 'Altitude_wetB']).plot.area(alpha=0.5, stacked=False, ax=ax2)
 _merged3.filter(['mountain_weather_freezing_level', 'Altitude_0iso']).plot.area(alpha=0.5, stacked=False, ax=ax3)
 
@@ -51,14 +52,15 @@ _merged3['diff_0iso'] = _merged3['mountain_weather_freezing_level'] - _merged3['
 
 plt.tight_layout()
 #plt.grid()
+plt.savefig('{0}_nsl_comparison.png'.format(REGION_ID), dpi=90)
 plt.show()
 
 print(_merged3['diff_nsl'].mean(), _merged3['diff_nsl'].std())
 print(_merged3['diff_wetB'].mean(), _merged3['diff_wetB'].std())
 print(_merged3['diff_0iso'].mean(), _merged3['diff_0iso'].std())
-print(_merged3['diff_nsl'].describe())
-print(_merged3['diff_wetB'].describe())
-print(_merged3['diff_0iso'].describe())
+print(_merged3['diff_nsl'].where(_merged3['mountain_weather_precip_region'] > 1.0).describe())
+print(_merged3['diff_wetB'].where(_merged3['mountain_weather_precip_region'] > 1.0).describe())
+print(_merged3['diff_0iso'].where(_merged3['mountain_weather_precip_region'] > 1.0).describe())
 
 print(nsl['Date'].iloc[0])
 print(aw2['Date'].iloc[0])
