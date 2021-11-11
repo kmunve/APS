@@ -5,6 +5,15 @@ import matplotlib
 matplotlib.style.use('seaborn-notebook')
 plt.rcParams['figure.figsize'] = (14, 12)
 
+"""
+Procedure
+
+Calculate new snow line based on wetBulb_altitude using the script new_snow_line.py.
+
+Execute GetTimeSerieData in SQL Studio and save result as <region_id>_newsnoline<year>.csv
+Execute GetTimeSerieData in SQL Studio and save result as <region_id>_0isoterm<year>.csv
+"""
+
 REGION_ID = 3034
 
 # Load data for new snow line calculated in *new_snow_line.py*
@@ -34,17 +43,18 @@ db_0iso_gr = db_0iso.groupby(by='Date', as_index=False).max()
 aw2 = pd.read_csv(r"C:\Users\kmu\PycharmProjects\varsomdata\varsomdata\{0}_forecasts_20_21.csv".format(REGION_ID), sep=";", header=0, index_col=0, parse_dates=['valid_from', 'date_valid'])
 aw2['Date'] = aw2['date_valid']
 
+# Merge all into one dataframe for plotting and analysis
 _merged = pd.merge(nsl_gr, db_gr, how='left', on='Date', suffixes=['_nsl', '_wetB'])
 _merged2 = pd.merge(_merged, db_0iso_gr, how='left', on='Date', suffixes=['_nsl', '_APSwetB'])
 _merged3 = pd.merge(_merged2, aw2, how='left', on='Date', suffixes=['_nsl', '_APS0iso'])
 
 _merged3.set_index('Date', inplace=True)
-
+_merged3['precip10'] = _merged3['mountain_weather_precip_region'] * 10
 
 fig, (ax1, ax2, ax3) = plt.subplots(3, 1, sharex=True)
-_merged3.filter(['mountain_weather_freezing_level', 'Altitude_nsl']).plot.area(alpha=0.5, stacked=False, ax=ax1, title=REGION_ID)
-_merged3.filter(['mountain_weather_freezing_level', 'Altitude_wetB']).plot.area(alpha=0.5, stacked=False, ax=ax2)
-_merged3.filter(['mountain_weather_freezing_level', 'Altitude_0iso']).plot.area(alpha=0.5, stacked=False, ax=ax3)
+_merged3.filter(['mountain_weather_freezing_level', 'Altitude_nsl', 'precip10']).plot.area(alpha=0.5, stacked=False, ax=ax1, title=REGION_ID)
+_merged3.filter(['mountain_weather_freezing_level', 'Altitude_wetB', 'precip10']).plot.area(alpha=0.5, stacked=False, ax=ax2)
+_merged3.filter(['mountain_weather_freezing_level', 'Altitude_0iso', 'precip10']).plot.area(alpha=0.5, stacked=False, ax=ax3)
 
 _merged3['diff_nsl'] = _merged3['mountain_weather_freezing_level'] - _merged3['Altitude_nsl']
 _merged3['diff_wetB'] = _merged3['mountain_weather_freezing_level'] - _merged3['Altitude_wetB']
@@ -55,9 +65,6 @@ plt.tight_layout()
 plt.savefig('{0}_nsl_comparison.png'.format(REGION_ID), dpi=90)
 plt.show()
 
-print(_merged3['diff_nsl'].mean(), _merged3['diff_nsl'].std())
-print(_merged3['diff_wetB'].mean(), _merged3['diff_wetB'].std())
-print(_merged3['diff_0iso'].mean(), _merged3['diff_0iso'].std())
 print(_merged3['diff_nsl'].where(_merged3['mountain_weather_precip_region'] > 1.0).describe())
 print(_merged3['diff_wetB'].where(_merged3['mountain_weather_precip_region'] > 1.0).describe())
 print(_merged3['diff_0iso'].where(_merged3['mountain_weather_precip_region'] > 1.0).describe())
@@ -71,3 +78,10 @@ print(nsl['Date'].iloc[-1])
 print(aw2['Date'].iloc[-1])
 print(db_gr['Date'].iloc[-1])
 print(db_0iso_gr['Date'].iloc[-1])
+
+def print_stats(var):
+    print("{0}: Mean: {1:.1f} +/-{2:.1f} [Min:{2:.1f}, Max:{3:.1f}]".format(var.name, var.mean(), var.std(), var.min(), var.max()))
+
+print_stats(_merged3['diff_nsl'])
+print_stats(_merged3['diff_wetB'])
+print_stats(_merged3['diff_0iso'])
