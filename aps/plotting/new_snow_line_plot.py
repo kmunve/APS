@@ -14,7 +14,7 @@ Execute GetTimeSerieData in SQL Studio and save result as <region_id>_newsnoline
 Execute GetTimeSerieData in SQL Studio and save result as <region_id>_0isoterm<year>.csv
 """
 
-REGION_ID = 3034
+REGION_ID = 3035
 
 # Load data for new snow line calculated in *new_snow_line.py*
 nsl = pd.read_csv(r"C:\Users\kmu\PycharmProjects\APS\aps\scripts\tmp\new_snow_line_{0}_20201201_20210531.csv".format(REGION_ID), sep=";", parse_dates=['Date'])
@@ -82,6 +82,12 @@ print(db_0iso_gr['Date'].iloc[-1])
 def print_stats(var):
     print("{0}: Mean: {1:.1f} +/-{2:.1f} [Min:{2:.1f}, Max:{3:.1f}]".format(var.name, var.mean(), var.std(), var.min(), var.max()))
 
+print("\nOverall stats:")
 print_stats(_merged3['diff_nsl'])
 print_stats(_merged3['diff_wetB'])
 print_stats(_merged3['diff_0iso'])
+precip_threshold = 1.0
+print("\nFor days with precip > {0}mm:".format(precip_threshold))
+print_stats(_merged3['diff_nsl'].where(_merged3['mountain_weather_precip_region'] > precip_threshold))
+print_stats(_merged3['diff_wetB'].where(_merged3['mountain_weather_precip_region'] > precip_threshold))
+print_stats(_merged3['diff_0iso'].where(_merged3['mountain_weather_precip_region'] > precip_threshold))
