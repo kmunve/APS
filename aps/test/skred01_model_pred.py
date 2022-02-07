@@ -36,6 +36,7 @@ IDS = [
     3035,
     3037
 ]
+FIG_SIZE = (8, 4)
 
 DL_correlations = dict()
 
@@ -50,7 +51,7 @@ for REGION_ID in IDS:
 
     pred_detailed = pd.DataFrame(pred_reg['detailed'].tolist(), index=pred_reg.index)
 
-    pred_detailed['danger_level'].plot(label='DL modelled')
+    pred_detailed['danger_level'].plot(label='DL modelled', figsize=FIG_SIZE)
     # plt.tight_layout()
 
     # Get published data
@@ -77,6 +78,7 @@ for REGION_ID in IDS:
 
 # print(DL_correlations)
 DL_correlations = pd.DataFrame.from_dict(DL_correlations, orient='index')
-DL_correlations.plot.bar()
+DL_correlations.plot.bar(figsize=FIG_SIZE)
+plt.tight_layout()
 plt.savefig('DL_correlations.png')
 pos = "end"
