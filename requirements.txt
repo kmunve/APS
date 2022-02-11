@@ -19,3 +19,10 @@ netCDF4>=1.5.3
 Pillow>=7.0.0
 scikit_learn>=0.22.2.post1
 watchdog>=0.10.2
+
+xarray~=0.20.1
+rioxarray~=0.9.1
+regobslib~=0.2.1
+pyodbc~=4.0.30
+branca~=0.4.1
+scikit-learn~=0.22.1
