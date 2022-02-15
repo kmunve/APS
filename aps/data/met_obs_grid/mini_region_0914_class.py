@@ -14,6 +14,8 @@ day = dt.datetime(year=2022, month=1, day=16).date()
 r0914 = MiniRegion(ix, iy, date=day, nwp_hour=6)
 print("Mean: ", r0914.mean_elevation)
 
+r0914.get_meteorology_3h()
+r0914.get_meteorology_24h()
 # r0914_1500 = r0914.elevations*r0914.elevation_masks["below_1500"]
 # plt.imshow(r0914_1500)
 # plt.show()
