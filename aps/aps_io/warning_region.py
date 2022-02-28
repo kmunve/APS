@@ -2,7 +2,7 @@ import numpy as np
 import xarray as xr
 import datetime as dt
 
-from netCDF4 import Dataset
+from netCDF4 import Dataset, num2date
 from pathlib import Path
 
 
@@ -122,6 +122,8 @@ class MiniRegion:
     def get_meteorology(self):
         nc_file = Dataset(self.met_prognosis_path / self.met_prognosis_file, 'r')
 
+        self.nc_time = nc_file.variables["time"][self.irt[0]:self.irt[1]]
+        self.nc_time_dt = num2date(nc_file.variables["time"][self.irt[0]:self.irt[1]], nc_file.variables["time"].units)
         # temperature data
         air_temperatures = nc_file.variables["air_temperature_2m"][self.nci]
         self.air_temperature_mean = air_temperatures.mean()
@@ -144,7 +146,14 @@ class MiniRegion:
         self.altitude_of_isoTprimW_equal_0_mean = altitude_of_isoTprimW_equal_0.mean()
 
         # Precipitation
-        precipitation_amount_acc = nc_file.variables["precipitation_amount_acc"][self.nci]
+        # Since we need to subtract element-wise form the accumulated values we need the previous acc.precip. values.
+        __precip_i = np.s_[self.irt[0]:self.irt[1]+1, self.iry[0]:self.iry[1], self.irx[0]:self.irx[1]]  # index of precip values before the time-slice we are using
+        precipitation_amount_acc = nc_file.variables["precipitation_amount_acc"][__precip_i]
+        self.precip_acc = precipitation_amount_acc[:]
+        self.precip_hour = np.diff(precipitation_amount_acc[:, :, :], n=1, axis=0)#, prepend=__precip_amount_prev)
+
+        self.precip_acc_1 = precipitation_amount_acc[:, 10, 10]
+        self.precip_hour_1 = np.diff(self.precip_acc_1, n=1, axis=0)  # TODO: need to include the previous value
         # TODO: need to calculate the precip per hour instead of accumulated.
 
 
