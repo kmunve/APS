@@ -89,6 +89,8 @@ class MiniRegion(SeNorgeSubDomain):
         self.date_filestr = "{d}T{h:02}Z".format(d=self.date.strftime("%Y%m%d"), h=self.nwp_hour)
         self.met_prognosis_path = Path(r"Y:\metdata\prognosis\meps\det\archive") / str(self.date.year)  # TODO: move to config file
         self.met_prognosis_file = "meps_det_1km_{df}.nc".format(df=self.date_filestr)
+        self.nc_file = Dataset(self.met_prognosis_path / self.met_prognosis_file, 'r')
+        # set array slices
         self.irt = (self.nt-nwp_hour, (2*self.nt)-nwp_hour)  # set the time index, based on NWP initiation time. Is 00-00 the day after self.date.
         self.nci = np.s_[self.irt[0]:self.irt[1], self.iry[0]:self.iry[1], self.irx[0]:self.irx[1]]  # set the index slice, size (24, 20, 20)
 
@@ -101,7 +103,8 @@ class MiniRegion(SeNorgeSubDomain):
         self.get_elevation_masks()
 
         # retrieve meteorological data from corresponding netCDF file(s)
-        self.get_meteorology()
+        # self.get_meteorology_24()
+        # self.get_meteorology_3()
 
     def __repr__(self):
         return f"{self.__class__.__name__}, class describing an APS mini region."
@@ -135,31 +138,32 @@ class MiniRegion(SeNorgeSubDomain):
             self.elevation_masks["above_{i}".format(i=self.elevation_boundaries[i])] = np.where(
                 self.elevations < self.elevation_boundaries[i], np.nan, 1)
 
-    def get_meteorology(self):
+    def get_meteorology_24h(self):
+
         nc_file = Dataset(self.met_prognosis_path / self.met_prognosis_file, 'r')
 
         self.nc_time = nc_file.variables["time"][self.irt[0]:self.irt[1]]
         self.nc_time_dt = num2date(nc_file.variables["time"][self.irt[0]:self.irt[1]], nc_file.variables["time"].units,
                                    only_use_cftime_datetimes=False)
         # temperature data
-        air_temperatures = nc_file.variables["air_temperature_2m"][self.nci]
+        air_temperatures = self.nc_file.variables["air_temperature_2m"][self.nci]
         self.air_temperature_mean = air_temperatures.mean()
 
         # wind data
-        x_wind = nc_file.variables["x_wind_10m"][self.nci]
-        y_wind = nc_file.variables["y_wind_10m"][self.nci]
+        x_wind = self.nc_file.variables["x_wind_10m"][self.nci]
+        y_wind = self.nc_file.variables["y_wind_10m"][self.nci]
         wind_speed = np.sqrt(x_wind**2 + y_wind**2)
         self.wind_speed_mean = wind_speed.mean()
         self._wsp = wind_speed
 
         # cloudiness
-        cloud_fraction = nc_file.variables["cloud_area_fraction"][self.nci]
+        cloud_fraction = self.nc_file.variables["cloud_area_fraction"][self.nci]
         self.cloud_fraction_mean = cloud_fraction.mean()
 
         # Freezing level and rain-snow boundary
         # altitude_of_0_degree_isotherm = nc_file.variables["altitude_of_0_degree_isotherm"][self.nci]
         # self.altitude_of_0_degree_isotherm_mean = altitude_of_0_degree_isotherm.mean()
-        altitude_of_isoTprimW_equal_0 = nc_file.variables["altitude_of_isoTprimW_equal_0"][self.nci]
+        altitude_of_isoTprimW_equal_0 = self.nc_file.variables["altitude_of_isoTprimW_equal_0"][self.nci]
         self.altitude_of_isoTprimW_equal_0_mean = altitude_of_isoTprimW_equal_0.mean()
 
         # Precipitation
@@ -176,6 +180,28 @@ class MiniRegion(SeNorgeSubDomain):
 
         # self.precip_acc_1 = precipitation_amount_acc[:, 10, 10]
         # self.precip_hour_1 = np.diff(self.precip_acc_1, n=1, axis=0)
+
+    def get_meteorology_3h(self):
+        # Create necessary slices, TODO: do they need to be part of "self" or can they be temporary?
+        for i, v in enumerate(range(self.irt[0], self.irt[1], 3)):
+            vars(self)[f"nci{i * 3}"] = np.s_[v:v+3, self.iry[0]:self.iry[1], self.irx[0]:self.irx[1]]
+
+        # Generating 3-h averages
+        _air_temperature_mean = []
+        _altitude_of_isoTprimW_equal_0_mean = []
+        _cloud_fraction_mean = []
+        _wind_speed_mean = []
+
+        for i, v in enumerate(range(self.irt[0], self.irt[1], 3)):
+            _air_temperature_mean.append(self.nc_file.variables["air_temperature_2m"][vars(self)[f"nci{i * 3}"]].mean())
+            _altitude_of_isoTprimW_equal_0_mean.append(self.nc_file.variables["altitude_of_isoTprimW_equal_0"][vars(self)[f"nci{i * 3}"]].mean())
+            _cloud_fraction_mean.append(self.nc_file.variables["cloud_area_fraction"][vars(self)[f"nci{i * 3}"]].mean())
+            # TODO: calculate wind from x- and y-.
+            # _wind_speed_mean.append(self.nc_file.variables["altitude_of_isoTprimW_equal_0"][vars(self)[f"nci{i * 3}"]].mean())
+        self.air_temperature_mean_3h = np.array(_air_temperature_mean)
+        self.altitude_of_isoTprimW_equal_0_mean_3h = np.array(_altitude_of_isoTprimW_equal_0_mean)
+        self.cloud_fraction_mean_3h = np.array(_cloud_fraction_mean)
+
 
 
 
