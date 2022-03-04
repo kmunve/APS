@@ -13,9 +13,10 @@ day = dt.datetime(year=2022, month=2, day=22).date()
 
 r0914 = MiniRegion(ix, iy, date=day, nwp_hour=0)
 print("Mean: ", r0914.mean_elevation)
-
-r0914.get_meteorology_3h()
+print(r0914.nc_file)
 r0914.get_meteorology_24h()
+r0914.get_meteorology_3h()
+
 # plt.step(r0914.nc_time, r0914.precip_acc[1:, 10, 10])
 plt.step(r0914.nc_time, r0914.precip_hour[:, 10, 10])
 # plt.step(r0914.nc_time, r0914.precip_3h[:, 10, 10])

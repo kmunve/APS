@@ -89,7 +89,12 @@ class MiniRegion(SeNorgeSubDomain):
         self.date_filestr = "{d}T{h:02}Z".format(d=self.date.strftime("%Y%m%d"), h=self.nwp_hour)
         self.met_prognosis_path = Path(r"Y:\metdata\prognosis\meps\det\archive") / str(self.date.year)  # TODO: move to config file
         self.met_prognosis_file = "meps_det_1km_{df}.nc".format(df=self.date_filestr)
-        self.nc_file = Dataset(self.met_prognosis_path / self.met_prognosis_file, 'r')
+        # self.nc_file = Dataset(self.met_prognosis_path / self.met_prognosis_file, 'r')
+        self.nc_file = xr.open_dataset(self.met_prognosis_path / self.met_prognosis_file,
+                                       engine="netcdf4",
+                                       decode_cf=True,
+                                       mask_and_scale=True,
+                                       decode_times=True)
         # set array slices
         self.irt = (self.nt-nwp_hour, (2*self.nt)-nwp_hour)  # set the time index, based on NWP initiation time. Is 00-00 the day after self.date.
         self.nci = np.s_[self.irt[0]:self.irt[1], self.iry[0]:self.iry[1], self.irx[0]:self.irx[1]]  # set the index slice, size (24, 20, 20)
@@ -140,11 +145,9 @@ class MiniRegion(SeNorgeSubDomain):
 
     def get_meteorology_24h(self):
 
-        nc_file = Dataset(self.met_prognosis_path / self.met_prognosis_file, 'r')
-
-        self.nc_time = nc_file.variables["time"][self.irt[0]:self.irt[1]]
-        self.nc_time_dt = num2date(nc_file.variables["time"][self.irt[0]:self.irt[1]], nc_file.variables["time"].units,
-                                   only_use_cftime_datetimes=False)
+        self.nc_time = self.nc_file.variables["time"][self.irt[0]:self.irt[1]]
+        # self.nc_time_dt = num2date(self.nc_file.variables["time"][self.irt[0]:self.irt[1]], self.nc_file.variables["time"].units,
+        #                            only_use_cftime_datetimes=False)
         # temperature data
         air_temperatures = self.nc_file.variables["air_temperature_2m"][self.nci]
         self.air_temperature_mean = air_temperatures.mean()
@@ -169,7 +172,7 @@ class MiniRegion(SeNorgeSubDomain):
         # Precipitation
         # Since we need to subtract element-wise form the accumulated values we need the previous acc.precip. values.
         precip_i = np.s_[self.irt[0]:self.irt[1]+1, self.iry[0]:self.iry[1], self.irx[0]:self.irx[1]]  # index of precip values before the time-slice we are using
-        precipitation_amount_acc = nc_file.variables["precipitation_amount_acc"][precip_i]
+        precipitation_amount_acc = self.nc_file.variables["precipitation_amount_acc"][precip_i]
         self.precip_acc_mean = precipitation_amount_acc[-1, :, :].mean()
         self.precip_acc_max = precipitation_amount_acc[-1, :, :].max()
         self.precip_hour = np.diff(precipitation_amount_acc[:, :, :], n=1, axis=0)
