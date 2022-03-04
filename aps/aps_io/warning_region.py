@@ -1,8 +1,8 @@
 import numpy as np
 import xarray as xr
 import datetime as dt
-
-from netCDF4 import Dataset
+import json
+from netCDF4 import Dataset, num2date
 from pathlib import Path
 
 
@@ -56,6 +56,9 @@ class SeNorgeSubDomain(SeNorgeDomain):
         self.ybc = self.senorge_y_bottom + self.ybi * self.senorge_cell_size
         self.ytc = self.ybc + self.y_offset * self.senorge_cell_size
 
+        # defining output file names
+        self.json_file = f"{ix}{iy}.json"  #TODO: add .to_json() method
+
     def __repr__(self):
         info_str = f"{self.__class__.__name__}, class describing a rectangular sub-doman of the SeNorge grid.\n" \
                    f"More information on www.senorge.no\n" \
@@ -64,10 +67,15 @@ class SeNorgeSubDomain(SeNorgeDomain):
                    f"UTM33N: Lower left (x, y): {self.xlc}, {self.ybc}. Upper right (x,y):  {self.xrc}, {self.ytc}."
         return info_str
 
+    def to_json(self):
+        pass
 
-class MiniRegion:
+
+class MiniRegion(SeNorgeSubDomain):
     # TODO: write docs
+    # TODO: change to Dataframes: a dataframe for metadata, a dataframe for daily met-data, a dataframe for 3h-met-data
     def __init__(self, irx, iry, date=dt.datetime.now().date(), nwp_hour=0):
+        # SeNorgeSubDomain.__init__(self) # TODO: make MiniRegion a sub-class of SeNorgeSubDomain, requires cahnge to irx and iry
         # set grid index ranges
         self.irx = irx  # SeNorgeDomain index range in x-direction
         self.iry = iry  # SeNorgeDomain index range in y-direction
@@ -101,6 +109,14 @@ class MiniRegion:
     def __repr__(self):
         return f"{self.__class__.__name__}, class describing an APS mini region."
 
+    def to_json(self, filename=None):
+        # TODO: update once converted to dataframes
+        if type(filename) is not type("str"):
+            filename = self.json_file
+        self.json_str = json.dumps(self.__dict__, skipkeys=True)
+        with open(filename, 'w') as f:
+            f.write(self.json_str)
+
     def set_elevation_ranges(self, elevation_boundaries=[300, 600, 900, 1200, 1500, 1800, 2100, 2400]):  # TODO: move to config file
         self.elevation_boundaries = elevation_boundaries
 
@@ -123,6 +139,12 @@ class MiniRegion:
                 self.elevations < self.elevation_boundaries[i], np.nan, 1)
 
     def get_meteorology_24h(self):
+
+        nc_file = Dataset(self.met_prognosis_path / self.met_prognosis_file, 'r')
+
+        self.nc_time = nc_file.variables["time"][self.irt[0]:self.irt[1]]
+        self.nc_time_dt = num2date(nc_file.variables["time"][self.irt[0]:self.irt[1]], nc_file.variables["time"].units,
+                                   only_use_cftime_datetimes=False)
         # temperature data
         air_temperatures = self.nc_file.variables["air_temperature_2m"][self.nci]
         self.air_temperature_mean = air_temperatures.mean()
@@ -145,8 +167,19 @@ class MiniRegion:
         self.altitude_of_isoTprimW_equal_0_mean = altitude_of_isoTprimW_equal_0.mean()
 
         # Precipitation
-        precipitation_amount_acc = self.nc_file.variables["precipitation_amount_acc"][self.nci]
-        # TODO: need to calculate the precip per hour instead of accumulated.
+        # Since we need to subtract element-wise form the accumulated values we need the previous acc.precip. values.
+        precip_i = np.s_[self.irt[0]:self.irt[1]+1, self.iry[0]:self.iry[1], self.irx[0]:self.irx[1]]  # index of precip values before the time-slice we are using
+        precipitation_amount_acc = nc_file.variables["precipitation_amount_acc"][precip_i]
+        self.precip_acc_mean = precipitation_amount_acc[-1, :, :].mean()
+        self.precip_acc_max = precipitation_amount_acc[-1, :, :].max()
+        self.precip_hour = np.diff(precipitation_amount_acc[:, :, :], n=1, axis=0)
+        self.precip_intensity_mean = self.precip_hour.mean()
+        self.precip_intensity_max = self.precip_hour.max()
+        # TODO: numpy.sum along time axis to get 3h data
+        # self.precip_3h = np.convolve(self.precip_hour, np.ones((3, self.ny, self.nx), dtype=int), 'valid') # convolve works only with 1-d arrays
+
+        # self.precip_acc_1 = precipitation_amount_acc[:, 10, 10]
+        # self.precip_hour_1 = np.diff(self.precip_acc_1, n=1, axis=0)
 
     def get_meteorology_3h(self):
         # Create necessary slices, TODO: do they need to be part of "self" or can they be temporary?
