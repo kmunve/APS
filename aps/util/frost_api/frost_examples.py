@@ -1,22 +1,23 @@
 import requests
 import pprint
 import json
+from frost_client import get_client_id
 
 
 """
 from https://frost.met.no/langex_python
 """
 
-def get_client_id():
-    """
-    Requires a file "client_id.json" with the following content:
-    {"client_id":  "12493b54-c073-4c44-7a41-633a3569f636"}
 
-    :return:
+def get_source_info():
     """
-    with open("client_id.json") as file:
-        _id = json.load(file)
-        return _id["client_id"]
+
+    """
+    client_id = get_client_id()
+    # url = r"https://frost.met.no/sources/v0.jsonld?name=*shortwave*"
+    url = r"https://frost.met.no/sources/v0.jsonld?ids=SN32061"
+    rsp = requests.get(url, auth=(client_id, ''))
+    print(rsp.text)
 
 
 def get_element_info():
@@ -26,11 +27,25 @@ def get_element_info():
     """
     client_id = get_client_id()
     # Get all elements that hav "precipitation" in their id
-    url = r"https://frost.met.no/elements/v0.jsonld?ids=*precipitation*&lang=en-US"
-
+    # url = r"https://frost.met.no/elements/v0.jsonld?ids=*rad*&lang=en-US"
+    # url = r"https://frost.met.no/elements/v0.jsonld?categories=Radiation&lang=en-US"
+    url = r"https://frost.met.no/elements/v0.jsonld?categories=Radiation&fields=category%2C%20name%2C%20unit&lang=en-US"
     rsp = requests.get(url, auth=(client_id, ''))
-
     print(rsp.text)
+
+
+def get_available_time_series(element="mean(surface_downwelling_shortwave_flux_in_air PT1H)"):
+    """
+    Provide elements and see which stations (sources) have available time series.
+    ElementIds can be retrieved from https://frost.met.no/elementtable.
+    """
+    client_id = get_client_id()
+    url = r"https://frost.met.no/observations/availableTimeSeries/v0.jsonld?elements={element}&fields=sourceId".format(element=element)
+    rsp = requests.get(url, auth=(client_id, ''))
+    print(rsp.text)
+    data = rsp.json()
+    print(data["totalItemCount"])
+
 
 def get_time_series():
     """
@@ -38,9 +53,11 @@ def get_time_series():
     :return:
     """
     client_id = get_client_id()
-    url = r"https://frost.met.no/observations/v0.jsonld?referencetime=2019-12-16/2019-12-17&elements=sum(precipitation_amount%20PT10M)&sources=SN55420"
+    # url = r"https://frost.met.no/observations/v0.jsonld?referencetime=2019-12-16/2019-12-17&elements=sum(precipitation_amount%20PT10M)&sources=SN55420"
+    url = r"https://frost.met.no/observations/availableTimeSeries/v0.jsonld?elements=mean(surface_downwelling_shortwave_flux_in_air%20PT1H)"
+    # url = r"https://frost.met.no/observations/availableTimeSeries/v0.jsonld?elements=mean(surface_downwelling_shortwave_flux_in_air%20PT1H)&fields=sourceId"
     rsp = requests.get(url, auth=(client_id, ''))
-    print(rsp.json())
+    print(rsp.text)
     data = rsp.json()
 
     print("{0} observations".format(data["currentItemCount"]))
@@ -141,9 +158,10 @@ def get_time_series():
 #             sys.stdout.write('\tother error\n')
 
 
-
 if __name__ == "__main__":
     # a = get_client_id()
+    # get_source_info()
     # get_element_info()
-    get_time_series()
+    get_available_time_series()
+    # get_time_series()
 
