@@ -1,6 +1,6 @@
 import requests
-import pprint
 import json
+import pandas as pd
 
 
 """
@@ -19,6 +19,49 @@ def get_client_id():
         return _id["client_id"]
 
 
+def get_stations_with_element(elem='sum(precipitation_amount P1D)'):
+
+    client_id = get_client_id()
+    # "https://frost.met.no/observations/availableTimeSeries/v0.jsonld?referencetime=2017-01-01&elements=sum(precipitation_amount%20PT10M)"
+    # Define endpoint and parameters
+    endpoint = 'https://frost.met.no/observations/availableTimeSeries/v0.jsonld'
+    parameters = {
+        'elements': elem,
+        'timeoffsets': 'PT6H',
+        'referencetime': '2022-10-02'
+    }
+    # Issue an HTTP GET request
+    r = requests.get(endpoint, parameters, auth=(client_id, ''))
+    # Extract JSON data
+    json = r.json()
+
+    # Check if the request worked, print out any errors
+    if r.status_code == 200:
+        data = json['data']
+        print('Data retrieved from frost.met.no!')
+    else:
+        print('Error! Returned status code %s' % r.status_code)
+        print('Message: %s' % json['error']['message'])
+        print('Reason: %s' % json['error']['reason'])
+
+    # This will return a Dataframe with all of the observations in a table format
+    df = pd.DataFrame(data)
+    # for i in range(len(data)):
+    #     # row = pd.DataFrame(data[i]['sourceId'])
+    #     # row['referenceTime'] = data[i]['referenceTime']
+    #     row['sourceId'] = data[i]['sourceId']
+    #     df = df.append(row)
+
+    # df = df.reset_index()
+
+    print(df.head)
+    df.to_csv("precip24h_stations.csv", index=False)
+
+    return df['sourceId']
+
+
+
+
 def get_element_info():
     """
     retrieve information about a certain element (parameter) or search for part of element-name.
@@ -31,6 +74,7 @@ def get_element_info():
     rsp = requests.get(url, auth=(client_id, ''))
 
     print(rsp.text)
+
 
 def get_time_series():
     """
@@ -54,6 +98,69 @@ def get_time_series():
             unit = o["unit"]
 
             print("{0}\t{1}\t{2}: {3} {4}".format(station_id, element_id, dt, value, unit))
+
+
+def get_timeseries_df():
+    """
+    NOT WORKING YET!!!
+    :return:
+    """
+    client_id = get_client_id()
+
+    # Define endpoint and parameters
+    endpoint = 'https://frost.met.no/observations/v0.jsonld'
+    parameters = {
+        'sources': 'SN18700,SN90450',
+        'elements': 'mean(air_temperature P1D),sum(precipitation_amount P1D),mean(wind_speed P1D)',
+        'referencetime': '2022-10-01/2022-10-02',
+    }
+    # Issue an HTTP GET request
+    r = requests.get(endpoint, parameters, auth=(client_id, ''))
+    # Extract JSON data
+    json = r.json()
+
+    # Check if the request worked, print out any errors
+    if r.status_code == 200:
+        data = json['data']
+        print('Data retrieved from frost.met.no!')
+    else:
+        print('Error! Returned status code %s' % r.status_code)
+        print('Message: %s' % json['error']['message'])
+        print('Reason: %s' % json['error']['reason'])
+
+    # This will return a Dataframe with all of the observations in a table format
+    df = pd.DataFrame()
+    for i in range(len(data)):
+        row = pd.DataFrame(data[i]['observations'])
+        row['referenceTime'] = data[i]['referenceTime']
+        row['sourceId'] = data[i]['sourceId']
+        df = df.append(row)
+
+    df = df.reset_index()
+
+    print(df.head)
+
+    # These additional columns will be kept
+    columns = ['sourceId', 'referenceTime', 'elementId', 'value', 'unit', 'timeOffset']
+    df2 = df[columns].copy()
+    # Convert the time value to something Python understands
+    df2['referenceTime'] = pd.to_datetime(df2['referenceTime'])
+
+    print(df2.head)
+
+
+def get_latest_daily_precip():
+    """
+    Get a list of stations that measure daily precipitation sum.
+    Return that list sorted after 24h precipitation descending.
+
+    Steps:
+    - get a list of all station in Norway (or a subregion) that measure 24h precipitation sum.
+    - retrieve precippitation sum for last 24h from all these stations
+    - sort this list by precipitation descending
+    """
+    ...
+
 #
 # """
 #
@@ -145,5 +252,10 @@ def get_time_series():
 if __name__ == "__main__":
     # a = get_client_id()
     # get_element_info()
-    get_time_series()
+    # get_time_series()
+    # get_timeseries_df()
+    station_series = get_stations_with_element()
+    station_list = station_series.tolist()
+    # get_latest_daily_precip()
 
+    a = 1
