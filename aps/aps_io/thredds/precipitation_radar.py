@@ -28,7 +28,6 @@ precip_rate[precip_rate < 0.2] = np.NaN
 # plt.imshow(precip_rate[5, :, :], vmin=0, vmax=5)
 # plt.savefig("radar_5.png")
 
-
 # Define the meta data for the movie
 metadata = dict(title='Radar animation', artist='Matplotlib',
                 comment='Nedbør radar over Norge')
@@ -42,23 +41,5 @@ with writer.saving(fig, "precip_radar.gif", 100):
         plt.imshow(precip_rate[i, :, :], vmin=0, vmax=5)
         writer.grab_frame()
         plt.clf()
-
-# n = 1000
-# x = np.linspace(0, 6*np.pi, n)
-# y = np.sin(x)
-#
-# # plot the sine wave line
-# sine_line, = plt.plot(x, y, 'b')
-# red_circle, = plt.plot([], [], 'ro', markersize = 10)
-# plt.xlabel('x')
-# plt.ylabel('sin(x)')
-#
-# # Update the frames for the movie
-# with writer.saving(fig, "sine_animation.gif", 100):
-#     for i in range(n):
-#         x0 = x[i]
-#         y0 = y[i]
-#         red_circle.set_data(x0, y0)
-#         writer.grab_frame()
 
 a = 1
