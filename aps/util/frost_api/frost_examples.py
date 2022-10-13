@@ -1,22 +1,12 @@
 import requests
-import json
 import pandas as pd
+
+from frost_client_id import get_client_id
 
 
 """
 from https://frost.met.no/langex_python
 """
-
-def get_client_id():
-    """
-    Requires a file "client_id.json" with the following content:
-    {"client_id":  "12493b54-c073-4c44-7a41-633a3569f636"}
-
-    :return:
-    """
-    with open("client_id.json") as file:
-        _id = json.load(file)
-        return _id["client_id"]
 
 
 def get_stations_with_element(elem='sum(precipitation_amount P1D)'):
@@ -159,7 +149,34 @@ def get_latest_daily_precip():
     - retrieve precippitation sum for last 24h from all these stations
     - sort this list by precipitation descending
     """
-    ...
+    client_id = get_client_id()
+    station_list = get_stations_with_element().tolist()
+
+
+    # Define endpoint and parameters
+    endpoint = 'https://frost.met.no/observations/v0.jsonld'
+    parameters = {
+        'sources': ",".join(station_list),
+        'elements': 'mean(air_temperature P1D),sum(precipitation_amount P1D),mean(wind_speed P1D)',
+        'referencetime': '2022-10-01/2022-10-02',
+    }
+    # Issue an HTTP GET request
+    r = requests.get(endpoint, parameters, auth=(client_id, ''))
+    # Extract JSON data
+    json = r.json()
+
+    # Check if the request worked, print out any errors
+    if r.status_code == 200:
+        data = json['data']
+        print('Data retrieved from frost.met.no!')
+    else:
+        print('Error! Returned status code %s' % r.status_code)
+        print('Message: %s' % json['error']['message'])
+        print('Reason: %s' % json['error']['reason'])
+
+    # This will return a Dataframe with all of the observations in a table format
+    df = pd.DataFrame()
+
 
 #
 # """

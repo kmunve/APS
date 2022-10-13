@@ -26,7 +26,7 @@ def xgeo_multifile_load(nc_wildcard, nc_dir=None):
     return nc
 
 
-def test_31jan2018_precip():
+def _test_31jan2018_precip():
     nc_dir = r'Y:\metdata\met_obs_v2.0\rr1h\2018\01'
     nc_wildcard = r'rr1h_2018_01_31_?.nc'
     nc = xgeo_multifile_load(nc_wildcard, nc_dir)
@@ -35,4 +35,4 @@ def test_31jan2018_precip():
 
 
 if __name__ == "__main__":
-    test_31jan2018_precip()
+    _test_31jan2018_precip()
