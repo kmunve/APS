@@ -1,7 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as manimation
+import cartopy.crs as ccrs
 from netCDF4 import Dataset, num2date
+
 
 nc_url = "https://thredds.met.no/thredds/dodsC/radarnowcasting/yrwms-nordic.mos.pcappi-0-rr.noclass-clfilter-novpr-clcorr-block.nordiclcc-1000.20221006T134500Z.nc"
 
@@ -35,6 +37,7 @@ writer = manimation.PillowWriter(fps=5, metadata=metadata)
 
 # Initialize the movie
 fig = plt.figure()
+
 
 with writer.saving(fig, "precip_radar.gif", 100):
     for i in range(24):
